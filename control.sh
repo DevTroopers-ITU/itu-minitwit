@@ -10,7 +10,7 @@ if [ "$1" = "init" ]; then
     sqlite3 /tmp/minitwit.db < schema.sql
 elif [ "$1" = "start" ]; then
     echo "Starting minitwit..."
-    nohup go run main.go > /tmp/out.log 2>&1 &
+    nohup go run . > /tmp/out.log 2>&1 &
 elif [ "$1" = "stop" ]; then
     echo "Stopping minitwit..."
     pkill -f minitwit
