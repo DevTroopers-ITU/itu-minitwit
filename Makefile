@@ -1,8 +1,11 @@
 init:
-	python -c"from minitwit import init_db; init_db()"
+	sqlite3 /tmp/minitwit.db < schema.sql
 
 build:
-	gcc flag_tool.c -l sqlite3 -o flag_tool
+	CGO_ENABLED=1 go build -o minitwit .
+
+test:
+	CGO_ENABLED=1 go test -v ./...
 
 clean:
-	rm flag_tool
+	rm -f minitwit

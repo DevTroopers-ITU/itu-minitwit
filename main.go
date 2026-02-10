@@ -1,96 +1,59 @@
 package main
 
 import (
-	"crypto/md5"
 	"database/sql"
-	"fmt"
-	"html/template"
 	"log"
 	"net/http"
-	"strings"
-	"time"
 
+	"github.com/gorilla/mux"
+	"github.com/gorilla/sessions"
 	_ "github.com/mattn/go-sqlite3"
 )
 
-type Message struct {
-	Username string
-	Email    string
-	Text     string
-	PubDate  int64
-}
+// Configuration
+const (
+	DATABASE   = "/tmp/minitwit.db"
+	PER_PAGE   = 30
+	SECRET_KEY = "development key"
+)
 
-var db *sql.DB
+// Globals
+var (
+	db    *sql.DB
+	store *sessions.CookieStore
+)
 
-func initDB() {
-	var err error
-	db, err = sql.Open("sqlite3", "/tmp/minitwit.db") // adjust path
-	if err != nil {
-		log.Fatal(err)
-	}
-}
+// Router setup
+func setupRouter() *mux.Router {
+	r := mux.NewRouter()
 
-func gravatar(email string) string {
-	h := md5.Sum([]byte(strings.ToLower(strings.TrimSpace(email))))
-	return fmt.Sprintf("https://www.gravatar.com/avatar/%x?d=identicon&s=48", h)
-}
+	// Static files
+	r.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 
-func datetimeformat(ts int64) string {
-	return time.Unix(ts, 0).Format("2006-01-02 15:04")
-}
+	// Specific routes first (so mux doesn't match them as {username})
+	r.HandleFunc("/public", publicTimelineHandler).Methods("GET")
+	r.HandleFunc("/login", loginHandler).Methods("GET", "POST")
+	r.HandleFunc("/register", registerHandler).Methods("GET", "POST")
+	r.HandleFunc("/logout", logoutHandler).Methods("GET")
+	r.HandleFunc("/add_message", addMessageHandler).Methods("POST")
 
-func publicTimelineHandler(w http.ResponseWriter, r *http.Request) {
-	funcMap := template.FuncMap{
-		"gravatar":       gravatar,
-		"datetimeformat": datetimeformat,
-	}
+	// User routes
+	r.HandleFunc("/{username}/follow", followHandler).Methods("GET")
+	r.HandleFunc("/{username}/unfollow", unfollowHandler).Methods("GET")
+	r.HandleFunc("/{username}", userTimelineHandler).Methods("GET")
 
-	rows, err := db.Query(`
-        SELECT message.text, message.pub_date, user.username, user.email
-        FROM message
-        JOIN user ON message.author_id = user.user_id
-        WHERE message.flagged = 0
-        ORDER BY message.pub_date DESC
-        LIMIT 30
-    `)
-	if err != nil {
-		http.Error(w, "DB error", 500)
-		return
-	}
-	defer rows.Close()
+	// Root
+	r.HandleFunc("/", timelineHandler).Methods("GET")
 
-	var messages []Message
-	for rows.Next() {
-		var m Message
-		if err := rows.Scan(&m.Text, &m.PubDate, &m.Username, &m.Email); err != nil {
-			http.Error(w, "Scan error", 500)
-			return
-		}
-		messages = append(messages, m)
-	}
-
-	tmpl := template.Must(template.New("layout.html").
-		Funcs(funcMap).
-		ParseFiles("templates/layout.html", "templates/timeline.html"))
-
-	data := map[string]interface{}{
-		"Messages":    messages,
-		"CurrentUser": map[string]interface{}{"Username": "bob"}, // replace with actual login
-		"IsPublic":    true,
-		"IsTimeline":  true,
-	}
-
-	tmpl.ExecuteTemplate(w, "layout.html", data)
+	return r
 }
 
 func main() {
-	initDB() // connect to SQLite
+	initDB()
+	store = newStore()
 
-	fs := http.FileServer(http.Dir("static"))
-	http.Handle("/static/", http.StripPrefix("/static/", fs))
+	r := setupRouter()
 
-	http.HandleFunc("/public", publicTimelineHandler)
-
-	log.Println("Listening on http://localhost:5000/public")
-	log.Fatal(http.ListenAndServe(":5000", nil))
+	log.Println("Listening on http://localhost:5000")
+	log.Fatal(http.ListenAndServe(":5000", r))
 }
