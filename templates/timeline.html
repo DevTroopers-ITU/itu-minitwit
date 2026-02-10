@@ -14,14 +14,14 @@ My Timeline
 {{ if .CurrentUser }}
   {{ if .IsUser }}
     <div class=followstatus>
-      {{ if eq .CurrentUser.ID .ProfileUser.ID }}
+      {{ if eq .CurrentUser.UserID .ProfileUser.UserID }}
         This is you!
       {{ else if .Followed }}
         You are currently following this user.
-        <a class=unfollow href="/unfollow/{{ .ProfileUser.Username }}">Unfollow user</a>.
+        <a class=unfollow href="/{{ .ProfileUser.Username }}/unfollow">Unfollow user</a>.
       {{ else }}
         You are not yet following this user.
-        <a class=follow href="/follow/{{ .ProfileUser.Username }}">Follow user</a>.
+        <a class=follow href="/{{ .ProfileUser.Username }}/follow">Follow user</a>.
       {{ end }}
     </div>
   {{ else if .IsTimeline }}
@@ -38,7 +38,7 @@ My Timeline
 <ul class=messages>
 {{ range .Messages }}
   <li><img src="{{ gravatar .Email }}"><p>
-    <strong><a href="/user/{{ .Username }}">{{ .Username }}</a></strong>
+    <strong><a href="/{{ .Username }}">{{ .Username }}</a></strong>
     {{ .Text }}
     <small>&mdash; {{ datetimeformat .PubDate }}</small>
   </p></li>
