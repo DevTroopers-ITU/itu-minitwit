@@ -1,4 +1,4 @@
-module github.com/leosakharoff/itu-minitwit.git
+module github.com/DevTroopers-ITU/itu-minitwit
 
 go 1.24.0
 
