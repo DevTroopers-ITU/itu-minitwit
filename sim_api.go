@@ -123,7 +123,8 @@ func simMessagesPerUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if r.Method == "GET" {
+	switch r.Method {
+	case "GET":
 		noMsgs, _ := strconv.Atoi(r.URL.Query().Get("no"))
 		if noMsgs == 0 {
 			noMsgs = 100
@@ -150,7 +151,7 @@ func simMessagesPerUser(w http.ResponseWriter, r *http.Request) {
 		}
 		json.NewEncoder(w).Encode(filtered)
 
-	} else if r.Method == "POST" {
+	case "POST":
 		var data map[string]string
 		json.NewDecoder(r.Body).Decode(&data)
 
@@ -177,7 +178,8 @@ func simFollow(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if r.Method == "POST" {
+	switch r.Method {
+	case "POST":
 		var data map[string]string
 		json.NewDecoder(r.Body).Decode(&data)
 
@@ -200,7 +202,7 @@ func simFollow(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(http.StatusNoContent)
 		}
 
-	} else if r.Method == "GET" {
+	case "GET":
 		noFollowers, _ := strconv.Atoi(r.URL.Query().Get("no"))
 		if noFollowers == 0 {
 			noFollowers = 100
