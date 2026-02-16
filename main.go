@@ -30,6 +30,14 @@ func setupRouter() *mux.Router {
 	// Static files
 	r.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 
+	// Swagger docs
+	r.HandleFunc("/swagger", func(w http.ResponseWriter, r *http.Request) {
+		http.ServeFile(w, r, "swagger.html")
+	}).Methods("GET")
+	r.HandleFunc("/swagger.json", func(w http.ResponseWriter, r *http.Request) {
+		http.ServeFile(w, r, "swagger.json")
+	}).Methods("GET")
+
 	// Sim API (before /{username} catch-all)
 	r.HandleFunc("/latest", getLatest).Methods("GET")
 	r.HandleFunc("/register", simRegister).Methods("POST").Headers("Content-Type", "application/json")
