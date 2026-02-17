@@ -8,8 +8,8 @@ Vagrant + Hetzner Cloud. (can be changed at any point)
 
 - Vagrant ([download](https://www.vagrantup.com/downloads))
 - `vagrant plugin install vagrant-hetznercloud`
-- `# One-liner to create and add a hetznercloud dummy box`
-mkdir /tmp/hetzner-dummy && cd /tmp/hetzner-dummy && echo '{"provider":"hetznercloud"}' > metadata.json && tar czf hetzner-dummy.box metadata.json && vagrant box add hetzner-dummy.box --name dummy --provider hetznercloud && cd ~
+-  One-liner to create and add a hetznercloud dummy box
+`mkdir /tmp/hetzner-dummy && cd /tmp/hetzner-dummy && echo '{"provider":"hetznercloud"}' > metadata.json && tar czf hetzner-dummy.box metadata.json && vagrant box add hetzner-dummy.box --name dummy --provider hetznercloud && cd ~`
 
 - Your SSH key on Hetzner Console (ask Leo if unsure)`
 
