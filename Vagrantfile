@@ -1,7 +1,6 @@
 Vagrant.configure("2") do |config|
   config.vm.box = "dummy"
   config.vm.synced_folder ".", "/vagrant", disabled: true
-  config.ssh.private_key_path = "~/.ssh/id_rsa"
   config.ssh.username = "root"
 
   config.vm.provider :hetznercloud do |hcloud|

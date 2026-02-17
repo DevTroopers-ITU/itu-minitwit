@@ -17,7 +17,16 @@ Get the token from Leo. SSH key name is one of these Peter is missing (`peter-ju
 ```bash
 export HCLOUD_TOKEN="..."
 export HCLOUD_SSH_KEY_NAME="your-name-here"
-ssh-add ~/.ssh/id_rsa
+ssh-add ~/.ssh/id_rsa OR ssh-add ~/.ssh/id_ed25519
+```
+
+### Plugin bugfix (required)
+
+The vagrant-hetznercloud plugin has a typo bug. Run this once after installing the plugin:
+
+```bash
+sed -i '' 's/option\[:location\]/options[:location]/;s/option\[:datacenter\]/options[:datacenter]/;s/option\[:user_data\]/options[:user_data]/' \
+  ~/.vagrant.d/gems/3.3.8/gems/vagrant-hetznercloud-0.0.1/lib/vagrant-hetznercloud/action/create_server.rb
 ```
 
 ### Run
