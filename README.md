@@ -20,7 +20,8 @@ Get the token from Leo. SSH key name is one of these Peter is missing (`peter-ju
 ```bash
 export HCLOUD_TOKEN="..."
 export HCLOUD_SSH_KEY_NAME="your-name-here"
-ssh-add ~/.ssh/id_rsa OR ssh-add ~/.ssh/id_ed25519
+export SSH_KEY_PATH="~/.ssh/id_ed25519"   # or ~/.ssh/id_rsa
+ssh-add ~/.ssh/id_ed25519                  # same key as above
 ```
 
 ### Plugin bugfix (required)
