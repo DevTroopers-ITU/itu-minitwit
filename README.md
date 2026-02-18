@@ -31,7 +31,7 @@ export HCLOUD_SSH_KEY_NAME="your-name-here"
 export SSH_KEY_PATH="~/.ssh/id_ed25519"   # or ~/.ssh/id_rsa
 ```
 
-This file is in `.gitignore` so it won't be committed. Before running Vagrant, load the variables and add your SSH key:
+This file is in `.gitignore` so it won't be committed. You only create it once, but you need to load it every time you open a new terminal:
 
 ```bash
 source .env
