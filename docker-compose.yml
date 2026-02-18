@@ -3,9 +3,11 @@ services:
     build: .                     # Build image from Dockerfile
     image: minitwit/myserver      # Name/tag of the image
     ports:
-      - "5001:5000"              # Host port → container port
+      - "8080:8080"              # Host port → container port
+    volumes:
+      - minitwit-db:/tmp         # Persist DB across container restarts
     healthcheck:
-      test: ["CMD", "wget", "--spider", "-q", "http://localhost:5000"]  # Check if app is running
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8080"]  # Check if app is running
       interval: 30s              # Check every 30 seconds
       timeout: 10s               # Fail if no response in 10 seconds
       retries: 3                 # Mark unhealthy after 3 failures
@@ -15,4 +17,7 @@ services:
     depends_on:
       webserver:
         condition: service_healthy  # Wait until webserver is healthy
-    entrypoint: sh -c "curl -s http://webserver:5000"  # Call the webserver
+    entrypoint: sh -c "curl -s http://webserver:8080"  # Call the webserver
+
+volumes:
+  minitwit-db:

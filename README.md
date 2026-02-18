@@ -54,6 +54,42 @@ source .env                          # load environment variables first
 vagrant up --provider=hetznercloud
 ```
 
-App will be at `http://<server-ip>:5001`. Takes a few minutes to build.
+App will be at `http://<server-ip>:8080`. Takes a few minutes to build.
 
 `vagrant ssh` to get into the server, `vagrant destroy` to tear it down.
+
+## Testing
+
+We have two layers of tests:
+
+### Go tests (unit/integration)
+
+Tests the code directly without starting a server. Runs fast and requires no setup:
+
+```bash
+go test -v
+```
+
+This runs both `main_test.go` (web UI tests) and `sim_api_test.go` (simulator API tests).
+
+### Python E2E tests (integration against running server)
+
+Tests the API over HTTP against a running server. Requires Python with `pytest` and `requests`.
+
+Install dependencies (one time):
+
+```bash
+pip install -r requirements.txt
+```
+
+Run the server and tests:
+
+```bash
+# Terminal 1 — start the server
+go run .
+
+# Terminal 2 — run the tests
+pytest python-references/minitwit_sim_api_test.py -v
+```
+
+Note: On macOS, port 5000 is taken by AirPlay Receiver — that's why we use port 8080.

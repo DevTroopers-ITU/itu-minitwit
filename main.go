@@ -68,6 +68,6 @@ func main() {
 
 	r := setupRouter()
 
-	log.Println("Listening on http://localhost:5000")
-	log.Fatal(http.ListenAndServe(":5000", r))
+	log.Println("Listening on http://localhost:8080")
+	log.Fatal(http.ListenAndServe(":8080", r))
 }
