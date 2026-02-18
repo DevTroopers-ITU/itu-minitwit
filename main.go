@@ -30,21 +30,35 @@ func setupRouter() *mux.Router {
 	// Static files
 	r.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 
-	// Specific routes first (so mux doesn't match them as {username})
+	// Swagger docs
+	r.HandleFunc("/swagger", func(w http.ResponseWriter, r *http.Request) {
+		http.ServeFile(w, r, "swagger.html")
+	}).Methods("GET")
+	r.HandleFunc("/swagger.json", func(w http.ResponseWriter, r *http.Request) {
+		http.ServeFile(w, r, "swagger.json")
+	}).Methods("GET")
+
+	// Sim API (before /{username} catch-all)
+	r.HandleFunc("/latest", getLatest).Methods("GET")
+	r.HandleFunc("/register", simRegister).Methods("POST").Headers("Content-Type", "application/json")
+	r.HandleFunc("/msgs", simMessages).Methods("GET")
+	r.HandleFunc("/msgs/{username}", simMessagesPerUser).Methods("GET", "POST")
+	r.HandleFunc("/fllws/{username}", simFollow).Methods("GET", "POST")
+
+	// Web UI routes
 	r.HandleFunc("/public", publicTimelineHandler).Methods("GET")
 	r.HandleFunc("/login", loginHandler).Methods("GET", "POST")
 	r.HandleFunc("/register", registerHandler).Methods("GET", "POST")
 	r.HandleFunc("/logout", logoutHandler).Methods("GET")
 	r.HandleFunc("/add_message", addMessageHandler).Methods("POST")
 
-	// User routes
+	// User routes (catch-all — must be last)
 	r.HandleFunc("/{username}/follow", followHandler).Methods("GET")
 	r.HandleFunc("/{username}/unfollow", unfollowHandler).Methods("GET")
 	r.HandleFunc("/{username}", userTimelineHandler).Methods("GET")
 
 	// Root
 	r.HandleFunc("/", timelineHandler).Methods("GET")
-
 	return r
 }
 
@@ -54,6 +68,6 @@ func main() {
 
 	r := setupRouter()
 
-	log.Println("Listening on http://localhost:5000")
-	log.Fatal(http.ListenAndServe(":5000", r))
+	log.Println("Listening on http://localhost:8080")
+	log.Fatal(http.ListenAndServe(":8080", r))
 }

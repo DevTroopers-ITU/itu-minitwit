@@ -11,6 +11,9 @@ flag_tool
 # IDE
 .vscode/
 
+# Vagrant
+.vagrant/
+
 # Environment
 .env
 
