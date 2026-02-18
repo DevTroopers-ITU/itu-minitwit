@@ -17,11 +17,25 @@ Vagrant + Hetzner Cloud. (can be changed at any point)
 
 Get the token from Leo. SSH key name is one of these Peter is missing (`peter-juul`, `haakon`, `apoorva`, `leo`).
 
+Create a `.env` file (same folder as this README):
+
 ```bash
-export HCLOUD_TOKEN="..."
+nano .env
+```
+
+Paste the following and save (`Ctrl+O`, `Ctrl+X`):
+
+```bash
+export HCLOUD_TOKEN="your-token-here"
 export HCLOUD_SSH_KEY_NAME="your-name-here"
 export SSH_KEY_PATH="~/.ssh/id_ed25519"   # or ~/.ssh/id_rsa
-ssh-add ~/.ssh/id_ed25519                  # same key as above
+```
+
+This file is in `.gitignore` so it won't be committed. Before running Vagrant, load the variables and add your SSH key:
+
+```bash
+source .env
+ssh-add ~/.ssh/id_ed25519                  # same key as SSH_KEY_PATH
 ```
 
 ### Plugin bugfix (required)
@@ -36,6 +50,7 @@ sed -i '' 's/option\[:location\]/options[:location]/;s/option\[:datacenter\]/opt
 ### Run
 
 ```bash
+source .env                          # load environment variables first
 vagrant up --provider=hetznercloud
 ```
 
