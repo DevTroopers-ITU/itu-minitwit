@@ -19,8 +19,8 @@ COPY . .
 # Build the Go binary
 RUN CGO_ENABLED=1 go build -o myserver .
 
-# Application listens on port 5000
-EXPOSE 5000
+# Application listens on port 8080
+EXPOSE 8080
 
 # Start the server
 CMD ["./myserver"]

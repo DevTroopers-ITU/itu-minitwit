@@ -19,7 +19,7 @@ Vagrant.configure("2") do |config|
 
     # Clone and deploy
     cd /root
-    git clone -b feature/simulator-api https://github.com/DevTroopers-ITU/itu-minitwit.git
+    git clone -b master https://github.com/DevTroopers-ITU/itu-minitwit.git
     cd itu-minitwit
     docker compose up --build -d
   SHELL
