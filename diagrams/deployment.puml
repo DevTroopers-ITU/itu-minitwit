@@ -1,0 +1,30 @@
+@startuml MiniTwit Deployment Diagram
+
+' -- Aktører/eksterne her --
+together {
+    actor "User" as user
+    actor "Simulator" as simulator
+    actor "Developer" as developer
+}
+
+' -- Nodes her (nestet) --
+node "Hetzner VM (Ubuntu 22.04)" as hetzner {
+    node "Docker Engine" {
+        node "Container"{
+            [Go Web Server]
+            database "SQLite" as sqlitedb
+        }
+        node "Volume" {
+            [minitwit-db]
+        }
+    }
+}
+
+' -- Forbindelser her --
+user -down-> hetzner : HTTP (:8080)
+simulator -down-> hetzner : HTTP (:8080)
+developer -left-> hetzner : Vagrant/SSH
+[Go Web Server] --> sqlitedb : reads/writes
+sqlitedb --> [minitwit-db] : persists data
+
+@enduml

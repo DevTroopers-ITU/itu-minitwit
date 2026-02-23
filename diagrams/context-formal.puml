@@ -1,0 +1,17 @@
+@startuml Minitwit Context Diagram
+
+actor "User" as user
+actor "Simulator" as simulator
+actor "Developer" as developer
+
+rectangle "Minitwit" <<System>> as minitwit {
+    component "Go Web Server" <<Internal>> as go
+    component "SQLite Database" <<Internal>> as db
+}
+
+user <--> go : HTTP/HTML
+simulator <--> go : HTTP/JSON (Basic Auth)
+developer --> minitwit : SSH/Git
+go <--> db : SQL Queries
+
+@enduml

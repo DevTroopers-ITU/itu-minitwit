@@ -1,0 +1,33 @@
+@startuml
+
+actor "User" as user
+actor "Simulator" as simulator
+
+package "Go Web Server" {
+    [Router (gorilla/mux)] as router
+    [Session Manager (gorilla/sessions)] as sessionmanager
+    [Web Handlers] as webhandlers
+    [API Handlers] as apihandlers
+    [HTML Templates] as htmltemplates
+    [Database Layer] as databaselayer
+}
+
+package "SQLite Database" {
+    database "SQLite" as sqlitedb
+}
+
+router --> webhandlers : routes requests
+router --> apihandlers : routes API requests
+
+webhandlers --> htmltemplates : renders HTML
+webhandlers --> sessionmanager : manages sessions
+
+webhandlers --> databaselayer : interacts with database
+apihandlers --> databaselayer : interacts with database
+
+databaselayer --> sqlitedb : reads/writes data
+
+user <--> router : HTTP/HTML
+simulator <--> router : HTTP/JSON (Basic Auth)
+
+@enduml
