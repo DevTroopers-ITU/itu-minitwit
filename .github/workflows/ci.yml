@@ -1,0 +1,129 @@
+---
+name: Continuous Deployment   # Keeping original name for reference
+
+on:
+  push:
+    # Run workflow every time something is pushed to the main branch
+    branches:
+      - dev_ci    # <-- CHANGE to your CI branch (or main/master later)
+  # allow manual triggers for now too
+  workflow_dispatch:
+
+# Remember to set the following secrets in your repository's settings:
+# https://github.com/your_username/itu-minitwit-ci/settings/secrets/actions
+# DOCKER_USERNAME
+# DOCKER_PASSWORD
+# SSH_USER
+# SSH_KEY
+# SSH_HOST
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+
+      ####################################################################
+      # -------------------- DOCKER HUB (CD) -----------------------------
+      # Commented out for now (CI only)
+      ####################################################################
+
+      # - name: Login to Docker Hub
+      #   uses: docker/login-action@v3
+      #   with:
+      #     username: ${{ secrets.DOCKER_USERNAME }}
+      #     password: ${{ secrets.DOCKER_PASSWORD }}
+
+      # - name: Set up Docker Buildx
+      #   uses: docker/setup-buildx-action@v3
+
+      # - name: Build and push minitwitimage
+      #   uses: docker/build-push-action@v6
+      #   with:
+      #     context: .
+      #     file: ./Dockerfile-minitwit
+      #     push: true
+      #     tags: ${{ secrets.DOCKER_USERNAME }}/minitwitimage:latest
+
+      # - name: Build and push mysqlimage
+      #   uses: docker/build-push-action@v6
+      #   with:
+      #     context: .
+      #     file: ./Dockerfile-mysql
+      #     push: true
+      #     tags: ${{ secrets.DOCKER_USERNAME }}/mysqlimage:latest
+
+      # - name: Build and push flagtoolimage
+      #   uses: docker/build-push-action@v6
+      #   with:
+      #     context: .
+      #     file: ./Dockerfile-flagtool
+      #     push: true
+      #     tags: ${{ secrets.DOCKER_USERNAME }}/flagtoolimage:latest
+
+
+
+      ####################################################################
+      # ------------------------- CI PART --------------------------------
+      ####################################################################
+
+      - name: Build application Docker image
+        run: docker build -t minitwit:ci .
+
+      - name: Run Go tests
+        run: docker run --rm minitwit:ci go test -v ./...
+
+      - name: Start server container
+        run: docker run -d --name minitwit_app -p 8080:8080 minitwit:ci
+
+      - name: Wait for server to start
+        run: |
+          for i in {1..20}; do
+            if curl -s http://localhost:8080 > /dev/null; then
+              echo "Server is up"
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "Server failed to start"
+          docker logs minitwit_app
+          exit 1
+
+      - name: Install Python dependencies
+        run: |
+          python3 -m pip install --upgrade pip
+          pip3 install -r requirements.txt
+
+      - name: Run Python E2E tests
+        run: pytest python-references/minitwit_sim_api_test.py -v
+
+      - name: Stop server container
+        if: always()
+        run: docker rm -f minitwit_app
+
+
+
+      ####################################################################
+      # ------------------------ DEPLOY (CD) -----------------------------
+      # Commented out for now
+      ####################################################################
+
+      # - name: Configure SSH
+      #   run: |
+      #     mkdir -p ~/.ssh/
+      #     echo "$SSH_KEY" > ~/.ssh/do_ssh_key
+      #     chmod 600 ~/.ssh/do_ssh_key
+      #   env:
+      #     SSH_KEY: ${{ secrets.SSH_KEY }}
+
+      # - name: Deploy to server
+      #   run: >
+      #     ssh $SSH_USER@$SSH_HOST
+      #     -i ~/.ssh/do_ssh_key -o StrictHostKeyChecking=no
+      #     '/minitwit/deploy.sh'
+      #   env:
+      #     SSH_USER: ${{ secrets.SSH_USER }}
+      #     SSH_HOST: ${{ secrets.SSH_HOST }}
