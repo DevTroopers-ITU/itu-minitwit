@@ -14,7 +14,14 @@ services:
       - minitwit-db-test:/tmp
     environment:
       - BASE_URL=http://webserver:8080
-    command: sh -c "pip install -r requirements.txt && pytest python-references/minitwit_sim_api_test.py -v"
+    command: >
+      sh -c "
+        pip install --upgrade pip &&
+        pip install -r requirements.txt &&
+        pytest python-references/minitwit_sim_api_test.py -v
+      "
+  clidownload:
+    profiles: ["manual"]
 
 volumes:
   minitwit-db-test:
