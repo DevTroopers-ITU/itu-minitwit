@@ -76,13 +76,27 @@ jobs:
       - name: Run Go tests
         run: docker run --rm minitwit:ci go test -v ./...
 
-      - name: Start server container
-        run: docker run -d --name minitwit_app -p 8080:8080 minitwit:ci
+      - name: Install sqlite3 on runner (for DB init)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y sqlite3
+
+      - name: Initialize shared SQLite DB (/tmp/minitwit.db)
+        run: |
+          rm -f /tmp/minitwit.db
+          sqlite3 /tmp/minitwit.db < schema.sql
+
+      - name: Start server container (mount shared DB)
+        run: |
+          docker run -d --name minitwit_app \
+            -p 8080:8080 \
+            -v /tmp/minitwit.db:/tmp/minitwit.db \
+            minitwit:ci
 
       - name: Wait for server to start
         run: |
           for i in {1..20}; do
-            if curl -s http://localhost:8080 > /dev/null; then
+            if curl -fsS http://127.0.0.1:8080/latest >/dev/null; then
               echo "Server is up"
               exit 0
             fi

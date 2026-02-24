@@ -29,11 +29,11 @@ def init_db():
 # Empty the database tables and reinitialize schema
 # Uses SQL DELETE instead of file deletion to keep the Go server's connection intact
 
-#with closing(sqlite3.connect(DATABASE)) as conn:
-#    conn.execute("DELETE FROM message")
-#    conn.execute("DELETE FROM follower")
-#    conn.execute("DELETE FROM user")
-#    conn.commit()
+with closing(sqlite3.connect(DATABASE)) as conn:
+    conn.execute("DELETE FROM message")
+    conn.execute("DELETE FROM follower")
+    conn.execute("DELETE FROM user")
+    conn.commit()
 
 
 def test_latest():
