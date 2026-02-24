@@ -19,7 +19,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     steps:
       - name: Checkout
@@ -76,47 +76,17 @@ jobs:
       - name: Run Go tests
         run: docker run --rm minitwit:ci go test -v ./...
 
-      - name: Install sqlite3 on runner (for DB init)
+      - name: Run E2E tests with docker compose
         run: |
-          sudo apt-get update
-          sudo apt-get install -y sqlite3
+          docker compose -f docker-compose.yml -f docker-compose.test.yml up \
+            --build \
+            --abort-on-container-exit \
+            --exit-code-from tests
 
-      - name: Initialize shared SQLite DB (/tmp/minitwit.db)
-        run: |
-          rm -f /tmp/minitwit.db
-          sqlite3 /tmp/minitwit.db < schema.sql
-
-      - name: Start server container (mount shared DB)
-        run: |
-          docker run -d --name minitwit_app \
-            -p 8080:8080 \
-            -v /tmp/minitwit.db:/tmp/minitwit.db \
-            minitwit:ci
-
-      - name: Wait for server to start
-        run: |
-          for i in {1..20}; do
-            if curl -fsS http://127.0.0.1:8080/latest >/dev/null; then
-              echo "Server is up"
-              exit 0
-            fi
-            sleep 2
-          done
-          echo "Server failed to start"
-          docker logs minitwit_app
-          exit 1
-
-      - name: Install Python dependencies
-        run: |
-          python3 -m pip install --upgrade pip
-          pip3 install -r requirements.txt
-
-      - name: Run Python E2E tests
-        run: pytest python-references/minitwit_sim_api_test.py -v
-
-      - name: Stop server container
+      - name: Compose down
         if: always()
-        run: docker rm -f minitwit_app
+        run: |
+          docker compose -f docker-compose.yml -f docker-compose.test.yml down -v
 
 
 
