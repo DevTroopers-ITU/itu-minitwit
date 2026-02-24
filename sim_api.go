@@ -107,6 +107,7 @@ func simMessages(w http.ResponseWriter, r *http.Request) {
 }
 
 func simMessagesPerUser(w http.ResponseWriter, r *http.Request) {
+	log.Printf("HIT %s %s", r.Method, r.URL.String())
 	updateLatest(r)
 	w.Header().Set("Content-Type", "application/json")
 
@@ -162,6 +163,7 @@ func simMessagesPerUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func simFollow(w http.ResponseWriter, r *http.Request) {
+	log.Printf("HIT %s %s", r.Method, r.URL.String())
 	updateLatest(r)
 	w.Header().Set("Content-Type", "application/json")
 
