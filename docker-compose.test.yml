@@ -1,6 +1,7 @@
 services:
   webserver:
-    volumes: []
+    volumes:
+      - minitwit-db-test:/tmp
 
   tests:
     image: python:3.12-slim
@@ -21,3 +22,6 @@ services:
 
   clidownload:
     profiles: ["manual"]
+
+volumes:
+  minitwit-db-test:
