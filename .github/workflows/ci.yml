@@ -1,74 +1,19 @@
----
-name: Continuous Deployment   # Keeping original name for reference
+name: CI
 
 on:
   push:
-    # Run workflow every time something is pushed to the main branch
-    branches:
-      - dev_ci    # <-- CHANGE to your CI branch (or main/master later)
-  # allow manual triggers for now too
+    branches: [dev]
+  pull_request:
+    branches: [master]
   workflow_dispatch:
 
-# Remember to set the following secrets in your repository's settings:
-# https://github.com/your_username/itu-minitwit-ci/settings/secrets/actions
-# DOCKER_USERNAME
-# DOCKER_PASSWORD
-# SSH_USER
-# SSH_KEY
-# SSH_HOST
-
 jobs:
-  build:
+  test:
     runs-on: ubuntu-22.04
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
-
-
-      ####################################################################
-      # -------------------- DOCKER HUB (CD) -----------------------------
-      # Commented out for now (CI only)
-      ####################################################################
-
-      # - name: Login to Docker Hub
-      #   uses: docker/login-action@v3
-      #   with:
-      #     username: ${{ secrets.DOCKER_USERNAME }}
-      #     password: ${{ secrets.DOCKER_PASSWORD }}
-
-      # - name: Set up Docker Buildx
-      #   uses: docker/setup-buildx-action@v3
-
-      # - name: Build and push minitwitimage
-      #   uses: docker/build-push-action@v6
-      #   with:
-      #     context: .
-      #     file: ./Dockerfile-minitwit
-      #     push: true
-      #     tags: ${{ secrets.DOCKER_USERNAME }}/minitwitimage:latest
-
-      # - name: Build and push mysqlimage
-      #   uses: docker/build-push-action@v6
-      #   with:
-      #     context: .
-      #     file: ./Dockerfile-mysql
-      #     push: true
-      #     tags: ${{ secrets.DOCKER_USERNAME }}/mysqlimage:latest
-
-      # - name: Build and push flagtoolimage
-      #   uses: docker/build-push-action@v6
-      #   with:
-      #     context: .
-      #     file: ./Dockerfile-flagtool
-      #     push: true
-      #     tags: ${{ secrets.DOCKER_USERNAME }}/flagtoolimage:latest
-
-
-
-      ####################################################################
-      # ------------------------- CI PART --------------------------------
-      ####################################################################
+        uses: actions/checkout@v4
 
       - name: Build application Docker image
         run: docker build -t minitwit:ci .
@@ -87,27 +32,3 @@ jobs:
         if: always()
         run: |
           docker compose -f docker-compose.yml -f docker-compose.test.yml down -v
-
-
-
-      ####################################################################
-      # ------------------------ DEPLOY (CD) -----------------------------
-      # Commented out for now
-      ####################################################################
-
-      # - name: Configure SSH
-      #   run: |
-      #     mkdir -p ~/.ssh/
-      #     echo "$SSH_KEY" > ~/.ssh/do_ssh_key
-      #     chmod 600 ~/.ssh/do_ssh_key
-      #   env:
-      #     SSH_KEY: ${{ secrets.SSH_KEY }}
-
-      # - name: Deploy to server
-      #   run: >
-      #     ssh $SSH_USER@$SSH_HOST
-      #     -i ~/.ssh/do_ssh_key -o StrictHostKeyChecking=no
-      #     '/minitwit/deploy.sh'
-      #   env:
-      #     SSH_USER: ${{ secrets.SSH_USER }}
-      #     SSH_HOST: ${{ secrets.SSH_HOST }}
