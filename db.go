@@ -1,65 +1,49 @@
 package main
 
 import (
-	"database/sql"
 	"log"
-	"os"
-)
 
-func openDB(path string) (*sql.DB, error) {
-	return sql.Open("sqlite3", path)
-}
+	"gorm.io/driver/sqlite"
+	"gorm.io/gorm"
+)
 
 func initDB() {
 	var err error
-	db, err = openDB(DATABASE)
+
+	db, err = gorm.Open(sqlite.Open(DATABASE), &gorm.Config{})
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	schema, err := os.ReadFile("schema.sql")
+	err = db.AutoMigrate(&User{}, &Message{}, &Follower{})
 	if err != nil {
-		log.Fatal("Failed to read schema.sql: ", err)
-	}
-	_, err = db.Exec(string(schema))
-	if err != nil {
-		log.Fatal("Failed to initialize database schema: ", err)
+		log.Fatal("Failed to migrate database:", err)
 	}
 }
 
 func getUserByID(userID int) *User {
 	var u User
-	err := db.QueryRow("SELECT user_id, username, email, pw_hash FROM user WHERE user_id = ?", userID).
-		Scan(&u.UserID, &u.Username, &u.Email, &u.PwHash)
-	if err != nil {
+	result := db.First(&u, "user_id = ?", userID)
+	if result.Error != nil {
 		return nil
 	}
 	return &u
 }
 
 func getUserID(username string) int {
-	var id int
-	err := db.QueryRow("SELECT user_id FROM user WHERE username = ?", username).Scan(&id)
-	if err != nil {
+	var u User
+	result := db.First(&u, "username = ?", username)
+	if result.Error != nil {
 		return -1
 	}
-	return id
+	return u.UserID
 }
 
-func queryMessages(query string, args ...interface{}) []Message {
-	rows, err := db.Query(query, args...)
-	if err != nil {
+func queryMessages(query string, args ...interface{}) []MessageView {
+	var messages []MessageView
+	result := db.Raw(query, args...).Scan(&messages)
+	if result.Error != nil {
 		return nil
-	}
-	defer rows.Close()
-
-	var messages []Message
-	for rows.Next() {
-		var m Message
-		if err := rows.Scan(&m.Text, &m.PubDate, &m.Username, &m.Email); err != nil {
-			continue
-		}
-		messages = append(messages, m)
 	}
 	return messages
 }

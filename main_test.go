@@ -9,6 +9,9 @@ import (
 	"os"
 	"strings"
 	"testing"
+
+	"gorm.io/driver/sqlite"
+	"gorm.io/gorm"
 )
 
 // Setup a test server with a fresh temp database
@@ -24,17 +27,13 @@ func setupTestServer(t *testing.T) (*httptest.Server, *http.Client) {
 	t.Cleanup(func() { os.Remove(tmpFile.Name()) })
 
 	// Open the temp database
-	db, err = openDB(tmpFile.Name())
+	db, err = gorm.Open(sqlite.Open(tmpFile.Name()), &gorm.Config{})
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	// Create tables
-	schema, err := os.ReadFile("schema.sql")
-	if err != nil {
-		t.Fatal(err)
-	}
-	_, err = db.Exec(string(schema))
+	err = db.AutoMigrate(&User{}, &Message{}, &Follower{})
 	if err != nil {
 		t.Fatal(err)
 	}

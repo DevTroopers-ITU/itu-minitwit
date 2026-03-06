@@ -1,13 +1,12 @@
 package main
 
 import (
-	"database/sql"
 	"log"
 	"net/http"
 
 	"github.com/gorilla/mux"
 	"github.com/gorilla/sessions"
-	_ "github.com/mattn/go-sqlite3"
+	"gorm.io/gorm"
 )
 
 // Configuration
@@ -19,7 +18,7 @@ const (
 
 // Globals
 var (
-	db    *sql.DB
+	db    *gorm.DB
 	store *sessions.CookieStore
 )
 

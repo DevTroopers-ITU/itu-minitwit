@@ -53,8 +53,7 @@ func userTimelineHandler(w http.ResponseWriter, r *http.Request) {
 	username := vars["username"]
 
 	var profileUser User
-	err := db.QueryRow("SELECT user_id, username, email, pw_hash FROM user WHERE username = ?", username).
-		Scan(&profileUser.UserID, &profileUser.Username, &profileUser.Email, &profileUser.PwHash)
+	err := db.First(&profileUser, "username = ?", username).Error
 	if err != nil {
 		http.NotFound(w, r)
 		return
@@ -63,9 +62,8 @@ func userTimelineHandler(w http.ResponseWriter, r *http.Request) {
 	followed := false
 	currentUser := getCurrentUser(r)
 	if currentUser != nil {
-		var exists int
-		err := db.QueryRow("SELECT 1 FROM follower WHERE who_id = ? AND whom_id = ?",
-			currentUser.UserID, profileUser.UserID).Scan(&exists)
+		var f Follower
+		err := db.First(&f, "who_id = ? AND whom_id = ?", currentUser.UserID, profileUser.UserID).Error
 		followed = err == nil
 	}
 
@@ -157,8 +155,7 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 		password := r.FormValue("password")
 
 		var u User
-		err := db.QueryRow("SELECT user_id, username, email, pw_hash FROM user WHERE username = ?", username).
-			Scan(&u.UserID, &u.Username, &u.Email, &u.PwHash)
+		err := db.First(&u, "username = ?", username).Error
 
 		if err != nil {
 			errorMsg = "Invalid username"

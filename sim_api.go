@@ -208,21 +208,14 @@ func simFollow(w http.ResponseWriter, r *http.Request) {
 			noFollowers = 100
 		}
 
-		rows, err := db.Query(`SELECT user.username FROM user
-							   INNER JOIN follower ON follower.whom_id = user.user_id
-							   WHERE follower.who_id = ?
-							   LIMIT ?`, userID, noFollowers)
+		var follows []string
+		err := db.Raw(`SELECT user.username FROM user
+					   INNER JOIN follower ON follower.whom_id = user.user_id
+					   WHERE follower.who_id = ?
+					   LIMIT ?`, userID, noFollowers).Scan(&follows).Error
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			return
-		}
-		defer rows.Close()
-
-		var follows []string
-		for rows.Next() {
-			var name string
-			rows.Scan(&name)
-			follows = append(follows, name)
 		}
 
 		if follows == nil {
