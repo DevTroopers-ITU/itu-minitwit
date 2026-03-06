@@ -22,5 +22,9 @@ Vagrant.configure("2") do |config|
     git clone -b master https://github.com/DevTroopers-ITU/itu-minitwit.git
     cd itu-minitwit
     docker compose up --build -d
+
+    echo "================================================"
+    echo " MiniTwit is running at http://$(curl -s -4 ifconfig.me):$(grep -m1 'EXPOSE' /root/itu-minitwit/Dockerfile | awk '{print $2}')"
+    echo "================================================"
   SHELL
 end

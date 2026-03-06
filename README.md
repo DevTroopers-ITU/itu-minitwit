@@ -79,6 +79,8 @@ Tests the API over HTTP against a running server. Requires Python with `pytest` 
 Install dependencies (one time):
 
 ```bash
+python3 -m venv venv
+source venv/bin/activate
 pip install -r requirements.txt
 ```
 
