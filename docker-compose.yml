@@ -1,7 +1,7 @@
 services:
   webserver:
     build: .                     # Build image from Dockerfile
-    image: minitwit/myserver      # Name/tag of the image
+    image: ghcr.io/devtroopers-itu/minitwit:latest  # Name/tag of the image
     ports:
       - "8080:8080"              # Host port → container port
     volumes:
