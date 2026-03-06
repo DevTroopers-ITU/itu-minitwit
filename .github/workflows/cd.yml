@@ -1,0 +1,40 @@
+name: CD
+
+on:
+  workflow_run:
+    workflows: ["CI"]
+    types: [completed]
+    branches: [master]
+
+jobs:
+  deploy: 
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push Docker image
+        run: |
+          docker build -t ghcr.io/devtroopers-itu/minitwit:latest .
+          docker push ghcr.io/devtroopers-itu/minitwit:latest
+
+      - name: Deploy to production
+        uses: appleboy/ssh-action@v1
+        with:
+          host: 46.224.144.214
+          username: root
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd /root/itu-minitwit
+            git pull origin master
+            docker compose pull
+            docker compose up -d
