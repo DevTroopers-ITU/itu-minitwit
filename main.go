@@ -1,5 +1,3 @@
-// CD pipeline test
-
 package main
 
 import (
