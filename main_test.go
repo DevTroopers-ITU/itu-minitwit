@@ -9,13 +9,15 @@ import (
 	"os"
 	"strings"
 	"testing"
+
+	"gorm.io/driver/sqlite"
+	"gorm.io/gorm"
 )
 
 // Setup a test server with a fresh temp database
 func setupTestServer(t *testing.T) (*httptest.Server, *http.Client) {
 	t.Helper()
 
-	// Create a temp database
 	tmpFile, err := os.CreateTemp("", "minitwit-test-*.db")
 	if err != nil {
 		t.Fatal(err)
@@ -23,27 +25,21 @@ func setupTestServer(t *testing.T) (*httptest.Server, *http.Client) {
 	tmpFile.Close()
 	t.Cleanup(func() { os.Remove(tmpFile.Name()) })
 
-	// Open the temp database
-	db, err = openDB(tmpFile.Name())
+	db, err = gorm.Open(sqlite.Open(tmpFile.Name()), &gorm.Config{})
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	// Create tables
-	schema, err := os.ReadFile("schema.sql")
-	if err != nil {
-		t.Fatal(err)
-	}
-	_, err = db.Exec(string(schema))
+	err = db.AutoMigrate(&User{}, &Message{}, &Follower{})
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	store = newStore()
+	store = NewDBStore(db)
+	sessionStore = newStore()
 
 	ts := httptest.NewServer(setupRouter())
 
-	// Client with cookie jar — follows redirects automatically
 	jar, _ := cookiejar.New(nil)
 	client := ts.Client()
 	client.Jar = jar
@@ -136,37 +132,31 @@ func TestRegister(t *testing.T) {
 	ts, client := setupTestServer(t)
 	defer ts.Close()
 
-	// Successful registration
 	body := register(t, ts, client, "user1", "default", "", "")
 	if !strings.Contains(body, "You were successfully registered and can login now") {
 		t.Error("Expected successful registration message")
 	}
 
-	// Duplicate username
 	body = register(t, ts, client, "user1", "default", "", "")
 	if !strings.Contains(body, "The username is already taken") {
 		t.Error("Expected 'username already taken' message")
 	}
 
-	// Empty username
 	body = register(t, ts, client, "", "default", "", "test@example.com")
 	if !strings.Contains(body, "You have to enter a username") {
 		t.Error("Expected 'enter a username' message")
 	}
 
-	// Empty password
 	body = register(t, ts, client, "meh", "", "", "meh@example.com")
 	if !strings.Contains(body, "You have to enter a password") {
 		t.Error("Expected 'enter a password' message")
 	}
 
-	// Mismatched passwords
 	body = register(t, ts, client, "meh", "x", "y", "meh@example.com")
 	if !strings.Contains(body, "The two passwords do not match") {
 		t.Error("Expected 'passwords do not match' message")
 	}
 
-	// Invalid email
 	body = register(t, ts, client, "meh", "foo", "", "broken")
 	if !strings.Contains(body, "You have to enter a valid email address") {
 		t.Error("Expected 'valid email address' message")
@@ -177,25 +167,21 @@ func TestLoginLogout(t *testing.T) {
 	ts, client := setupTestServer(t)
 	defer ts.Close()
 
-	// Register and login
 	body := registerAndLogin(t, ts, client, "user1", "default")
 	if !strings.Contains(body, "You were logged in") {
 		t.Error("Expected 'logged in' message")
 	}
 
-	// Logout
 	body = doLogout(t, ts, client)
 	if !strings.Contains(body, "You were logged out") {
 		t.Error("Expected 'logged out' message")
 	}
 
-	// Wrong password
 	body = login(t, ts, client, "user1", "wrongpassword")
 	if !strings.Contains(body, "Invalid password") {
 		t.Error("Expected 'Invalid password' message")
 	}
 
-	// Wrong username
 	body = login(t, ts, client, "user2", "wrongpassword")
 	if !strings.Contains(body, "Invalid username") {
 		t.Error("Expected 'Invalid username' message")
@@ -223,16 +209,13 @@ func TestTimelines(t *testing.T) {
 	ts, client := setupTestServer(t)
 	defer ts.Close()
 
-	// foo posts a message
 	registerAndLogin(t, ts, client, "foo", "default")
 	addMessage(t, ts, client, "the message by foo")
 	doLogout(t, ts, client)
 
-	// bar posts a message
 	registerAndLogin(t, ts, client, "bar", "default")
 	addMessage(t, ts, client, "the message by bar")
 
-	// Public timeline shows both
 	body := getBody(t, ts, client, "/public")
 	if !strings.Contains(body, "the message by foo") {
 		t.Error("Expected foo's message on public timeline")
@@ -241,7 +224,6 @@ func TestTimelines(t *testing.T) {
 		t.Error("Expected bar's message on public timeline")
 	}
 
-	// Bar's timeline shows only bar's message
 	body = getBody(t, ts, client, "/")
 	if strings.Contains(body, "the message by foo") {
 		t.Error("Did not expect foo's message on bar's timeline")
@@ -250,13 +232,11 @@ func TestTimelines(t *testing.T) {
 		t.Error("Expected bar's message on bar's timeline")
 	}
 
-	// Follow foo
 	body = getBody(t, ts, client, "/foo/follow")
 	if !strings.Contains(body, "You are now following") {
 		t.Error("Expected follow confirmation message")
 	}
 
-	// Now bar's timeline should show both
 	body = getBody(t, ts, client, "/")
 	if !strings.Contains(body, "the message by foo") {
 		t.Error("Expected foo's message after following")
@@ -265,7 +245,6 @@ func TestTimelines(t *testing.T) {
 		t.Error("Expected bar's message on own timeline")
 	}
 
-	// User page shows only that user's messages
 	body = getBody(t, ts, client, "/bar")
 	if strings.Contains(body, "the message by foo") {
 		t.Error("Did not expect foo's message on bar's user page")
@@ -282,13 +261,11 @@ func TestTimelines(t *testing.T) {
 		t.Error("Did not expect bar's message on foo's user page")
 	}
 
-	// Unfollow foo
 	body = getBody(t, ts, client, "/foo/unfollow")
 	if !strings.Contains(body, "You are no longer following") {
 		t.Error("Expected unfollow confirmation message")
 	}
 
-	// Bar's timeline should only show bar's message again
 	body = getBody(t, ts, client, "/")
 	if strings.Contains(body, "the message by foo") {
 		t.Error("Did not expect foo's message after unfollowing")

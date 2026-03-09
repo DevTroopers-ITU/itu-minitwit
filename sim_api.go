@@ -12,8 +12,6 @@ import (
 
 var latest int = -1
 
-// helper functions
-
 func getLatest(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(map[string]int{"latest": latest})
@@ -30,8 +28,6 @@ func updateLatest(r *http.Request) {
 func notReqFromSimulator(r *http.Request) bool {
 	return r.Header.Get("Authorization") != "Basic c2ltdWxhdG9yOnN1cGVyX3NhZmUh"
 }
-
-// Sim API handlers
 
 func simRegister(w http.ResponseWriter, r *http.Request) {
 	updateLatest(r)
@@ -59,14 +55,13 @@ func simRegister(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(map[string]interface{}{"status": 400, "error_msg": "You have to enter a password"})
 		return
 	}
-	if getUserID(data["username"]) != -1 {
+	if store.GetUserID(data["username"]) != -1 {
 		w.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(w).Encode(map[string]interface{}{"status": 400, "error_msg": "The username is already taken"})
 		return
 	}
 
-	hashedPassword := hashPassword(data["pwd"])
-	db.Exec("INSERT INTO user (username, email, pw_hash) VALUES (?, ?, ?)", data["username"], data["email"], hashedPassword)
+	store.CreateUser(data["username"], data["email"], hashPassword(data["pwd"]))
 	w.WriteHeader(http.StatusNoContent)
 }
 
@@ -85,13 +80,13 @@ func simMessages(w http.ResponseWriter, r *http.Request) {
 		noMsgs = 100
 	}
 
-	query := `SELECT message.text, message.pub_date, user.username, user.email
-			  FROM message, user
-			  WHERE message.flagged = 0 AND message.author_id = user.user_id
-			  ORDER BY message.pub_date DESC LIMIT ?`
-	messages := queryMessages(query, noMsgs)
+	messages, err := store.PublicTimeline(noMsgs)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
 
-	var filtered []map[string]interface{}
+	filtered := make([]map[string]interface{}, 0, len(messages))
 	for _, msg := range messages {
 		filtered = append(filtered, map[string]interface{}{
 			"content":  msg.Text,
@@ -100,9 +95,6 @@ func simMessages(w http.ResponseWriter, r *http.Request) {
 		})
 	}
 
-	if filtered == nil {
-		filtered = []map[string]interface{}{}
-	}
 	json.NewEncoder(w).Encode(filtered)
 }
 
@@ -117,7 +109,7 @@ func simMessagesPerUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	username := mux.Vars(r)["username"]
-	userID := getUserID(username)
+	userID := store.GetUserID(username)
 	if userID == -1 {
 		w.WriteHeader(http.StatusNotFound)
 		return
@@ -130,14 +122,13 @@ func simMessagesPerUser(w http.ResponseWriter, r *http.Request) {
 			noMsgs = 100
 		}
 
-		query := `SELECT message.text, message.pub_date, user.username, user.email
-				  FROM message, user
-				  WHERE message.flagged = 0 AND user.user_id = message.author_id
-				  AND user.user_id = ?
-				  ORDER BY message.pub_date DESC LIMIT ?`
-		messages := queryMessages(query, userID, noMsgs)
+		messages, err := store.UserTimeline(userID, noMsgs)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
 
-		var filtered []map[string]interface{}
+		filtered := make([]map[string]interface{}, 0, len(messages))
 		for _, msg := range messages {
 			filtered = append(filtered, map[string]interface{}{
 				"content":  msg.Text,
@@ -145,18 +136,12 @@ func simMessagesPerUser(w http.ResponseWriter, r *http.Request) {
 				"user":     msg.Username,
 			})
 		}
-
-		if filtered == nil {
-			filtered = []map[string]interface{}{}
-		}
 		json.NewEncoder(w).Encode(filtered)
 
 	case "POST":
 		var data map[string]string
 		json.NewDecoder(r.Body).Decode(&data)
-
-		db.Exec("INSERT INTO message (author_id, text, pub_date, flagged) VALUES (?, ?, ?, 0)",
-			userID, data["content"], time.Now().Unix())
+		store.AddMessage(userID, data["content"], time.Now().Unix())
 		w.WriteHeader(http.StatusNoContent)
 	}
 }
@@ -172,7 +157,7 @@ func simFollow(w http.ResponseWriter, r *http.Request) {
 	}
 
 	username := mux.Vars(r)["username"]
-	userID := getUserID(username)
+	userID := store.GetUserID(username)
 	if userID == -1 {
 		w.WriteHeader(http.StatusNotFound)
 		return
@@ -184,21 +169,21 @@ func simFollow(w http.ResponseWriter, r *http.Request) {
 		json.NewDecoder(r.Body).Decode(&data)
 
 		if followUser, ok := data["follow"]; ok {
-			followID := getUserID(followUser)
+			followID := store.GetUserID(followUser)
 			if followID == -1 {
 				w.WriteHeader(http.StatusNotFound)
 				return
 			}
-			db.Exec("INSERT INTO follower (who_id, whom_id) VALUES (?, ?)", userID, followID)
+			store.Follow(userID, followID)
 			w.WriteHeader(http.StatusNoContent)
 
 		} else if unfollowUser, ok := data["unfollow"]; ok {
-			unfollowID := getUserID(unfollowUser)
+			unfollowID := store.GetUserID(unfollowUser)
 			if unfollowID == -1 {
 				w.WriteHeader(http.StatusNotFound)
 				return
 			}
-			db.Exec("DELETE FROM follower WHERE who_id=? AND whom_id=?", userID, unfollowID)
+			store.Unfollow(userID, unfollowID)
 			w.WriteHeader(http.StatusNoContent)
 		}
 
@@ -208,26 +193,12 @@ func simFollow(w http.ResponseWriter, r *http.Request) {
 			noFollowers = 100
 		}
 
-		rows, err := db.Query(`SELECT user.username FROM user
-							   INNER JOIN follower ON follower.whom_id = user.user_id
-							   WHERE follower.who_id = ?
-							   LIMIT ?`, userID, noFollowers)
+		follows, err := store.FollowingUsernames(userID, noFollowers)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}
-		defer rows.Close()
 
-		var follows []string
-		for rows.Next() {
-			var name string
-			rows.Scan(&name)
-			follows = append(follows, name)
-		}
-
-		if follows == nil {
-			follows = []string{}
-		}
 		json.NewEncoder(w).Encode(map[string]interface{}{"follows": follows})
 	}
 }
