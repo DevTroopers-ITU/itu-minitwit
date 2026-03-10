@@ -24,22 +24,26 @@ func newStore() *sessions.CookieStore {
 }
 
 func getCurrentUser(r *http.Request) *User {
-	session, _ := store.Get(r, "session")
+	session, _ := sessionStore.Get(r, "session")
 	userID, ok := session.Values["user_id"]
 	if !ok {
 		return nil
 	}
-	return getUserByID(userID.(int))
+	u, err := store.GetUserByID(userID.(int))
+	if err != nil {
+		return nil
+	}
+	return u
 }
 
 func addFlash(w http.ResponseWriter, r *http.Request, message string) {
-	session, _ := store.Get(r, "session")
+	session, _ := sessionStore.Get(r, "session")
 	session.AddFlash(message)
 	session.Save(r, w)
 }
 
 func getFlashes(w http.ResponseWriter, r *http.Request) []interface{} {
-	session, _ := store.Get(r, "session")
+	session, _ := sessionStore.Get(r, "session")
 	flashes := session.Flashes()
 	session.Save(r, w)
 	return flashes

@@ -1,13 +1,12 @@
 package main
 
 import (
-	"database/sql"
 	"log"
 	"net/http"
 
 	"github.com/gorilla/mux"
 	"github.com/gorilla/sessions"
-	_ "github.com/mattn/go-sqlite3"
+	"gorm.io/gorm"
 )
 
 // Configuration
@@ -19,8 +18,9 @@ const (
 
 // Globals
 var (
-	db    *sql.DB
-	store *sessions.CookieStore
+	db           *gorm.DB
+	store        *DBStore
+	sessionStore *sessions.CookieStore
 )
 
 // Router setup
@@ -40,7 +40,6 @@ func setupRouter() *mux.Router {
 
 	// Sim API (before /{username} catch-all)
 	r.HandleFunc("/latest", getLatest).Methods("GET")
-	r.HandleFunc("/register", simRegister).Methods("POST").Headers("Content-Type", "application/json")
 	r.HandleFunc("/msgs", simMessages).Methods("GET")
 	r.HandleFunc("/msgs/{username}", simMessagesPerUser).Methods("GET", "POST")
 	r.HandleFunc("/fllws/{username}", simFollow).Methods("GET", "POST")
@@ -48,7 +47,7 @@ func setupRouter() *mux.Router {
 	// Web UI routes
 	r.HandleFunc("/public", publicTimelineHandler).Methods("GET")
 	r.HandleFunc("/login", loginHandler).Methods("GET", "POST")
-	r.HandleFunc("/register", registerHandler).Methods("GET", "POST")
+	r.HandleFunc("/register", registerDispatcher).Methods("GET", "POST")
 	r.HandleFunc("/logout", logoutHandler).Methods("GET")
 	r.HandleFunc("/add_message", addMessageHandler).Methods("POST")
 
@@ -64,7 +63,8 @@ func setupRouter() *mux.Router {
 
 func main() {
 	initDB()
-	store = newStore()
+	store = NewDBStore(db)
+	sessionStore = newStore()
 
 	r := setupRouter()
 
