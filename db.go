@@ -2,7 +2,9 @@ package main
 
 import (
 	"log"
+	"os"
 
+	"gorm.io/driver/postgres"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
@@ -10,7 +12,13 @@ import (
 func initDB() {
 	var err error
 
-	db, err = gorm.Open(sqlite.Open(DATABASE), &gorm.Config{})
+	if dsn := os.Getenv("DATABASE_URL"); dsn != "" {
+		log.Println("Connecting to PostgreSQL")
+		db, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	} else {
+		log.Println("Connecting to SQLite:", DATABASE)
+		db, err = gorm.Open(sqlite.Open(DATABASE), &gorm.Config{})
+	}
 	if err != nil {
 		log.Fatal(err)
 	}

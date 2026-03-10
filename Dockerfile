@@ -19,6 +19,9 @@ COPY . .
 # Build the Go binary
 RUN CGO_ENABLED=1 go build -o myserver .
 
+# Build the migration tool
+RUN CGO_ENABLED=1 go build -o migrate ./migrate
+
 # Application listens on port 8080
 EXPOSE 8080
 

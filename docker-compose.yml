@@ -1,23 +1,35 @@
 services:
-  webserver:
-    build: .                     # Build image from Dockerfile
-    image: ghcr.io/devtroopers-itu/minitwit:latest  # Name/tag of the image
-    ports:
-      - "8080:8080"              # Host port → container port
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: minitwit
+      POSTGRES_USER: minitwit
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
     volumes:
-      - minitwit-db:/tmp         # Persist DB across container restarts
+      - pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8080"]  # Check if app is running
-      interval: 30s              # Check every 30 seconds
-      timeout: 10s               # Fail if no response in 10 seconds
-      retries: 3                 # Mark unhealthy after 3 failures
+      test: ["CMD", "pg_isready", "-U", "minitwit"]
+      interval: 5s
+      retries: 3
 
-  clidownload:
-    image: appropriate/curl      # Simple container with curl
+  webserver:
+    build: .
+    image: ghcr.io/devtroopers-itu/minitwit:latest
+    ports:
+      - "8080:8080"
+    environment:
+      - DATABASE_URL=postgres://minitwit:${DB_PASSWORD}@db:5432/minitwit?sslmode=disable
     depends_on:
-      webserver:
-        condition: service_healthy  # Wait until webserver is healthy
-    entrypoint: sh -c "curl -s http://webserver:8080"  # Call the webserver
+      db:
+        condition: service_healthy
+    volumes:
+      - minitwit-db:/tmp
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8080"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
 volumes:
+  pgdata:
   minitwit-db:
