@@ -22,7 +22,7 @@ var (
 	db           *gorm.DB
 	store        *DBStore
 	sessionStore *sessions.CookieStore
-    SECRET_KEY   = os.Getenv("SECRET_KEY")
+    SECRET_KEY   = getSecretKey()
 )
 
 // Router setup
@@ -63,8 +63,16 @@ func setupRouter() *mux.Router {
 	return r
 }
 
+func getSecretKey() string {
+    if err := godotenv.Load(); err == nil {
+        if key := os.Getenv("SECRET_KEY"); key != "" {
+            return key
+        }
+    }
+    return "dev-fallback-key-change-in-production"
+}
+
 func main() {
-    godotenv.Load() // loads .env automatically
 	initDB()
 	store = NewDBStore(db)
 	sessionStore = newStore()
