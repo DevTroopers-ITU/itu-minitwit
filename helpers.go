@@ -29,7 +29,11 @@ func getCurrentUser(r *http.Request) *User {
 	if !ok {
 		return nil
 	}
-	return getUserByID(userID.(int))
+	u, err := store.GetUserByID(userID.(int))
+	if err != nil {
+		return nil
+	}
+	return u
 }
 
 func addFlash(w http.ResponseWriter, r *http.Request, message string) {
