@@ -45,12 +45,12 @@ func publicTimelineHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func registerDispatcher(w http.ResponseWriter, r *http.Request) {
-    ct := r.Header.Get("Content-Type")
-    if strings.HasPrefix(ct, "application/json") {
-        simRegister(w, r)
-    } else {
-        registerHandler(w, r)
-    }
+	ct := r.Header.Get("Content-Type")
+	if strings.HasPrefix(ct, "application/json") {
+		simRegister(w, r)
+	} else {
+		registerHandler(w, r)
+	}
 }
 
 // GET /{username} — user timeline
@@ -100,7 +100,10 @@ func followHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	store.Follow(user.UserID, whomID)
+	if err := store.Follow(user.UserID, whomID); err != nil {
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		return
+	}
 	addFlash(w, r, fmt.Sprintf("You are now following \"%s\"", username))
 	http.Redirect(w, r, "/"+username, http.StatusFound)
 }
@@ -121,7 +124,10 @@ func unfollowHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	store.Unfollow(user.UserID, whomID)
+	if err := store.Unfollow(user.UserID, whomID); err != nil {
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		return
+	}
 	addFlash(w, r, fmt.Sprintf("You are no longer following \"%s\"", username))
 	http.Redirect(w, r, "/"+username, http.StatusFound)
 }
@@ -136,7 +142,10 @@ func addMessageHandler(w http.ResponseWriter, r *http.Request) {
 
 	text := r.FormValue("text")
 	if text != "" {
-		store.AddMessage(user.UserID, text, time.Now().Unix())
+		if err := store.AddMessage(user.UserID, text, time.Now().Unix()); err != nil {
+			http.Error(w, "Internal server error", http.StatusInternalServerError)
+			return
+		}
 		addFlash(w, r, "Your message was recorded")
 	}
 	http.Redirect(w, r, "/", http.StatusFound)
@@ -163,7 +172,10 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 		} else {
 			session, _ := sessionStore.Get(r, "session")
 			session.Values["user_id"] = u.UserID
-			session.Save(r, w)
+			if err := session.Save(r, w); err != nil {
+				http.Error(w, "Internal server error", http.StatusInternalServerError)
+				return
+			}
 			addFlash(w, r, "You were logged in")
 			http.Redirect(w, r, "/", http.StatusFound)
 			return
@@ -201,7 +213,10 @@ func registerHandler(w http.ResponseWriter, r *http.Request) {
 		} else if store.GetUserID(username) != -1 {
 			errorMsg = "The username is already taken"
 		} else {
-			store.CreateUser(username, email, hashPassword(password))
+			if err := store.CreateUser(username, email, hashPassword(password)); err != nil {
+				http.Error(w, "Internal server error", http.StatusInternalServerError)
+				return
+			}
 			addFlash(w, r, "You were successfully registered and can login now")
 			http.Redirect(w, r, "/login", http.StatusFound)
 			return
@@ -217,7 +232,10 @@ func registerHandler(w http.ResponseWriter, r *http.Request) {
 func logoutHandler(w http.ResponseWriter, r *http.Request) {
 	session, _ := sessionStore.Get(r, "session")
 	delete(session.Values, "user_id")
-	session.Save(r, w)
+	if err := session.Save(r, w); err != nil {
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		return
+	}
 	addFlash(w, r, "You were logged out")
 	http.Redirect(w, r, "/public", http.StatusFound)
 }

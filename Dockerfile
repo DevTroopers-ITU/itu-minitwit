@@ -5,6 +5,7 @@ FROM golang:1.24-alpine
 WORKDIR /app
 
 # Required to build with SQLite (CGO)
+# hadolint ignore=DL3018
 RUN apk add --no-cache build-base sqlite-dev
 
 # Go dependency files
