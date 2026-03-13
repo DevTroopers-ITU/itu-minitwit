@@ -11,7 +11,7 @@ import (
 
 // Configuration
 const (
-	DATABASE   = "/tmp/minitwit.db"
+
 	PER_PAGE   = 30
 	SECRET_KEY = "development key"
 )
