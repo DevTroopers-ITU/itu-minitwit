@@ -116,7 +116,7 @@
           "includeNullMetadata": true,
           "instant": false,
           "interval": "",
-          "legendFormat": "Total Message Posts",
+          "legendFormat": "{{method}} {{route}} {{status}}",
           "range": true,
           "refId": "B",
           "useBackend": false
@@ -210,6 +210,63 @@
       ],
       "title": "Application status",
       "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus-uid"
+      },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 8 },
+      "id": 3,
+      "title": "HTTP response time (p95)",
+      "type": "timeseries",
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus-uid" },
+          "expr": "histogram_quantile(0.95, sum(rate(minitwit_http_duration_seconds_bucket[5m])) by (le, route))",
+          "legendFormat": "{{route}}",
+          "range": true,
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus-uid"
+      },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 8 },
+      "id": 4,
+      "title": "Requests per route",
+      "type": "timeseries",
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus-uid" },
+          "expr": "sum(rate(minitwit_http_responses_total[5m])) by (route)",
+          "legendFormat": "{{route}}",
+          "range": true,
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus-uid"
+      },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 16 },
+      "id": 5,
+      "title": "Error rate (4xx and 5xx)",
+      "type": "timeseries",
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus-uid" },
+          "expr": "sum(rate(minitwit_http_responses_total{status=~\"4..|5..\"}[5m])) by (route, status)",
+          "legendFormat": "{{route}} {{status}}",
+          "range": true,
+          "refId": "A"
+        }
+      ]
     }
   ],
   "preload": false,
