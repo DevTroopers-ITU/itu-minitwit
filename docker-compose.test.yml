@@ -1,6 +1,7 @@
 services:
   webserver:
     environment:
+    restart: always
       - DATABASE_URL=postgres://postgres:testpassword@db:5432/minitwit
     depends_on:
       db:

@@ -1,5 +1,6 @@
 services:
   webserver:
+    restart: always
     build: .
     image: ghcr.io/devtroopers-itu/minitwit:latest
     ports:
