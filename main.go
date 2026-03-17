@@ -65,10 +65,7 @@ func metricsMiddleware(next http.Handler) http.Handler {
 
 // Router setup
 func setupRouter() *mux.Router {
-	// Register metric
-	prometheus.MustRegister(httpResponsesTotal)
-	prometheus.MustRegister(httpDuration)
-
+	
 	r := mux.NewRouter()
 	// Add metrics endpoint
     r.Handle("/metrics", promhttp.Handler())
@@ -109,6 +106,8 @@ func setupRouter() *mux.Router {
 
 func main() {
 	initDB()
+	prometheus.MustRegister(httpResponsesTotal)
+    prometheus.MustRegister(httpDuration)
 	store = NewDBStore(db)
 	sessionStore = newStore()
 
