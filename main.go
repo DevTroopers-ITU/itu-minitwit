@@ -3,7 +3,8 @@ package main
 import (
 	"log"
 	"net/http"
-
+	"fmt"
+	"time"
 	"github.com/gorilla/mux"
 	"github.com/gorilla/sessions"
 	"gorm.io/gorm"
@@ -23,21 +24,42 @@ var (
 	db           *gorm.DB
 	store        *DBStore
 	sessionStore *sessions.CookieStore
-	// Prometheus counter
-    httpResponsesTotal = prometheus.NewCounter(prometheus.CounterOpts{
+	// Prometheus metrics
+    httpResponsesTotal = prometheus.NewCounterVec(prometheus.CounterOpts{
         Name: "minitwit_http_responses_total",
         Help: "Total number of HTTP responses",
-    })
+    }, []string{"method", "route", "status"})
+
+    httpDuration = prometheus.NewHistogramVec(prometheus.HistogramOpts{
+        Name:    "minitwit_http_duration_seconds",
+        Help:    "Duration of HTTP requests in seconds",
+        Buckets: prometheus.DefBuckets,
+    }, []string{"method", "route"})
 )
 
-// metricsMiddleware wraps the router and increments the Prometheus
-// httpResponsesTotal counter on every incoming HTTP request.
-// It calls next.ServeHTTP to pass the request to the actual route handler,
-// and then increments the counter after the handler has finished.
+type responseWriter struct {
+    http.ResponseWriter
+    status int
+}
+
+func (rw *responseWriter) WriteHeader(code int) {
+    rw.status = code
+    rw.ResponseWriter.WriteHeader(code)
+}
+
 func metricsMiddleware(next http.Handler) http.Handler {
     return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-        next.ServeHTTP(w, r)
-        httpResponsesTotal.Inc()
+        start := time.Now()
+
+        // Wrap writer to capture status code
+        wrapped := &responseWriter{ResponseWriter: w, status: 200}
+        next.ServeHTTP(wrapped, r)
+
+        duration := time.Since(start).Seconds()
+        route := r.URL.Path
+
+        httpResponsesTotal.WithLabelValues(r.Method, route, fmt.Sprintf("%d", wrapped.status)).Inc()
+        httpDuration.WithLabelValues(r.Method, route).Observe(duration)
     })
 }
 
@@ -45,7 +67,8 @@ func metricsMiddleware(next http.Handler) http.Handler {
 func setupRouter() *mux.Router {
 	// Register metric
 	prometheus.MustRegister(httpResponsesTotal)
-	
+	prometheus.MustRegister(httpDuration)
+
 	r := mux.NewRouter()
 	// Add metrics endpoint
     r.Handle("/metrics", promhttp.Handler())
