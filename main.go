@@ -5,8 +5,11 @@ import (
 	"net/http"
 	"fmt"
 	"time"
+	"os"
+
 	"github.com/gorilla/mux"
 	"github.com/gorilla/sessions"
+	"github.com/joho/godotenv"
 	"gorm.io/gorm"
 	"github.com/prometheus/client_golang/prometheus"
     "github.com/prometheus/client_golang/prometheus/promhttp"
@@ -16,7 +19,6 @@ import (
 const (
 	DATABASE   = "/tmp/minitwit.db"
 	PER_PAGE   = 30
-	SECRET_KEY = "development key"
 )
 
 // Globals
@@ -35,6 +37,7 @@ var (
         Help:    "Duration of HTTP requests in seconds",
         Buckets: prometheus.DefBuckets,
     }, []string{"method", "route"})
+    SECRET_KEY   = getSecretKey()
 )
 
 type responseWriter struct {
@@ -105,6 +108,15 @@ func setupRouter() *mux.Router {
 	// Root
 	r.HandleFunc("/", timelineHandler).Methods("GET")
 	return r
+}
+
+func getSecretKey() string {
+    if err := godotenv.Load(); err == nil {
+        if key := os.Getenv("SECRET_KEY"); key != "" {
+            return key
+        }
+    }
+    return "dev-fallback-key-change-in-production"
 }
 
 func main() {
