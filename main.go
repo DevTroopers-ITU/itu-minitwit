@@ -7,6 +7,8 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/gorilla/sessions"
 	"gorm.io/gorm"
+	"github.com/prometheus/client_golang/prometheus"
+    "github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
 // Configuration
@@ -21,11 +23,31 @@ var (
 	db           *gorm.DB
 	store        *DBStore
 	sessionStore *sessions.CookieStore
+	// Prometheus counter
+    httpResponsesTotal = prometheus.NewCounter(prometheus.CounterOpts{
+        Name: "minitwit_http_responses_total",
+        Help: "Total number of HTTP responses",
+    })
 )
+
+// metricsMiddleware wraps the router and increments the Prometheus
+// httpResponsesTotal counter on every incoming HTTP request.
+// It calls next.ServeHTTP to pass the request to the actual route handler,
+// and then increments the counter after the handler has finished.
+func metricsMiddleware(next http.Handler) http.Handler {
+    return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+        next.ServeHTTP(w, r)
+        httpResponsesTotal.Inc()
+    })
+}
 
 // Router setup
 func setupRouter() *mux.Router {
+	// Register metric
+	prometheus.MustRegister(httpResponsesTotal)
 	r := mux.NewRouter()
+	// Add metrics endpoint
+    r.Handle("/metrics", promhttp.Handler())
 
 	// Static files
 	r.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
@@ -69,5 +91,5 @@ func main() {
 	r := setupRouter()
 
 	log.Println("Listening on http://localhost:8080")
-	log.Fatal(http.ListenAndServe(":8080", r))
+	log.Fatal(http.ListenAndServe(":8080", metricsMiddleware(r)))
 }
