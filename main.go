@@ -45,6 +45,7 @@ func metricsMiddleware(next http.Handler) http.Handler {
 func setupRouter() *mux.Router {
 	// Register metric
 	prometheus.MustRegister(httpResponsesTotal)
+	
 	r := mux.NewRouter()
 	// Add metrics endpoint
     r.Handle("/metrics", promhttp.Handler())
