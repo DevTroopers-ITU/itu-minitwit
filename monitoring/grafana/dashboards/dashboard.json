@@ -106,7 +106,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "fegat3x6evklcc"
+            "uid": "prometheus-uid"
           },
           "disableTextWrap": false,
           "editorMode": "builder",
@@ -197,7 +197,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "P1809F7CD0C75ACF3"
+            "uid": "prometheus-uid"
           },
           "editorMode": "code",
           "expr": "up{instance=\"webserver:8080\"}",
