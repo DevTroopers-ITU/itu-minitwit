@@ -19,5 +19,19 @@ services:
         condition: service_healthy  # Wait until webserver is healthy
     entrypoint: sh -c "curl -s http://webserver:8080"  # Call the webserver
 
+  prometheus:
+    build: ./monitoring/prometheus
+    ports:
+      - "9090:9090"
+    depends_on:
+      - webserver
+
+  grafana:
+    build: ./monitoring/grafana
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus
+
 volumes:
   minitwit-db:
