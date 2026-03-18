@@ -1,3 +1,5 @@
+branch = ENV["DEPLOY_BRANCH"] || "master"
+
 Vagrant.configure("2") do |config|
   config.vm.box = "dummy"
   config.vm.synced_folder ".", "/vagrant", disabled: true
@@ -14,21 +16,18 @@ Vagrant.configure("2") do |config|
   end
 
   config.vm.provision "shell", inline: <<-SHELL
-    # Install Docker
     apt-get update -qq
     apt-get install -y -qq docker.io docker-compose-v2 git > /dev/null 2>&1
 
-    # Clone or pull latest
     if [ -d /root/itu-minitwit ]; then
       echo "Repo already exists, pulling latest..."
       cd /root/itu-minitwit
-      git pull origin master
+      git pull origin #{branch}
     else
       echo "Cloning repo..."
-      git clone -b master https://github.com/DevTroopers-ITU/itu-minitwit.git /root/itu-minitwit
+      git clone -b #{branch} https://github.com/DevTroopers-ITU/itu-minitwit.git /root/itu-minitwit
     fi
 
-    # Copy .env into project directory
     cp /root/.env /root/itu-minitwit/.env
 
     cd /root/itu-minitwit
