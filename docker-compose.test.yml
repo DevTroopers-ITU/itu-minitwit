@@ -1,7 +1,21 @@
 services:
   webserver:
-    volumes:
-      - minitwit-db-test:/tmp
+    environment:
+      - DATABASE_URL=postgres://postgres:testpassword@db:5432/minitwit
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_PASSWORD: testpassword
+      POSTGRES_DB: minitwit
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   tests:
     image: python:3.12-slim
@@ -22,6 +36,3 @@ services:
 
   clidownload:
     profiles: ["manual"]
-
-volumes:
-  minitwit-db-test:

@@ -17,7 +17,6 @@ import (
 
 // Configuration
 const (
-	DATABASE = "/tmp/minitwit.db"
 	PER_PAGE = 30
 )
 
