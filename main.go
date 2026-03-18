@@ -13,8 +13,8 @@ import (
 
 // Configuration
 const (
-	DATABASE   = "/tmp/minitwit.db"
-	PER_PAGE   = 30
+	DATABASE = "/tmp/minitwit.db"
+	PER_PAGE = 30
 )
 
 // Globals
@@ -22,7 +22,7 @@ var (
 	db           *gorm.DB
 	store        *DBStore
 	sessionStore *sessions.CookieStore
-    SECRET_KEY   = getSecretKey()
+	SECRET_KEY   = getSecretKey()
 )
 
 // Router setup
@@ -64,12 +64,12 @@ func setupRouter() *mux.Router {
 }
 
 func getSecretKey() string {
-    if err := godotenv.Load(); err == nil {
-        if key := os.Getenv("SECRET_KEY"); key != "" {
-            return key
-        }
-    }
-    return "dev-fallback-key-change-in-production"
+	if err := godotenv.Load(); err == nil {
+		if key := os.Getenv("SECRET_KEY"); key != "" {
+			return key
+		}
+	}
+	return "dev-fallback-key-change-in-production"
 }
 
 func main() {
