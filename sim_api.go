@@ -14,7 +14,7 @@ var latest int = -1
 
 func getLatest(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(map[string]int{"latest": latest})
+	_ = json.NewEncoder(w).Encode(map[string]int{"latest": latest})
 }
 
 func updateLatest(r *http.Request) {
@@ -36,32 +36,35 @@ func simRegister(w http.ResponseWriter, r *http.Request) {
 	var data map[string]string
 	if err := json.NewDecoder(r.Body).Decode(&data); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		json.NewEncoder(w).Encode(map[string]interface{}{"status": 400, "error_msg": "Bad request"})
+		_ = json.NewEncoder(w).Encode(map[string]interface{}{"status": 400, "error_msg": "Bad request"})
 		return
 	}
 
 	if data["username"] == "" {
 		w.WriteHeader(http.StatusBadRequest)
-		json.NewEncoder(w).Encode(map[string]interface{}{"status": 400, "error_msg": "You have to enter a username"})
+		_ = json.NewEncoder(w).Encode(map[string]interface{}{"status": 400, "error_msg": "You have to enter a username"})
 		return
 	}
 	if data["email"] == "" || !strings.Contains(data["email"], "@") {
 		w.WriteHeader(http.StatusBadRequest)
-		json.NewEncoder(w).Encode(map[string]interface{}{"status": 400, "error_msg": "You have to enter a valid email address"})
+		_ = json.NewEncoder(w).Encode(map[string]interface{}{"status": 400, "error_msg": "You have to enter a valid email address"})
 		return
 	}
 	if data["pwd"] == "" {
 		w.WriteHeader(http.StatusBadRequest)
-		json.NewEncoder(w).Encode(map[string]interface{}{"status": 400, "error_msg": "You have to enter a password"})
+		_ = json.NewEncoder(w).Encode(map[string]interface{}{"status": 400, "error_msg": "You have to enter a password"})
 		return
 	}
 	if store.GetUserID(data["username"]) != -1 {
 		w.WriteHeader(http.StatusBadRequest)
-		json.NewEncoder(w).Encode(map[string]interface{}{"status": 400, "error_msg": "The username is already taken"})
+		_ = json.NewEncoder(w).Encode(map[string]interface{}{"status": 400, "error_msg": "The username is already taken"})
 		return
 	}
 
-	store.CreateUser(data["username"], data["email"], hashPassword(data["pwd"]))
+	if err := store.CreateUser(data["username"], data["email"], hashPassword(data["pwd"])); err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
 	w.WriteHeader(http.StatusNoContent)
 }
 
@@ -71,7 +74,7 @@ func simMessages(w http.ResponseWriter, r *http.Request) {
 
 	if notReqFromSimulator(r) {
 		w.WriteHeader(http.StatusForbidden)
-		json.NewEncoder(w).Encode(map[string]interface{}{"status": 403, "error_msg": "You are not authorized to use this resource!"})
+		_ = json.NewEncoder(w).Encode(map[string]interface{}{"status": 403, "error_msg": "You are not authorized to use this resource!"})
 		return
 	}
 
@@ -95,7 +98,7 @@ func simMessages(w http.ResponseWriter, r *http.Request) {
 		})
 	}
 
-	json.NewEncoder(w).Encode(filtered)
+	_ = json.NewEncoder(w).Encode(filtered)
 }
 
 func simMessagesPerUser(w http.ResponseWriter, r *http.Request) {
@@ -104,7 +107,7 @@ func simMessagesPerUser(w http.ResponseWriter, r *http.Request) {
 
 	if notReqFromSimulator(r) {
 		w.WriteHeader(http.StatusForbidden)
-		json.NewEncoder(w).Encode(map[string]interface{}{"status": 403, "error_msg": "You are not authorized to use this resource!"})
+		_ = json.NewEncoder(w).Encode(map[string]interface{}{"status": 403, "error_msg": "You are not authorized to use this resource!"})
 		return
 	}
 
@@ -136,12 +139,18 @@ func simMessagesPerUser(w http.ResponseWriter, r *http.Request) {
 				"user":     msg.Username,
 			})
 		}
-		json.NewEncoder(w).Encode(filtered)
+		_ = json.NewEncoder(w).Encode(filtered)
 
 	case "POST":
 		var data map[string]string
-		json.NewDecoder(r.Body).Decode(&data)
-		store.AddMessage(userID, data["content"], time.Now().Unix())
+		if err := json.NewDecoder(r.Body).Decode(&data); err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
+		if err := store.AddMessage(userID, data["content"], time.Now().Unix()); err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
 		w.WriteHeader(http.StatusNoContent)
 	}
 }
@@ -152,7 +161,7 @@ func simFollow(w http.ResponseWriter, r *http.Request) {
 
 	if notReqFromSimulator(r) {
 		w.WriteHeader(http.StatusForbidden)
-		json.NewEncoder(w).Encode(map[string]interface{}{"status": 403, "error_msg": "You are not authorized to use this resource!"})
+		_ = json.NewEncoder(w).Encode(map[string]interface{}{"status": 403, "error_msg": "You are not authorized to use this resource!"})
 		return
 	}
 
@@ -166,7 +175,10 @@ func simFollow(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case "POST":
 		var data map[string]string
-		json.NewDecoder(r.Body).Decode(&data)
+		if err := json.NewDecoder(r.Body).Decode(&data); err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
 
 		if followUser, ok := data["follow"]; ok {
 			followID := store.GetUserID(followUser)
@@ -174,7 +186,10 @@ func simFollow(w http.ResponseWriter, r *http.Request) {
 				w.WriteHeader(http.StatusNotFound)
 				return
 			}
-			store.Follow(userID, followID)
+			if err := store.Follow(userID, followID); err != nil {
+				w.WriteHeader(http.StatusInternalServerError)
+				return
+			}
 			w.WriteHeader(http.StatusNoContent)
 
 		} else if unfollowUser, ok := data["unfollow"]; ok {
@@ -183,7 +198,10 @@ func simFollow(w http.ResponseWriter, r *http.Request) {
 				w.WriteHeader(http.StatusNotFound)
 				return
 			}
-			store.Unfollow(userID, unfollowID)
+			if err := store.Unfollow(userID, unfollowID); err != nil {
+				w.WriteHeader(http.StatusInternalServerError)
+				return
+			}
 			w.WriteHeader(http.StatusNoContent)
 		}
 
@@ -199,6 +217,6 @@ func simFollow(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		json.NewEncoder(w).Encode(map[string]interface{}{"follows": follows})
+		_ = json.NewEncoder(w).Encode(map[string]interface{}{"follows": follows})
 	}
 }
