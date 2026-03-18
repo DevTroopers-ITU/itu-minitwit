@@ -3,17 +3,17 @@ package main
 import (
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/gorilla/mux"
 	"github.com/gorilla/sessions"
+	"github.com/joho/godotenv"
 	"gorm.io/gorm"
 )
 
 // Configuration
 const (
-
-	PER_PAGE   = 30
-	SECRET_KEY = "development key"
+	PER_PAGE = 30
 )
 
 // Globals
@@ -21,6 +21,7 @@ var (
 	db           *gorm.DB
 	store        *DBStore
 	sessionStore *sessions.CookieStore
+	SECRET_KEY   = getSecretKey()
 )
 
 // Router setup
@@ -59,6 +60,15 @@ func setupRouter() *mux.Router {
 	// Root
 	r.HandleFunc("/", timelineHandler).Methods("GET")
 	return r
+}
+
+func getSecretKey() string {
+	if err := godotenv.Load(); err == nil {
+		if key := os.Getenv("SECRET_KEY"); key != "" {
+			return key
+		}
+	}
+	return "dev-fallback-key-change-in-production"
 }
 
 func main() {
