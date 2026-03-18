@@ -1,13 +1,17 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/gorilla/mux"
 	"github.com/gorilla/sessions"
 	"github.com/joho/godotenv"
+	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"gorm.io/gorm"
 )
 
@@ -21,12 +25,52 @@ var (
 	db           *gorm.DB
 	store        *DBStore
 	sessionStore *sessions.CookieStore
-	SECRET_KEY   = getSecretKey()
+	// Prometheus metrics
+	httpResponsesTotal = prometheus.NewCounterVec(prometheus.CounterOpts{
+		Name: "minitwit_http_responses_total",
+		Help: "Total number of HTTP responses",
+	}, []string{"method", "route", "status"})
+
+	httpDuration = prometheus.NewHistogramVec(prometheus.HistogramOpts{
+		Name:    "minitwit_http_duration_seconds",
+		Help:    "Duration of HTTP requests in seconds",
+		Buckets: prometheus.DefBuckets,
+	}, []string{"method", "route"})
+	SECRET_KEY = getSecretKey()
 )
+
+type responseWriter struct {
+	http.ResponseWriter
+	status int
+}
+
+func (rw *responseWriter) WriteHeader(code int) {
+	rw.status = code
+	rw.ResponseWriter.WriteHeader(code)
+}
+
+func metricsMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		start := time.Now()
+
+		// Wrap writer to capture status code
+		wrapped := &responseWriter{ResponseWriter: w, status: 200}
+		next.ServeHTTP(wrapped, r)
+
+		duration := time.Since(start).Seconds()
+		route := r.URL.Path
+
+		httpResponsesTotal.WithLabelValues(r.Method, route, fmt.Sprintf("%d", wrapped.status)).Inc()
+		httpDuration.WithLabelValues(r.Method, route).Observe(duration)
+	})
+}
 
 // Router setup
 func setupRouter() *mux.Router {
+
 	r := mux.NewRouter()
+	// Add metrics endpoint
+	r.Handle("/metrics", promhttp.Handler())
 
 	// Static files
 	r.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
@@ -73,11 +117,13 @@ func getSecretKey() string {
 
 func main() {
 	initDB()
+	prometheus.MustRegister(httpResponsesTotal)
+	prometheus.MustRegister(httpDuration)
 	store = NewDBStore(db)
 	sessionStore = newStore()
 
 	r := setupRouter()
 
 	log.Println("Listening on http://localhost:8080")
-	log.Fatal(http.ListenAndServe(":8080", r))
+	log.Fatal(http.ListenAndServe(":8080", metricsMiddleware(r)))
 }

@@ -1,0 +1,4 @@
+# prometheus.rules.yml
+# currently empty - but relevant to alert if the app goes down. 
+
+groups: []
