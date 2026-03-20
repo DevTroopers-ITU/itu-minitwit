@@ -8,8 +8,8 @@ Vagrant + Hetzner Cloud. (can be changed at any point)
 
 - Vagrant ([download](https://www.vagrantup.com/downloads))
 - `vagrant plugin install vagrant-hetznercloud`
--  One-liner to create and add a hetznercloud dummy box
-`mkdir /tmp/hetzner-dummy && cd /tmp/hetzner-dummy && echo '{"provider":"hetznercloud"}' > metadata.json && tar czf hetzner-dummy.box metadata.json && vagrant box add hetzner-dummy.box --name dummy --provider hetznercloud && cd ~`
+- One-liner to create and add a hetznercloud dummy box
+  `mkdir /tmp/hetzner-dummy && cd /tmp/hetzner-dummy && echo '{"provider":"hetznercloud"}' > metadata.json && tar czf hetzner-dummy.box metadata.json && vagrant box add hetzner-dummy.box --name dummy --provider hetznercloud && cd ~`
 
 - Your SSH key on Hetzner Console (ask Leo if unsure)`
 
@@ -29,6 +29,9 @@ Paste the following and save (`Ctrl+O`, `Ctrl+X`):
 export HCLOUD_TOKEN="your-token-here"
 export HCLOUD_SSH_KEY_NAME="your-name-here"
 export SSH_KEY_PATH="~/.ssh/id_ed25519"   # or ~/.ssh/id_rsa
+export SECRET_KEY=""                      # insert random string (longer the better)
+export DATABASE_URL=""                    # insert the Postgres URL (ask for it in Discord)
+export POSTGRES_PASSWORD=""               # insert the Postgres password (ask for it in Discord)
 ```
 
 This file is in `.gitignore` so it won't be committed. You only create it once, but you need to load it every time you open a new terminal:
@@ -61,6 +64,12 @@ App will be at `http://<server-ip>:8080`. Takes a few minutes to build.
 ## Testing
 
 We have two layers of tests:
+
+Tests the code directly without starting a server. Runs fast and requires no setup:
+
+```bash
+go test -v
+```
 
 ### Go tests (unit/integration)
 
@@ -95,3 +104,12 @@ pytest python-references/minitwit_sim_api_test.py -v
 ```
 
 Note: On macOS, port 5000 is taken by AirPlay Receiver — that's why we use port 8080.
+
+### Test development
+
+If you just want to make virtual machines on hetzner with the development branch, you can run:
+
+```bash
+source .env                          # load environment variables first
+DEPLOY_BRANCH=dev vagrant up --provider=hetznercloud
+```
