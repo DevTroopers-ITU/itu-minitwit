@@ -33,8 +33,14 @@ jobs:
           host: 46.224.144.214
           username: root
           key: ${{ secrets.SSH_PRIVATE_KEY }}
+          envs: POSTGRES_PASSWORD,SECRET_KEY
           script: |
             cd /root/itu-minitwit
+            echo "POSTGRES_PASSWORD=$POSTGRES_PASSWORD" > .env
+            echo "SECRET_KEY=$SECRET_KEY" >> .env
             git pull origin master
             docker compose pull
-            docker compose up -d
+            docker compose up -d || docker compose logs webserver
+        env:
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          SECRET_KEY: ${{ secrets.SECRET_KEY }}
