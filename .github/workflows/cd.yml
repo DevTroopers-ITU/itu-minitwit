@@ -35,6 +35,8 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             cd /root/itu-minitwit
+            echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" > .env
+            echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" >> .env
             git pull origin master
             docker compose pull
-            docker compose up -d
+            docker compose up -d || docker compose logs webserver
