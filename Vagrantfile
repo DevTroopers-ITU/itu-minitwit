@@ -12,7 +12,7 @@ Vagrant.configure("2") do |config|
     hcloud.image = "ubuntu-22.04"
     hcloud.location = "nbg1"
     hcloud.server_type = "cx23"
-    hcloud.ssh_keys = ["leo", "haakon-2", "apoorva", "peter-juul"]
+    hcloud.ssh_keys = ["leo", "haakon-2", "apoorva", "peter-juul", "phkt@archlinux"]
   end
 
   config.vm.provision "shell", inline: <<-SHELL
