@@ -9,7 +9,7 @@ type User struct {
 }
 
 func (User) TableName() string {
-	return "user"
+	return "users"
 }
 
 // Message represents a tweet/message joined with user info.
@@ -22,16 +22,16 @@ type Message struct {
 	Flagged   int
 }
 
-func (Message) TableName() string {
-	return "message"
-}
-
 // Follower represents a follow relation.
 type Follower struct {
 	WhoID  int
 	WhomID int
 }
 
+func (Message) TableName() string {
+	return "messages"
+}
+
 func (Follower) TableName() string {
-	return "follower"
+	return "followers"
 }

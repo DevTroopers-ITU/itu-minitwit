@@ -39,13 +39,13 @@ func getCurrentUser(r *http.Request) *User {
 func addFlash(w http.ResponseWriter, r *http.Request, message string) {
 	session, _ := sessionStore.Get(r, "session")
 	session.AddFlash(message)
-	session.Save(r, w)
+	_ = session.Save(r, w)
 }
 
 func getFlashes(w http.ResponseWriter, r *http.Request) []interface{} {
 	session, _ := sessionStore.Get(r, "session")
 	flashes := session.Flashes()
-	session.Save(r, w)
+	_ = session.Save(r, w)
 	return flashes
 }
 
@@ -89,5 +89,7 @@ func renderTemplate(w http.ResponseWriter, r *http.Request, templateFile string,
 		data["Flashes"] = getFlashes(w, r)
 	}
 
-	tmpl.ExecuteTemplate(w, "layout.html", data)
+	if err := tmpl.ExecuteTemplate(w, "layout.html", data); err != nil {
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+	}
 }
