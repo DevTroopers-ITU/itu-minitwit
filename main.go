@@ -50,19 +50,23 @@ func (rw *responseWriter) WriteHeader(code int) {
 }
 
 func metricsMiddleware(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		start := time.Now()
+    return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+        start := time.Now()
+        wrapped := &responseWriter{ResponseWriter: w, status: 200}
+        next.ServeHTTP(wrapped, r)
+        duration := time.Since(start).Seconds()
 
-		// Wrap writer to capture status code
-		wrapped := &responseWriter{ResponseWriter: w, status: 200}
-		next.ServeHTTP(wrapped, r)
+        // Get the matched route template instead of the actual path
+        route := r.URL.Path
+        if routeMatch := mux.CurrentRoute(r); routeMatch != nil {
+            if template, err := routeMatch.GetPathTemplate(); err == nil {
+                route = template
+            }
+        }
 
-		duration := time.Since(start).Seconds()
-		route := r.URL.Path
-
-		httpResponsesTotal.WithLabelValues(r.Method, route, fmt.Sprintf("%d", wrapped.status)).Inc()
-		httpDuration.WithLabelValues(r.Method, route).Observe(duration)
-	})
+        httpResponsesTotal.WithLabelValues(r.Method, route, fmt.Sprintf("%d", wrapped.status)).Inc()
+        httpDuration.WithLabelValues(r.Method, route).Observe(duration)
+    })
 }
 
 // Router setup
