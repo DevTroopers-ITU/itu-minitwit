@@ -1,23 +1,18 @@
 services:
   webserver:
-    build: .                     # Build image from Dockerfile
-    image: ghcr.io/devtroopers-itu/minitwit:latest  # Name/tag of the image
+    build: .
+    image: ghcr.io/devtroopers-itu/minitwit:latest
     ports:
-      - "8080:8080"              # Host port → container port
-    volumes:
-      - minitwit-db:/tmp         # Persist DB across container restarts
+      - "8080:8080"
+    restart: always
     healthcheck:
-      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8080"]  # Check if app is running
-      interval: 30s              # Check every 30 seconds
-      timeout: 10s               # Fail if no response in 10 seconds
-      retries: 3                 # Mark unhealthy after 3 failures
-
-  clidownload:
-    image: appropriate/curl      # Simple container with curl
-    depends_on:
-      webserver:
-        condition: service_healthy  # Wait until webserver is healthy
-    entrypoint: sh -c "curl -s http://webserver:8080"  # Call the webserver
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8080"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - SECRET_KEY=${SECRET_KEY}
 
   prometheus:
     build: ./monitoring/prometheus
@@ -32,6 +27,3 @@ services:
       - "3000:3000"
     depends_on:
       - prometheus
-
-volumes:
-  minitwit-db:
