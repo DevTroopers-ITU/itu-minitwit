@@ -73,6 +73,7 @@ func metricsMiddleware(next http.Handler) http.Handler {
 func setupRouter() *mux.Router {
 
 	r := mux.NewRouter()
+	r.Use(metricsMiddleware)
 	// Add metrics endpoint
 	r.Handle("/metrics", promhttp.Handler())
 
@@ -129,5 +130,5 @@ func main() {
 	r := setupRouter()
 
 	log.Println("Listening on http://localhost:8080")
-	log.Fatal(http.ListenAndServe(":8080", metricsMiddleware(r)))
+	log.Fatal(http.ListenAndServe(":8080",r))
 }
