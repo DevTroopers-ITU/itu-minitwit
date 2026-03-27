@@ -18,6 +18,11 @@ services:
     build: ./monitoring/prometheus
     ports:
       - "9090:9090"
+    mem_limit: 256m
+    restart: unless-stopped
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.retention.time=15d"
     depends_on:
       - webserver
 
