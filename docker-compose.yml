@@ -13,6 +13,8 @@ services:
     environment:
       - DATABASE_URL=${DATABASE_URL}
       - SECRET_KEY=${SECRET_KEY}
+    networks:
+      - minitwit-network
 
   prometheus:
     build: ./monitoring/prometheus
@@ -24,9 +26,11 @@ services:
       - '--config.file=/etc/prometheus/prometheus.yml'
       - '--storage.tsdb.retention.time=15d'
     volumes:
-      - prometheus-data:/prometheus   # add this
+      - prometheus-data:/prometheus
     depends_on:
       - webserver
+    networks:
+      - minitwit-network
 
   grafana:
     build: ./monitoring/grafana
@@ -34,7 +38,13 @@ services:
       - "3000:3000"
     depends_on:
       - prometheus
+    networks:
+      - minitwit-network
 
 volumes:
   minitwit-db:
   prometheus-data:
+
+networks:
+  minitwit-network:
+    driver: bridge
