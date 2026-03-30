@@ -33,6 +33,8 @@ services:
     build: ./monitoring/grafana
     ports:
       - "3000:3000"
+    environment:
+      - DISCORD_WEBHOOK_URL=${DISCORD_WEBHOOK_URL}
     depends_on:
       - prometheus
       - loki
