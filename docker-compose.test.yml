@@ -7,6 +7,10 @@ services:
         condition: service_healthy
 
 
+  grafana:
+    environment:
+      - DISCORD_WEBHOOK_URL=https://discord.com/api/webhooks/test/placeholder
+
   db:
     image: postgres:16
     environment:
