@@ -8,3 +8,9 @@ datasources:
     isDefault: true
     editable: false
     uid: prometheus-uid
+  - name: loki
+    type: loki
+    url: http://loki:3100
+    isDefault: false
+    editable: false
+    uid: loki-uid

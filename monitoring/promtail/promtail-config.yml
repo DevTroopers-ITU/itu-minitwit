@@ -1,0 +1,27 @@
+# Promtail runs its own little HTTP server (for health checks, debugging)
+server:
+  http_listen_port: 9080
+  grpc_listen_port: 0
+
+# Tracks "Ive read up to line X in this log file" so it doesnt re-read on restart
+positions:
+  filename: /tmp/positions.yaml
+
+# Where to send the logs to (loki)
+clients:
+  - url: http://loki:3100/loki/api/v1/push
+
+# How to find and collect logs (Docker service discovery)
+scrape_configs:
+  - job_name: docker
+    docker_sd_configs:
+      - host: unix:///var/run/docker.sock
+        refresh_interval: 5s
+    relabel_configs:
+      - source_labels: [__meta_docker_container_name] 
+        regex: "/(.*)"
+        target_label: container
+      - source_labels: [__meta_docker_container_label_com_docker_compose_service]
+        target_label: compose_service
+      - source_labels: [__meta_docker_container_log_stream]
+        target_label: stream
