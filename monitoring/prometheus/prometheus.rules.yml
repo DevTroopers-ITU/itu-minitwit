@@ -1,4 +1,32 @@
-# prometheus.rules.yml
-# currently empty - but relevant to alert if the app goes down. 
+groups:
+  - name: minitwit-alerts
+    rules:
+      # Fires if the webserver has been unreachable for 1 minute
+      - alert: WebserverDown
+        expr: up{job="itu-minitwit-app"} == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Webserver is down"
+          description: "The minitwit webserver has been unreachable for more than 1 minute."
 
-groups: []
+      # Fires if more than 10% of responses are 5xx errors over 5 minutes
+      - alert: HighErrorRate
+        expr: sum(rate(minitwit_http_responses_total{status=~"5.."}[5m])) / sum(rate(minitwit_http_responses_total[5m])) > 0.1
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High HTTP error rate"
+          description: "More than 10% of HTTP responses are 5xx errors over the last 5 minutes."
+
+      # Fires if 95th percentile response time exceeds 1 second for 5 minutes
+      - alert: SlowResponses
+        expr: histogram_quantile(0.95, sum(rate(minitwit_http_duration_seconds_bucket[5m])) by (le)) > 1
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Slow response times"
+          description: "P95 response time has been above 1 second for 5 minutes."

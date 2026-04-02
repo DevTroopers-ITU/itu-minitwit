@@ -33,16 +33,19 @@ jobs:
           host: 46.224.144.214
           username: root
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          envs: DATABASE_URL,POSTGRES_PASSWORD,SECRET_KEY
+          envs: DATABASE_URL,POSTGRES_PASSWORD,SECRET_KEY,DISCORD_WEBHOOK_URL
           script: |
             cd /root/itu-minitwit
             echo "DATABASE_URL=$DATABASE_URL" > .env
             echo "POSTGRES_PASSWORD=$POSTGRES_PASSWORD" >> .env
             echo "SECRET_KEY=$SECRET_KEY" >> .env
+            echo "DISCORD_WEBHOOK_URL=$DISCORD_WEBHOOK_URL" >> .env
             git pull origin master
+            docker compose build
             docker compose pull
             docker compose up -d || docker compose logs webserver
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
