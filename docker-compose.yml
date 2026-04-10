@@ -1,9 +1,26 @@
 services:
+  traefik:
+    image: traefik:v3.4
+    command:
+      - "--providers.docker=true"
+      - "--providers.docker.exposedByDefault=false"
+      - "--entryPoints.web.address=:80"
+      - "--entryPoints.websecure.address=:443"
+      - "--entryPoints.web.http.redirections.entryPoint.to=websecure"
+      - "--certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=web"
+      - "--certificatesresolvers.letsencrypt.acme.email=devtroopers@itu.dk"
+      - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - letsencrypt-data:/letsencrypt
+    restart: always
+
   webserver:
     build: .
     image: ghcr.io/devtroopers-itu/minitwit:latest
-    ports:
-      - "8080:8080"
     restart: always
     healthcheck:
       test: ["CMD", "wget", "--spider", "-q", "http://localhost:8080"]
@@ -13,11 +30,15 @@ services:
     environment:
       - DATABASE_URL=${DATABASE_URL}
       - SECRET_KEY=${SECRET_KEY}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.minitwit.rule=Host(`devtroopersminitwit.codes`)"
+      - "traefik.http.routers.minitwit.entrypoints=websecure"
+      - "traefik.http.routers.minitwit.tls.certresolver=letsencrypt"
+      - "traefik.http.services.minitwit.loadbalancer.server.port=8080"
 
   prometheus:
     build: ./monitoring/prometheus
-    ports:
-      - "9090:9090"
     mem_limit: 1g
     restart: unless-stopped
     command:
@@ -28,21 +49,23 @@ services:
     depends_on:
       - webserver
 
-
   grafana:
     build: ./monitoring/grafana
-    ports:
-      - "3000:3000"
     environment:
       - DISCORD_WEBHOOK_URL=${DISCORD_WEBHOOK_URL}
+      - GF_SERVER_ROOT_URL=https://grafana.devtroopersminitwit.codes/
     depends_on:
       - prometheus
       - loki
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.grafana.rule=Host(`grafana.devtroopersminitwit.codes`)"
+      - "traefik.http.routers.grafana.entrypoints=websecure"
+      - "traefik.http.routers.grafana.tls.certresolver=letsencrypt"
+      - "traefik.http.services.grafana.loadbalancer.server.port=3000"
 
   loki:
     image: grafana/loki:3.6.7
-    ports:
-      - "3100:3100"
     volumes:
       - ./monitoring/loki/loki-config.yml:/etc/loki/local-config.yaml:ro
       - loki-data:/loki
@@ -63,3 +86,4 @@ volumes:
   minitwit-db:
   prometheus-data:
   loki-data:
+  letsencrypt-data:
