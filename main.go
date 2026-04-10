@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/gorilla/mux"
@@ -111,9 +112,17 @@ func setupRouter() *mux.Router {
 	return r
 }
 
+func getSecretOrEnv(name string) string {
+	path := "/run/secrets/" + name
+	if data, err := os.ReadFile(path); err == nil {
+		return strings.TrimSpace(string(data))
+	}
+	return os.Getenv(name)
+}
+
 func getSecretKey() string {
 	if err := godotenv.Load(); err == nil {
-		if key := os.Getenv("SECRET_KEY"); key != "" {
+		if key := getSecretOrEnv("SECRET_KEY"); key != "" {
 			return key
 		}
 	}

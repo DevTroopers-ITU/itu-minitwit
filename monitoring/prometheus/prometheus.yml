@@ -19,14 +19,12 @@ scrape_configs:
       - targets: ['prometheus:9090']
 
   - job_name:       'itu-minitwit-app'
-
-    # Override the global default and scrape targets from this job every 5 seconds.
     scrape_interval: 15s
-
-    static_configs:
-      - targets: ['webserver:8080']
-        labels:
-          group: 'production'
+    dns_sd_configs:
+      - names:
+          - 'tasks.webserver'
+        type: 'A'
+        port: 8080
     metric_relabel_configs:
       - source_labels: [__name__]
         regex: 'minitwit_.*|up'
