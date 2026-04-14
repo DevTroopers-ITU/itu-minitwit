@@ -2,7 +2,6 @@ package main
 
 import (
 	"log"
-	"os"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -10,7 +9,7 @@ import (
 
 func initDB() {
 	var err error
-	dsn := os.Getenv("DATABASE_URL")
+	dsn := getSecretOrEnv("DATABASE_URL")
 
 	db, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {

@@ -19,12 +19,28 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build and push Docker image
+      - name: Build and push Docker images
         run: |
           docker build -t ghcr.io/devtroopers-itu/minitwit:latest .
+          docker build -t ghcr.io/devtroopers-itu/minitwit-prometheus:latest ./monitoring/prometheus
+          docker build -t ghcr.io/devtroopers-itu/minitwit-grafana:latest ./monitoring/grafana
           docker push ghcr.io/devtroopers-itu/minitwit:latest
+          docker push ghcr.io/devtroopers-itu/minitwit-prometheus:latest
+          docker push ghcr.io/devtroopers-itu/minitwit-grafana:latest
 
-      - name: Deploy to production
+      - name: Deploy to Swarm (DigitalOcean)
+        uses: appleboy/ssh-action@v1
+        with:
+          host: 64.226.116.162
+          username: root
+          key: ${{ secrets.DO_SSH_PRIVATE_KEY }}
+          script: |
+            cd /root/itu-minitwit
+            git pull origin master
+            echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+            docker stack deploy -c docker-stack.yml minitwit --with-registry-auth
+
+      - name: Deploy to Hetzner (legacy)
         uses: appleboy/ssh-action@v1
         with:
           host: 46.224.144.214
