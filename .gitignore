@@ -1,6 +1,10 @@
 # Binaries
 minitwit
+itu-minitwit
 flag_tool
+
+# Claude Code
+CLAUDE.md
 
 # Database
 *.db

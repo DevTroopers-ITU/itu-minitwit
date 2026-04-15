@@ -1,0 +1,146 @@
+services:
+  traefik:
+    image: traefik:v3.4
+    command:
+      - "--providers.swarm=true"
+      - "--providers.swarm.exposedByDefault=false"
+      - "--entryPoints.web.address=:80"
+      - "--entryPoints.websecure.address=:443"
+      - "--entryPoints.web.http.redirections.entryPoint.to=websecure"
+      - "--entryPoints.simulator.address=:8080"
+      - "--certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=web"
+      - "--certificatesresolvers.letsencrypt.acme.email=devtroopers@itu.dk"
+      - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8080:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - letsencrypt-data:/letsencrypt
+    networks:
+      - frontend
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+
+  webserver:
+    image: ghcr.io/devtroopers-itu/minitwit:latest
+    networks:
+      - frontend
+      - backend
+    secrets:
+      - database_url
+      - secret_key
+    deploy:
+      replicas: 3
+      update_config:
+        parallelism: 1
+        delay: 10s
+        order: start-first
+      rollback_config:
+        parallelism: 1
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.minitwit.rule=Host(`devtroopersminitwit.codes`)"
+        - "traefik.http.routers.minitwit.entrypoints=websecure"
+        - "traefik.http.routers.minitwit.tls.certresolver=letsencrypt"
+        - "traefik.http.services.minitwit.loadbalancer.server.port=8080"
+        - "traefik.http.routers.minitwit-sim.rule=PathPrefix(`/`)"
+        - "traefik.http.routers.minitwit-sim.entrypoints=simulator"
+        - "traefik.http.services.minitwit-sim.loadbalancer.server.port=8080"
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8080"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  prometheus:
+    image: ghcr.io/devtroopers-itu/minitwit-prometheus:latest
+    networks:
+      - backend
+    volumes:
+      - prometheus-data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.retention.time=15d'
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          memory: 1G
+      placement:
+        constraints: [node.role == manager]
+
+  grafana:
+    image: ghcr.io/devtroopers-itu/minitwit-grafana:latest
+    networks:
+      - frontend
+      - backend
+    secrets:
+      - discord_webhook_url
+    environment:
+      - GF_SERVER_ROOT_URL=https://grafana.devtroopersminitwit.codes/
+    deploy:
+      replicas: 1
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.grafana.rule=Host(`grafana.devtroopersminitwit.codes`)"
+        - "traefik.http.routers.grafana.entrypoints=websecure"
+        - "traefik.http.routers.grafana.tls.certresolver=letsencrypt"
+        - "traefik.http.services.grafana.loadbalancer.server.port=3000"
+
+  loki:
+    image: grafana/loki:3.6.7
+    volumes:
+      - loki-data:/loki
+    configs:
+      - source: loki_config
+        target: /etc/loki/local-config.yaml
+    networks:
+      - backend
+    deploy:
+      replicas: 1
+
+  promtail:
+    image: grafana/promtail:3.6.0
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+    configs:
+      - source: promtail_config
+        target: /etc/promtail/config.yml
+    command: -config.file=/etc/promtail/config.yml
+    networks:
+      - backend
+    deploy:
+      mode: global
+
+networks:
+  frontend:
+    driver: overlay
+  backend:
+    driver: overlay
+
+volumes:
+  prometheus-data:
+  loki-data:
+  letsencrypt-data:
+
+configs:
+  loki_config:
+    file: ./monitoring/loki/loki-config.yml
+  promtail_config:
+    file: ./monitoring/promtail/promtail-config.yml
+
+secrets:
+  database_url:
+    external: true
+  secret_key:
+    external: true
+  discord_webhook_url:
+    external: true
