@@ -113,7 +113,7 @@ func setupRouter() *mux.Router {
 }
 
 func getSecretOrEnv(name string) string {
-	path := "/run/secrets/" + name
+	path := "/run/secrets/" + strings.ToLower(name)
 	if data, err := os.ReadFile(path); err == nil {
 		return strings.TrimSpace(string(data))
 	}
