@@ -1,6 +1,6 @@
 services:
   traefik:
-    image: traefik:v3.4
+    image: traefik:v3.6
     command:
       - "--providers.swarm=true"
       - "--providers.swarm.exposedByDefault=false"
@@ -49,10 +49,11 @@ services:
         - "traefik.http.routers.minitwit.rule=Host(`devtroopersminitwit.codes`)"
         - "traefik.http.routers.minitwit.entrypoints=websecure"
         - "traefik.http.routers.minitwit.tls.certresolver=letsencrypt"
-        - "traefik.http.services.minitwit.loadbalancer.server.port=8080"
+        - "traefik.http.routers.minitwit.service=minitwit-svc"
         - "traefik.http.routers.minitwit-sim.rule=PathPrefix(`/`)"
         - "traefik.http.routers.minitwit-sim.entrypoints=simulator"
-        - "traefik.http.services.minitwit-sim.loadbalancer.server.port=8080"
+        - "traefik.http.routers.minitwit-sim.service=minitwit-svc"
+        - "traefik.http.services.minitwit-svc.loadbalancer.server.port=8080"
     healthcheck:
       test: ["CMD", "wget", "--spider", "-q", "http://localhost:8080"]
       interval: 30s
