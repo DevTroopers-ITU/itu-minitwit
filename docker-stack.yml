@@ -11,10 +11,17 @@ services:
       - "--certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=web"
       - "--certificatesresolvers.letsencrypt.acme.email=devtroopers@itu.dk"
       - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
+    # Host-mode publishing: bypass Docker Swarm's ingress mesh (IPVS + VXLAN).
+    # Traefik is pinned to the manager via placement constraint below, so there
+    # is no benefit to ingress routing — and ingress mesh has a known failure
+    # mode where HTTP/2 connections from clients 504 after 30s because of MTU
+    # interactions with the overlay network. Host mode binds these ports
+    # directly on the manager's NIC. See docs/session11-ops-debug.md for the
+    # full diagnosis.
     ports:
-      - "80:80"
-      - "443:443"
-      - "8080:8080"
+      - { mode: host, target: 80,   published: 80,   protocol: tcp }
+      - { mode: host, target: 443,  published: 443,  protocol: tcp }
+      - { mode: host, target: 8080, published: 8080, protocol: tcp }
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - letsencrypt-data:/letsencrypt
