@@ -109,6 +109,74 @@ Once DNS is pointing to DO and the simulator URL is updated:
 1. Remove the Hetzner deploy step from `cd.yml`
 2. Shut down the Hetzner server
 
+## Host-mode ports vs Ingress mesh
+
+### What are they?
+
+When Traefik publishes ports (80, 443, 8080), Docker Swarm has two ways to handle incoming traffic:
+
+**Ingress mesh (Swarm default):** Every node in the swarm listens on the published ports. When a request hits any node, Swarm's built-in load balancer (IPVS) tunnels it through a virtual network (VXLAN) to whichever node is actually running Traefik.
+
+```
+Client → Worker-2:443 → IPVS → VXLAN tunnel → Manager:Traefik
+```
+
+**Host-mode (what we use):** Only the node running Traefik listens on those ports. Traffic goes straight to Traefik, no tunnel, no extra hops.
+
+```
+Client → Manager:443 → Traefik (direct, no tunnel)
+```
+
+### Why we chose host-mode
+
+1. **DNS only points to the manager.** Our A-record is `64.226.116.162` (the manager). No client ever hits Worker-1 or Worker-2 directly. So having all nodes listen on port 443 via ingress mesh is pointless — the traffic always arrives at the manager anyway.
+
+2. **Ingress mesh caused 30-second timeouts.** HTTP/2 connections through the VXLAN overlay hit an MTU (packet size) issue that made requests hang for 30 seconds before failing. Host-mode bypasses the overlay entirely and fixes this.
+
+### The tradeoff: What happens if the manager dies?
+
+**With ingress mesh:**
+- DNS points to all 3 nodes → clients can still reach Worker-1 or Worker-2
+- Swarm elects a new leader and restarts Traefik on another node
+- Ingress mesh routes traffic to the new Traefik automatically
+- Result: ~30 seconds of downtime, then self-heals
+
+**With host-mode (our setup):**
+- DNS points only to the manager → clients cannot reach the dead IP
+- Swarm elects a new leader and restarts Traefik on the new manager node
+- Traefik is running and healthy on the new node
+- BUT DNS still points to the old (dead) IP
+- Result: site is down until someone manually updates DNS to the new manager's IP
+
+### Why this tradeoff is fine for us
+
+- The manager rarely dies
+- Updating a DNS record at Name.com takes 2 minutes
+- TTL is 300 seconds, so DNS propagates in under 5 minutes
+- We avoid the VXLAN/MTU bugs that made the site unreliable
+
+### When would ingress mesh be better?
+
+If you have a setup where DNS points to multiple nodes (round-robin A-records), or if you need automatic failover without touching DNS. This is more relevant for larger-scale deployments or services with strict uptime SLAs.
+
+### The code change
+
+```yaml
+# BEFORE: Ingress mesh (default)
+ports:
+  - "80:80"
+  - "443:443"
+  - "8080:8080"
+
+# AFTER: Host-mode (direct binding)
+ports:
+  - { mode: host, target: 80,   published: 80,   protocol: tcp }
+  - { mode: host, target: 443,  published: 443,  protocol: tcp }
+  - { mode: host, target: 8080, published: 8080, protocol: tcp }
+```
+
+Same ports, just with `mode: host` added. That tells Docker: "bind directly to the machine's network interface instead of going through Swarm's internal load balancer."
+
 ## Decisions and rationale
 
 - **Why Docker Swarm over Kubernetes?** Swarm is simpler, built into Docker, and sufficient for our scale. The course exercise specifically covers Swarm.
