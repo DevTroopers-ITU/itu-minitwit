@@ -1,6 +1,11 @@
 services:
   traefik:
-    image: traefik:v3.6
+    # Pinned to the exact patch release rather than floating v3.6. A floating
+    # tag bit us once already (see docs/session11-ops-debug.md, bug 1) when
+    # the Docker engine's minimum API version was silently bumped and the
+    # Traefik SDK couldn't negotiate. Bump this manually when we want the
+    # next patch release; don't let Docker pull it behind our back.
+    image: traefik:v3.6.13
     command:
       - "--providers.swarm=true"
       - "--providers.swarm.exposedByDefault=false"
@@ -11,6 +16,10 @@ services:
       - "--certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=web"
       - "--certificatesresolvers.letsencrypt.acme.email=devtroopers@itu.dk"
       - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
+      # Access logs to stdout. Promtail tails container logs, so these flow
+      # into Loki automatically. Without this, debugging a forward hang is
+      # blind (see bug 3 in docs/session11-ops-debug.md).
+      - "--accesslog=true"
     # Host-mode publishing: bypass Docker Swarm's ingress mesh (IPVS + VXLAN).
     # Traefik is pinned to the manager via placement constraint below, so there
     # is no benefit to ingress routing — and ingress mesh has a known failure
