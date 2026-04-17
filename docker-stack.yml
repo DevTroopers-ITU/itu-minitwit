@@ -1,6 +1,6 @@
 services:
   traefik:
-    image: traefik:v3.4
+    image: traefik:v3.6
     command:
       - "--providers.swarm=true"
       - "--providers.swarm.exposedByDefault=false"
@@ -53,12 +53,27 @@ services:
         max_attempts: 3
       labels:
         - "traefik.enable=true"
+        # webserver is attached to two overlay networks: `minitwit_frontend`
+        # (shared with Traefik) and `minitwit_backend` (shared with postgres,
+        # prometheus, etc. — NOT shared with Traefik). Without this label,
+        # Traefik's Swarm provider picks whichever task IP comes first in the
+        # task spec, which lands on the backend network and is unreachable,
+        # producing a 30s hang on every request.
+        - "traefik.swarm.network=minitwit_frontend"
+        # Traefik v3.6's Swarm provider will NOT auto-link a router to a
+        # service when the service definition has more than one named
+        # loadbalancer. Since we publish both the web UI (443) and the
+        # simulator API (8080) from this same container, we declare two
+        # router/service pairs and wire each router to its service
+        # explicitly with the `.service=` label.
         - "traefik.http.routers.minitwit.rule=Host(`devtroopersminitwit.codes`)"
         - "traefik.http.routers.minitwit.entrypoints=websecure"
         - "traefik.http.routers.minitwit.tls.certresolver=letsencrypt"
+        - "traefik.http.routers.minitwit.service=minitwit"
         - "traefik.http.services.minitwit.loadbalancer.server.port=8080"
         - "traefik.http.routers.minitwit-sim.rule=PathPrefix(`/`)"
         - "traefik.http.routers.minitwit-sim.entrypoints=simulator"
+        - "traefik.http.routers.minitwit-sim.service=minitwit-sim"
         - "traefik.http.services.minitwit-sim.loadbalancer.server.port=8080"
     healthcheck:
       test: ["CMD", "wget", "--spider", "-q", "http://localhost:8080"]
@@ -96,6 +111,7 @@ services:
       replicas: 1
       labels:
         - "traefik.enable=true"
+        - "traefik.swarm.network=minitwit_frontend"
         - "traefik.http.routers.grafana.rule=Host(`grafana.devtroopersminitwit.codes`)"
         - "traefik.http.routers.grafana.entrypoints=websecure"
         - "traefik.http.routers.grafana.tls.certresolver=letsencrypt"
