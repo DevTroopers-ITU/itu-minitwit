@@ -53,7 +53,7 @@
       "targets": [
         {
           "datasource": { "type": "prometheus", "uid": "prometheus-uid" },
-          "expr": "avg_over_time(up{instance=\"webserver:8080\"}[24h]) * 100",
+          "expr": "avg_over_time(avg(up{job=\"itu-minitwit-app\"})[24h:1m]) * 100",
           "legendFormat": "Uptime",
           "refId": "A"
         }
@@ -99,7 +99,7 @@
       "targets": [
         {
           "datasource": { "type": "prometheus", "uid": "prometheus-uid" },
-          "expr": "up{instance=\"webserver:8080\"}",
+          "expr": "up{job=\"itu-minitwit-app\"}",
           "legendFormat": "Webserver",
           "refId": "A"
         }
@@ -286,7 +286,7 @@
             "uid": "prometheus-uid"
           },
           "editorMode": "code",
-          "expr": "up{instance=\"webserver:8080\"}",
+          "expr": "avg(up{job=\"itu-minitwit-app\"})",
           "hide": false,
           "instant": false,
           "legendFormat": "__auto",
