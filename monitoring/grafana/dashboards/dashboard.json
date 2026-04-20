@@ -26,6 +26,92 @@
         "type": "prometheus",
         "uid": "prometheus-uid"
       },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "decimals": 2,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "dark-red", "value": 0 },
+              { "color": "yellow", "value": 99 },
+              { "color": "green", "value": 99.9 }
+            ]
+          },
+          "color": { "mode": "thresholds" }
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 4, "w": 6, "x": 0, "y": 0 },
+      "id": 6,
+      "options": {
+        "reduceOptions": { "calcs": ["lastNotNull"] },
+        "colorMode": "background",
+        "textMode": "auto",
+        "graphMode": "none"
+      },
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus-uid" },
+          "expr": "avg_over_time(avg(up{job=\"itu-minitwit-app\"})[24h:1m]) * 100",
+          "legendFormat": "Uptime",
+          "refId": "A"
+        }
+      ],
+      "title": "Uptime % (Last 24h)",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus-uid"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "mappings": [
+            {
+              "type": "value",
+              "options": {
+                "0": { "text": "DOWN", "color": "dark-red", "index": 1 },
+                "1": { "text": "UP", "color": "green", "index": 0 }
+              }
+            }
+          ],
+          "color": { "mode": "thresholds" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "dark-red", "value": 0 },
+              { "color": "green", "value": 1 }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 4, "w": 18, "x": 6, "y": 0 },
+      "id": 7,
+      "options": {
+        "mergeValues": true,
+        "showValue": "never",
+        "alignValue": "center",
+        "rowHeight": 0.9
+      },
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus-uid" },
+          "expr": "up{job=\"itu-minitwit-app\"}",
+          "legendFormat": "Webserver",
+          "refId": "A"
+        }
+      ],
+      "title": "Availability Timeline",
+      "type": "state-timeline"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus-uid"
+      },
       "description": "",
       "fieldConfig": {
         "defaults": {
@@ -83,7 +169,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 0
+        "y": 4
       },
       "id": 2,
       "options": {
@@ -172,7 +258,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 0
+        "y": 4
       },
       "id": 1,
       "options": {
@@ -200,7 +286,7 @@
             "uid": "prometheus-uid"
           },
           "editorMode": "code",
-          "expr": "up{instance=\"webserver:8080\"}",
+          "expr": "avg(up{job=\"itu-minitwit-app\"})",
           "hide": false,
           "instant": false,
           "legendFormat": "__auto",
@@ -216,7 +302,7 @@
         "type": "prometheus",
         "uid": "prometheus-uid"
       },
-      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 8 },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 12 },
       "id": 3,
       "title": "HTTP response time (p95)",
       "type": "timeseries",
@@ -235,7 +321,7 @@
         "type": "prometheus",
         "uid": "prometheus-uid"
       },
-      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 8 },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 12 },
       "id": 4,
       "title": "Requests per route",
       "type": "timeseries",
@@ -254,7 +340,7 @@
         "type": "prometheus",
         "uid": "prometheus-uid"
       },
-      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 16 },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 20 },
       "id": 5,
       "title": "Error rate (4xx and 5xx)",
       "type": "timeseries",
