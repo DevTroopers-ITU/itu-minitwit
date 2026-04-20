@@ -579,3 +579,141 @@ Tracked in branch `fix/traefik-ingress-host-mode`, PR into `dev` →
    Within 5 min (the TTL) new resolvers will re-pick Hetzner.
 
 
+## 17 Apr, afternoon — the follow-on bugs we hit when we actually tried
+
+After the host-mode port change we thought we were green. We were not.
+Three more problems surfaced once real traffic hit the cluster. Notes
+here so the same hour doesn't get spent twice.
+
+### Bug 1: Traefik hanging on startup with `client version 1.24 is too old`
+
+Symptom. Every fresh Traefik container on the DO manager spammed:
+
+```
+Error response from daemon: client version 1.24 is too old.
+Minimum supported API version is 1.44, please upgrade your client.
+```
+
+…and therefore populated zero routers, serving 404 on everything.
+
+What we ruled out.
+
+- Not the Docker daemon (`/_ping` returned 200; `/v1.44/version` returned 200).
+- Not a socket proxy (socket is the real one, `root:docker`).
+- Not `daemon.json` (there is none).
+- Not Traefik version per se: v3.3.6, v3.4.5, **and** v3.5.6 all reproduce it.
+- The OLD running container kept working because it was already live and had
+  completed negotiation before the bug surfaced; a restart would have broken it too.
+
+What fixed it. Upgrade to **Traefik v3.6**. Empirically:
+
+| tag | v1.24 errors in 5 s |
+|-----|---------------------|
+| v3.4 | 10 |
+| v3.5 | 8 |
+| v3.6 | 0 |
+
+Guess at the mechanism: the Docker SDK vendored into ≤ v3.5 of Traefik defaults
+to API v1.24 when it cannot negotiate, and something about
+how the Swarm provider initializes made negotiation fail against modern Docker
+engines (29.1.x reports API 1.52, min 1.44). v3.6 apparently vendors a newer
+SDK that negotiates before it issues real calls. Good enough explanation to
+move on.
+
+### Bug 2: `Router X cannot be linked automatically with multiple Services`
+
+With v3.6 up, Traefik served 404s instantly instead of hanging. Logs:
+
+```
+Router minitwit     cannot be linked automatically with multiple Services: ["minitwit-sim" "minitwit"]
+Router minitwit-sim cannot be linked automatically with multiple Services: ["minitwit-sim" "minitwit"]
+```
+
+Cause. Our webserver service declares two Traefik services — `minitwit`
+(443 → webserver:8080) and `minitwit-sim` (8080 → webserver:8080). Traefik
+v3.4 used to pick one and move on; v3.6 refuses and returns 404.
+
+Fix. Give each router an explicit `.service=` label:
+
+```yaml
+- "traefik.http.routers.minitwit.service=minitwit"
+- "traefik.http.routers.minitwit-sim.service=minitwit-sim"
+```
+
+### Bug 3: Traefik forwarding to an unreachable IP — the 30 s hang, round 2
+
+Symptom after bug 2 fix. Request would reach Traefik, Traefik would match
+`minitwit` correctly, and then the request just sat there until curl gave up.
+`docker service logs` (with `--accesslog=true --log.level=DEBUG`) showed:
+
+```
+Service selected by WRR: http://10.0.1.110:8080
+499 Client Closed Request   error="context canceled"
+```
+
+`10.0.1.x` is the **`minitwit_backend`** overlay. Traefik is attached to
+`minitwit_frontend` (10.0.2.x) and has no route to 10.0.1.x. So every forward
+hung on TCP connect until the client timed out.
+
+Cause. Webserver is attached to two overlays — `frontend` and `backend`. The
+Swarm provider picks the first task IP it sees in the Endpoint spec, which
+happens to be the backend VIP. There is no auto-disambiguation.
+
+Fix. Tell Traefik which network to use per service:
+
+```yaml
+- "traefik.swarm.network=minitwit_frontend"
+```
+
+This label has to go on every service Traefik routes to (webserver and
+grafana in our case). With it in place the WRR picks 10.0.2.x addresses
+and forwards actually work.
+
+### Lessons 9–11 (appended to the running list)
+
+9. **Floating Traefik tags are a time bomb.** A daemon upgrade on the manager
+   silently raised the minimum API version and broke every Traefik container
+   we restarted afterward. Pin a known-good **major** at least, and keep an
+   eye on Traefik's release notes when Docker engines upgrade. Alternative:
+   add a socket proxy (`tecnativa/docker-socket-proxy`) that forces a
+   specific API version so Traefik's SDK never has to negotiate.
+
+10. **Docker services on multiple overlays need `traefik.swarm.network`.**
+    Without it, Traefik picks an arbitrary IP per task. It may work by luck
+    if the chosen network happens to be the one Traefik is on. Ours didn't.
+    Make this label non-optional anywhere routing crosses >1 overlay.
+
+11. **Turn on `--accesslog=true --log.level=DEBUG` *before* you think you
+    need it.** Bug 3 would have been a 30 second debug with logs, and was
+    a 45 minute one without. The access log line
+    `"Service selected by WRR: http://10.0.1.110:8080"` is the only place
+    the wrong-network bug names itself.
+
+### Pre-flight revisited (superseded checklist)
+
+The checklist earlier in this doc is now necessary but not sufficient. Before
+flipping DNS, also verify:
+
+```bash
+# 1. Traefik container is the one we expect and has fully reconciled:
+ssh root@64.226.116.162 'docker service logs --tail 40 minitwit_traefik' \
+  | grep -Ei 'ERR|WRN'
+# Expect: no "client version 1.24", no "cannot be linked", no "context canceled"
+# to 10.0.1.x addresses in access logs.
+
+# 2. Each Traefik-exposed service has traefik.swarm.network label:
+ssh root@64.226.116.162 'for s in minitwit_webserver minitwit_grafana; do
+  echo "=== $s ==="
+  docker service inspect $s --format "{{json .Spec.Labels}}" | grep -o traefik.swarm.network || echo MISSING
+done'
+
+# 3. Actual forward succeeds from outside over HTTP/2:
+curl --http2 --resolve devtroopersminitwit.codes:443:64.226.116.162 \
+  -o /dev/null -w "code=%{http_code} time=%{time_total}s\n" \
+  https://devtroopersminitwit.codes/public
+# Expect: code=200 time < 1s. If 000 or >5s, STOP.
+```
+
+Site was live on Hetzner the entire time these bugs were being fixed.
+No user-visible outage. DNS stays on 46.224.144.214 until all three checks
+above return clean.
