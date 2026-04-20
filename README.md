@@ -57,6 +57,8 @@ source .env                          # load environment variables first
 vagrant up --provider=hetznercloud
 ```
 
+Its important that when we make new VMs, we add the IP adress from the machine as a trusted source in the 'network access' in the database in DigitalOcean.
+
 App will be at `http://<server-ip>:8080`. Takes a few minutes to build.
 
 `vagrant ssh` to get into the server, `vagrant destroy` to tear it down.
