@@ -1,6 +1,8 @@
 services:
   traefik:
     image: traefik:v3.4
+    environment:
+      - DOCKER_API_VERSION=1.44
     command:
       - "--providers.swarm=true"
       - "--providers.swarm.exposedByDefault=false"
@@ -66,8 +68,8 @@ services:
     volumes:
       - prometheus-data:/prometheus
     command:
-      - '--config.file=/etc/prometheus/prometheus.yml'
-      - '--storage.tsdb.retention.time=15d'
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.retention.time=15d"
     deploy:
       replicas: 1
       resources:
