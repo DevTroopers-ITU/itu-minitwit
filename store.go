@@ -136,13 +136,18 @@ func (s *DBStore) UserTimeline(userID, limit int) ([]MessageView, error) {
 
 func (s *DBStore) PersonalTimeline(userID, limit int) ([]MessageView, error) {
     var msgs []Message
+
+    followedIDs := s.db.Model(&Follower{}).
+        Select("whom_id").
+        Where("who_id = ?", userID)
+
     err := s.db.
-        Joins("LEFT JOIN followers ON messages.author_id = followers.whom_id AND followers.who_id = ?", userID).
-        Where("messages.flagged = 0").
-        Where("messages.author_id = ? OR followers.who_id IS NOT NULL", userID).
+        Where("flagged = 0").
+        Where("author_id = ? OR author_id IN (?)", userID, followedIDs).
         Preload("Author").
-        Order("messages.pub_date desc").
+        Order("pub_date desc").
         Limit(limit).
         Find(&msgs).Error
+
     return toViews(msgs), err
 }
