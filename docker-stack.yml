@@ -50,6 +50,9 @@ services:
       - secret_key
     deploy:
       replicas: 3
+      placement:
+        preferences:
+          - spread: node.id
       update_config:
         parallelism: 1
         delay: 10s
@@ -118,6 +121,8 @@ services:
       - GF_SERVER_ROOT_URL=https://grafana.devtroopersminitwit.codes/
     deploy:
       replicas: 1
+      placement:
+        constraints: [node.role == manager]
       labels:
         - "traefik.enable=true"
         - "traefik.swarm.network=minitwit_frontend"
@@ -137,6 +142,8 @@ services:
       - backend
     deploy:
       replicas: 1
+      placement:
+        constraints: [node.role == manager]
 
   promtail:
     image: grafana/promtail:3.6.0
