@@ -12,6 +12,8 @@ import (
 
 var latest int = -1
 
+const errUnauthorized = "You are not authorized to use this resource!"
+
 func getLatest(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	_ = json.NewEncoder(w).Encode(map[string]int{"latest": latest})
@@ -74,7 +76,7 @@ func simMessages(w http.ResponseWriter, r *http.Request) {
 
 	if notReqFromSimulator(r) {
 		w.WriteHeader(http.StatusForbidden)
-		_ = json.NewEncoder(w).Encode(map[string]interface{}{"status": 403, "error_msg": "You are not authorized to use this resource!"})
+		_ = json.NewEncoder(w).Encode(map[string]interface{}{"status": 403, "error_msg": errUnauthorized})
 		return
 	}
 
@@ -107,7 +109,7 @@ func simMessagesPerUser(w http.ResponseWriter, r *http.Request) {
 
 	if notReqFromSimulator(r) {
 		w.WriteHeader(http.StatusForbidden)
-		_ = json.NewEncoder(w).Encode(map[string]interface{}{"status": 403, "error_msg": "You are not authorized to use this resource!"})
+		_ = json.NewEncoder(w).Encode(map[string]interface{}{"status": 403, "error_msg": errUnauthorized})
 		return
 	}
 
@@ -161,7 +163,7 @@ func simFollow(w http.ResponseWriter, r *http.Request) {
 
 	if notReqFromSimulator(r) {
 		w.WriteHeader(http.StatusForbidden)
-		_ = json.NewEncoder(w).Encode(map[string]interface{}{"status": 403, "error_msg": "You are not authorized to use this resource!"})
+		_ = json.NewEncoder(w).Encode(map[string]interface{}{"status": 403, "error_msg": errUnauthorized})
 		return
 	}
 
