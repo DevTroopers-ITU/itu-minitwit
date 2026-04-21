@@ -73,7 +73,6 @@ func itoa(i int) string {
 func TestSimLatest(t *testing.T) {
 	ts, client := setupTestServer(t)
 	defer ts.Close()
-	latest = -1
 
 	// Register a user to trigger latest update
 	code := simRegisterUser(t, ts, client, "test", "test@test.com", "foo", 1337)
@@ -95,7 +94,6 @@ func TestSimLatest(t *testing.T) {
 func TestSimRegister(t *testing.T) {
 	ts, client := setupTestServer(t)
 	defer ts.Close()
-	latest = -1
 
 	code := simRegisterUser(t, ts, client, "a", "a@a.a", "a", 1)
 	if code != http.StatusNoContent {
@@ -113,7 +111,6 @@ func TestSimRegister(t *testing.T) {
 func TestSimCreateMsg(t *testing.T) {
 	ts, client := setupTestServer(t)
 	defer ts.Close()
-	latest = -1
 
 	simRegisterUser(t, ts, client, "a", "a@a.a", "a", 1)
 
@@ -136,7 +133,6 @@ func TestSimCreateMsg(t *testing.T) {
 func TestSimGetUserMsgs(t *testing.T) {
 	ts, client := setupTestServer(t)
 	defer ts.Close()
-	latest = -1
 
 	simRegisterUser(t, ts, client, "a", "a@a.a", "a", 1)
 
@@ -173,7 +169,6 @@ func TestSimGetUserMsgs(t *testing.T) {
 func TestSimGetAllMsgs(t *testing.T) {
 	ts, client := setupTestServer(t)
 	defer ts.Close()
-	latest = -1
 
 	simRegisterUser(t, ts, client, "a", "a@a.a", "a", 1)
 
@@ -209,7 +204,6 @@ func TestSimGetAllMsgs(t *testing.T) {
 func TestSimFollowUnfollow(t *testing.T) {
 	ts, client := setupTestServer(t)
 	defer ts.Close()
-	latest = -1
 
 	// Register three users
 	simRegisterUser(t, ts, client, "a", "a@a.a", "a", 1)

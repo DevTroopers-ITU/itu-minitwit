@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 	"strconv"
 	"strings"
@@ -10,18 +11,22 @@ import (
 	"github.com/gorilla/mux"
 )
 
-var latest int = -1
-
 func getLatest(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	_ = json.NewEncoder(w).Encode(map[string]int{"latest": latest})
+	_ = json.NewEncoder(w).Encode(map[string]int{"latest": store.GetLatest()})
 }
 
 func updateLatest(r *http.Request) {
-	if latestStr := r.URL.Query().Get("latest"); latestStr != "" {
-		if latestInt, err := strconv.Atoi(latestStr); err == nil {
-			latest = latestInt
-		}
+	latestStr := r.URL.Query().Get("latest")
+	if latestStr == "" {
+		return
+	}
+	latestInt, err := strconv.Atoi(latestStr)
+	if err != nil {
+		return
+	}
+	if err := store.SetLatest(latestInt); err != nil {
+		log.Printf("updateLatest: SetLatest(%d) failed: %v", latestInt, err)
 	}
 }
 

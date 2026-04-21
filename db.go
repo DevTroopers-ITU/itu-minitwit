@@ -26,7 +26,7 @@ func initDB() {
 	sqlDB.SetMaxIdleConns(10)
 	sqlDB.SetConnMaxLifetime(5 * time.Minute)
 
-	err = db.AutoMigrate(&User{}, &Message{}, &Follower{})
+	err = db.AutoMigrate(&User{}, &Message{}, &Follower{}, &SimState{})
 	if err != nil {
 		log.Fatal("Failed to migrate database:", err)
 	}
