@@ -131,7 +131,7 @@ Cross-referenced from course session tasks and git history. Updated April 2026.
 - Promtail in global mode on all nodes
 - `59930d8` (Apr 10): Fixed missing ports configuration
 - `e619a92` (Mar 30): Grafana alerting with Discord webhook (bonus ✓)
-- **Rolling updates ✓** — explicitly configured in docker-stack.yml: `parallelism: 1`, `delay: 10s`, `order: start-first` with rollback config. Documented in docs/docker-swarm.md.
+- **Rolling updates ✓** — explicitly configured in docker-stack.yml: `parallelism: 1`, `delay: 10s`, `order: start-first` with rollback config. Documented in docs/operations/docker-swarm.md.
 - **Healthcheck ✓** — webserver has `wget --spider` healthcheck in docker-stack.yml
 
 *Note: Docker Swarm migration done 2 weeks after session (Apr 10), bundled with TLS work.*
