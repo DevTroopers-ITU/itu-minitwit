@@ -4,29 +4,29 @@ Start here. Each file is linked once below with a one-line summary of what's in 
 
 ## Daily operations
 
-- [`ops-cli-reference.md`](ops-cli-reference.md) — Cheat sheet for SSH, Swarm, logs, deploy/rollback, troubleshooting, DB access, CI/CD. **Start here when something looks broken in prod.**
+- [`operations/ops-cli-reference.md`](operations/ops-cli-reference.md) — Cheat sheet for SSH, Swarm, logs, deploy/rollback, troubleshooting, DB access, CI/CD. **Start here when something looks broken in prod.**
 - [`progress.md`](progress.md) — Session-to-implementation tracker. Which course session each change maps to.
 
 ## Deployment & infrastructure
 
-- [`docker-swarm.md`](docker-swarm.md) — Why Swarm, node layout (Manager + 2 workers on DO), service distribution, initial setup steps.
-- [`firewall-changes.md`](firewall-changes.md) — DO firewall rules: which ports are open on manager vs workers, and why.
-- [`ufw-setup-recap.md`](ufw-setup-recap.md) — UFW baseline on all three nodes, layered with the DO firewall.
+- [`operations/docker-swarm.md`](operations/docker-swarm.md) — Why Swarm, node layout (Manager + 2 workers on DO), service distribution, initial setup steps.
+- [`operations/firewall-changes.md`](operations/firewall-changes.md) — DO firewall rules: which ports are open on manager vs workers, and why.
+- [`operations/ufw-setup-recap.md`](operations/ufw-setup-recap.md) — UFW baseline on all three nodes, layered with the DO firewall.
 
 ## Architecture & design decisions
 
-- [`architecture.md`](architecture.md) — High-level architecture narrative. Companion to the diagram.
-- [`architecture.drawio`](architecture.drawio) — Source for the diagram (edit in draw.io / VS Code extension).
-- [`architecture.png`](architecture.png) — Rendered diagram for reports and slides.
-- [`latest-counter-in-db.md`](latest-counter-in-db.md) — Why the simulator's `/latest` counter moved from an in-process `int` to a single Postgres row (PR #138).
+- [`architecture/architecture.md`](architecture/architecture.md) — High-level architecture narrative. Companion to the diagram.
+- [`architecture/architecture.drawio`](architecture/architecture.drawio) — Source for the diagram (edit in draw.io / VS Code extension).
+- [`architecture/architecture.png`](architecture/architecture.png) — Rendered diagram for reports and slides.
+- [`architecture/latest-counter-in-db.md`](architecture/latest-counter-in-db.md) — Why the simulator's `/latest` counter moved from an in-process `int` to a single Postgres row (PR #138).
 
 ## Monitoring & alerting
 
-- [`alerting.md`](alerting.md) — Grafana alert rules and Discord webhook integration.
+- [`monitoring/alerting.md`](monitoring/alerting.md) — Grafana alert rules and Discord webhook integration.
 
 ## Incident notes
 
-- [`session11-ops-debug.md`](session11-ops-debug.md) — Debug diary from the Traefik v3.6 / host-mode incident (April 2026). Read before touching Traefik config.
+- [`incidents/session11-ops-debug.md`](incidents/session11-ops-debug.md) — Debug diary from the Traefik v3.6 / host-mode incident (April 2026). Read before touching Traefik config.
 
 ## Conventions for new docs
 

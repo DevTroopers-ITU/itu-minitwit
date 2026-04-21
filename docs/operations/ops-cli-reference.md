@@ -244,7 +244,7 @@ gh pr checks <pr-number>                        # check gate status on a PR
 ```bash
 ssh root@<node-ip> 'ufw status verbose'         # current rules
 # Rule changes: edit manually, never via the DO firewall panel alone
-# (see docs/ufw-setup-recap.md for the baseline).
+# (see ufw-setup-recap.md in this folder for the baseline).
 ```
 
 ## Common gotchas
@@ -256,9 +256,9 @@ ssh root@<node-ip> 'ufw status verbose'         # current rules
 
 ## See also
 
-- `docs/docker-swarm.md` — why Swarm, initial setup, service distribution
-- `docs/firewall-changes.md` — manager vs worker port exposure
-- `docs/ufw-setup-recap.md` — UFW baseline on all nodes
-- `docs/session11-ops-debug.md` — Traefik v3.6 debug diary (host mode fix)
-- `docs/latest-counter-in-db.md` — why `/latest` is backed by Postgres
-- `docs/alerting.md` — Grafana + Discord alert rules
+- [`docker-swarm.md`](docker-swarm.md) — why Swarm, initial setup, service distribution
+- [`firewall-changes.md`](firewall-changes.md) — manager vs worker port exposure
+- [`ufw-setup-recap.md`](ufw-setup-recap.md) — UFW baseline on all nodes
+- [`../incidents/session11-ops-debug.md`](../incidents/session11-ops-debug.md) — Traefik v3.6 debug diary (host mode fix)
+- [`../architecture/latest-counter-in-db.md`](../architecture/latest-counter-in-db.md) — why `/latest` is backed by Postgres
+- [`../monitoring/alerting.md`](../monitoring/alerting.md) — Grafana + Discord alert rules
