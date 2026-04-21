@@ -46,7 +46,7 @@
         <mxCell id="graf" parent="1" style="whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11" value="Grafana&#xa;grafana.devtroopersminitwit.codes&#xa;(not pinned — floats; currently here)" vertex="1">
           <mxGeometry height="80" width="440" x="580" y="285" as="geometry" />
         </mxCell>
-        <mxCell id="ws_w1" parent="1" style="whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;dashed=1" value="webserver × 0&#xa;(no replicas scheduled here right now — floats)" vertex="1">
+        <mxCell id="ws_w1" parent="1" style="whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;dashed=1" value="webserver .2 — Rejected&#xa;(desired: running, stuck 23h ago: ghcr pull flake)" vertex="1">
           <mxGeometry height="60" width="440" x="580" y="385" as="geometry" />
         </mxCell>
         <mxCell id="pt_w1" parent="1" style="whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11" value="Promtail (global)" vertex="1">
@@ -58,13 +58,13 @@
         <mxCell id="w2" parent="1" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;fontStyle=1;fontSize=12;fillColor=#d5e8d4;strokeColor=#82b366" value="Worker-2 — 206.189.59.60" vertex="1">
           <mxGeometry height="600" width="480" x="1070" y="240" as="geometry" />
         </mxCell>
-        <mxCell id="ws_w2" parent="1" style="whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11" value="webserver × 2&#xa;Go · :8080" vertex="1">
+        <mxCell id="ws_w2" parent="1" style="whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11" value="webserver × 1&#xa;Go · :8080" vertex="1">
           <mxGeometry height="80" width="440" x="1090" y="285" as="geometry" />
         </mxCell>
         <mxCell id="pt_w2" parent="1" style="whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11" value="Promtail (global)" vertex="1">
           <mxGeometry height="60" width="440" x="1090" y="385" as="geometry" />
         </mxCell>
-        <mxCell id="w2_notes" parent="1" style="text;html=1;fontSize=10;align=left;verticalAlign=top;fontColor=#333333" value="Webserver distribution is 1+0+2 — uneven.&#xa;Adding placement.preferences: spread would&#xa;force one-per-node and survive a worker outage better." vertex="1">
+        <mxCell id="w2_notes" parent="1" style="text;html=1;fontSize=10;align=left;verticalAlign=top;fontColor=#333333" value="Webserver: replicas=3 with spread: node.id&#xa;Desired: 1+1+1. Currently serving: 1+0+1 (Worker-1&#xa;.2 Rejected). `service update --force` will re-kick placement." vertex="1">
           <mxGeometry height="60" width="440" x="1090" y="465" as="geometry" />
         </mxCell>
         <mxCell id="pg" parent="1" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11" value="DO Managed Postgres&#xa;(outside Swarm — reached over public IP)" vertex="1">
@@ -134,7 +134,7 @@
         <mxCell id="t_title" parent="1" style="text;html=1;fontSize=18;fontStyle=1;align=center" value="Docker Swarm Architecture" vertex="1">
           <mxGeometry height="30" width="800" x="390" y="280" as="geometry" />
         </mxCell>
-        <mxCell id="t_subtitle" parent="1" style="text;html=1;fontSize=11;fontStyle=2;align=center;fontColor=#666666" value="Same topology as current, but webserver is evenly spread, Grafana is pinned next to its datasources, and dashboards query real labels." vertex="1">
+        <mxCell id="t_subtitle" parent="1" style="text;html=1;fontSize=11;fontStyle=2;align=center;fontColor=#666666" value="Grafana pinned to Manager, dashboards using correct labels, `latest` counter backed by Postgres, simulator traffic on DO only." vertex="1">
           <mxGeometry height="20" width="1000" x="290" y="310" as="geometry" />
         </mxCell>
         <mxCell id="t_client" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12" value="User browser&#xa;+ course simulator" vertex="1">
@@ -188,11 +188,11 @@
         <mxCell id="t_pg" parent="1" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11" value="DO Managed Postgres&#xa;(unchanged — outside Swarm)" vertex="1">
           <mxGeometry height="110" width="180" x="710" y="1277" as="geometry" />
         </mxCell>
-        <mxCell id="t_changes_box" parent="1" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;fontStyle=1;fontSize=12;fillColor=none;strokeColor=none;" value="Changes from current state&lt;div&gt;&lt;br&gt;&lt;/div&gt;" vertex="1">
-          <mxGeometry height="175" width="640" x="20" y="1570" as="geometry" />
+        <mxCell id="t_changes_box" parent="1" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;fontStyle=1;fontSize=12;fillColor=none;strokeColor=none;" value="Path to target state&lt;div&gt;&lt;br&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="320" width="720" x="20" y="1570" as="geometry" />
         </mxCell>
-        <mxCell id="t_changes_list" parent="1" style="text;html=1;fontSize=11;align=left;verticalAlign=top" value="1.  Webserver ×3 spread evenly — placement.preferences: spread: node.hostname&lt;br&gt;2.  Grafana pinned to manager — collapses cross-node observability dependency&lt;br&gt;3.  Dashboard queries fixed — up{job=&quot;itu-minitwit-app&quot;} and {swarm_service=&quot;minitwit_webserver&quot;}&lt;br&gt;4.  Simulator URL flipped to domain — retires the hardcoded Hetzner IP DONE&lt;br&gt;5.  Hetzner legacy stack decommissioned — one cluster to operate, not two&lt;br&gt;&lt;br&gt;Not sure about&lt;br&gt;6.  (Backlog) tecnativa/docker-socket-proxy in front of Traefik + Promtail&lt;br&gt;7.  (Backlog) rotate the plaintext ghcr.io PAT — currently in Swarm secrets" vertex="1">
-          <mxGeometry height="140" width="615" x="35" y="1600" as="geometry" />
+        <mxCell id="t_changes_list" parent="1" style="text;html=1;fontSize=11;align=left;verticalAlign=top" value="Already on dev (ships on next dev→master deploy):&lt;br&gt;  ✓ Grafana pinned to manager (constraints: node.role==manager)&lt;br&gt;  ✓ App dashboard fixed — up{job=&quot;itu-minitwit-app&quot;} + Uptime% panel&lt;br&gt;  ✓ Logging dashboard fixed — {swarm_service=&quot;minitwit_webserver&quot;}&lt;br&gt;  ✓ UFW firewall rules on all 3 nodes&lt;br&gt;&lt;br&gt;Triggered by the deploy itself:&lt;br&gt;  • Webserver .2 on Worker-1 gets re-scheduled against new digest → Rejected state clears&lt;br&gt;&lt;br&gt;Still to do before simulator URL flips to DO:&lt;br&gt;  1. Back `latest` counter with Postgres (sim_api.go:13 is still in-process — flaky under 3 replicas)&lt;br&gt;  2. Merge course PR (repositories.py → devtroopersminitwit.codes)&lt;br&gt;&lt;br&gt;Post-flip cleanup:&lt;br&gt;  3. Decommission Hetzner after 48h of clean DO-only traffic&lt;br&gt;&lt;br&gt;Backlog:&lt;br&gt;  4. Rotate the plaintext ghcr.io PAT (currently in Swarm secrets)&lt;br&gt;  5. tecnativa/docker-socket-proxy in front of Traefik + Promtail" vertex="1">
+          <mxGeometry height="285" width="700" x="35" y="1600" as="geometry" />
         </mxCell>
         <mxCell id="t_legend_box" parent="1" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;fontStyle=1;fontSize=11;fillColor=#ffffff;strokeColor=#999999" value="Legend" vertex="1">
           <mxGeometry height="160" width="200" x="1340" y="1367" as="geometry" />
@@ -307,34 +307,34 @@
         <mxCell id="RjSwBC4ydJbp_bvudmUq-13" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;fontSize=10;spacing=2;" value="Droplet on Digital Ocean" vertex="1">
           <mxGeometry height="18" width="140" x="1060" y="612" as="geometry" />
         </mxCell>
-        <mxCell id="J2RW5DFo4OKp40TaJ20q-1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;fontStyle=1;fontSize=13;fillColor=#f5f5f5;strokeColor=#666666;fontColor=light-dark(#999999, #ededed);" value="Hetzner single server" vertex="1">
+        <mxCell id="J2RW5DFo4OKp40TaJ20q-1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;fontStyle=1;fontSize=13;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#999999;" value="Hetzner single server" vertex="1">
           <mxGeometry height="990" width="480" x="1660" y="566" as="geometry" />
         </mxCell>
-        <mxCell id="J2RW5DFo4OKp40TaJ20q-2" parent="1" style="whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;fontColor=light-dark(#999999, #ededed);" value="webserver × 1&lt;br&gt;Go · :8080" vertex="1">
+        <mxCell id="J2RW5DFo4OKp40TaJ20q-2" parent="1" style="whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;fontColor=#999999;" value="webserver × 1&lt;br&gt;Go · :8080" vertex="1">
           <mxGeometry height="70" width="440" x="1680" y="768" as="geometry" />
         </mxCell>
-        <mxCell id="J2RW5DFo4OKp40TaJ20q-9" edge="1" parent="1" source="J2RW5DFo4OKp40TaJ20q-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontColor=light-dark(#999999, #ededed);strokeColor=#808080;" target="J2RW5DFo4OKp40TaJ20q-2">
+        <mxCell id="J2RW5DFo4OKp40TaJ20q-9" edge="1" parent="1" source="J2RW5DFo4OKp40TaJ20q-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontColor=#999999;strokeColor=#808080;" target="J2RW5DFo4OKp40TaJ20q-2">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="J2RW5DFo4OKp40TaJ20q-3" parent="1" style="whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;fontColor=light-dark(#999999, #ededed);" value="Prometheus&#xa;scrapes tasks.webserver" vertex="1">
+        <mxCell id="J2RW5DFo4OKp40TaJ20q-3" parent="1" style="whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;fontColor=#999999;" value="Prometheus&#xa;scrapes tasks.webserver" vertex="1">
           <mxGeometry height="40" width="440" x="1680" y="868" as="geometry" />
         </mxCell>
-        <mxCell id="J2RW5DFo4OKp40TaJ20q-10" edge="1" parent="1" source="J2RW5DFo4OKp40TaJ20q-4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontColor=light-dark(#999999, #ededed);strokeColor=#808080;" target="J2RW5DFo4OKp40TaJ20q-3">
+        <mxCell id="J2RW5DFo4OKp40TaJ20q-10" edge="1" parent="1" source="J2RW5DFo4OKp40TaJ20q-4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontColor=#999999;strokeColor=#808080;" target="J2RW5DFo4OKp40TaJ20q-3">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="J2RW5DFo4OKp40TaJ20q-13" edge="1" parent="1" source="J2RW5DFo4OKp40TaJ20q-4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontColor=light-dark(#999999, #ededed);strokeColor=#808080;" target="J2RW5DFo4OKp40TaJ20q-5">
+        <mxCell id="J2RW5DFo4OKp40TaJ20q-13" edge="1" parent="1" source="J2RW5DFo4OKp40TaJ20q-4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontColor=#999999;strokeColor=#808080;" target="J2RW5DFo4OKp40TaJ20q-5">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="J2RW5DFo4OKp40TaJ20q-4" parent="1" style="whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;fontColor=light-dark(#999999, #ededed);" value="Grafana&lt;br&gt;grafana.devtroopersminitwit.codes&lt;br&gt;(now pinned: node.role==manager)" vertex="1">
+        <mxCell id="J2RW5DFo4OKp40TaJ20q-4" parent="1" style="whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;fontColor=#999999;" value="Grafana&lt;br&gt;grafana.devtroopersminitwit.codes&lt;br&gt;(now pinned: node.role==manager)" vertex="1">
           <mxGeometry height="70" width="440" x="1680" y="935" as="geometry" />
         </mxCell>
-        <mxCell id="J2RW5DFo4OKp40TaJ20q-5" parent="1" style="whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;fontColor=light-dark(#999999, #ededed);" value="Loki&#xa;(log store)" vertex="1">
+        <mxCell id="J2RW5DFo4OKp40TaJ20q-5" parent="1" style="whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;fontColor=#999999;" value="Loki&#xa;(log store)" vertex="1">
           <mxGeometry height="60" width="440" x="1680" y="1031" as="geometry" />
         </mxCell>
-        <mxCell id="J2RW5DFo4OKp40TaJ20q-12" edge="1" parent="1" source="J2RW5DFo4OKp40TaJ20q-6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontColor=light-dark(#999999, #ededed);strokeColor=#808080;" target="J2RW5DFo4OKp40TaJ20q-5">
+        <mxCell id="J2RW5DFo4OKp40TaJ20q-12" edge="1" parent="1" source="J2RW5DFo4OKp40TaJ20q-6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontColor=#999999;strokeColor=#808080;" target="J2RW5DFo4OKp40TaJ20q-5">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="J2RW5DFo4OKp40TaJ20q-6" parent="1" style="whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;fontColor=light-dark(#999999, #ededed);" value="Promtail (global)" vertex="1">
+        <mxCell id="J2RW5DFo4OKp40TaJ20q-6" parent="1" style="whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;fontColor=#999999;" value="Promtail (global)" vertex="1">
           <mxGeometry height="60" width="440" x="1680" y="1168" as="geometry" />
         </mxCell>
         <mxCell id="J2RW5DFo4OKp40TaJ20q-8" edge="1" parent="1" source="J2RW5DFo4OKp40TaJ20q-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0;entryDx=0;entryDy=75;entryPerimeter=0;strokeColor=#808080;" target="t_pg">
@@ -345,10 +345,10 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="J2RW5DFo4OKp40TaJ20q-15" edge="1" parent="1" source="J2RW5DFo4OKp40TaJ20q-14" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontColor=light-dark(#999999, #ededed);strokeColor=#808080;" target="J2RW5DFo4OKp40TaJ20q-2">
+        <mxCell id="J2RW5DFo4OKp40TaJ20q-15" edge="1" parent="1" source="J2RW5DFo4OKp40TaJ20q-14" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontColor=#999999;strokeColor=#808080;" target="J2RW5DFo4OKp40TaJ20q-2">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="J2RW5DFo4OKp40TaJ20q-14" parent="1" style="whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;fontColor=light-dark(#999999, #ededed);" value="Traefik v3.6.x&#xa;reverse proxy · TLS · access logs&#xa;publish mode: host&#xa;pinned: node.role==manager" vertex="1">
+        <mxCell id="J2RW5DFo4OKp40TaJ20q-14" parent="1" style="whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;fontColor=#999999;" value="Traefik v3.6.x&#xa;reverse proxy · TLS · access logs&#xa;publish mode: host&#xa;pinned: node.role==manager" vertex="1">
           <mxGeometry height="70" width="440" x="1680" y="668" as="geometry" />
         </mxCell>
       </root>

@@ -35,3 +35,16 @@ func (Message) TableName() string {
 func (Follower) TableName() string {
 	return "followers"
 }
+
+// SimState holds singleton state for the simulator API. The row with ID=1 is
+// the only row used; other rows must never be written. Backing the `latest`
+// counter in the DB (rather than a package-level var) keeps the value
+// consistent across webserver replicas.
+type SimState struct {
+	ID     int `gorm:"primaryKey"`
+	Latest int
+}
+
+func (SimState) TableName() string {
+	return "sim_states"
+}

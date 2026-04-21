@@ -30,7 +30,7 @@ func setupTestServer(t *testing.T) (*httptest.Server, *http.Client) {
 		t.Fatal(err)
 	}
 
-	err = db.AutoMigrate(&User{}, &Message{}, &Follower{})
+	err = db.AutoMigrate(&User{}, &Message{}, &Follower{}, &SimState{})
 	if err != nil {
 		t.Fatal(err)
 	}
