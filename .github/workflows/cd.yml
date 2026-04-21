@@ -34,11 +34,21 @@ jobs:
           host: 64.226.116.162
           username: root
           key: ${{ secrets.DO_SSH_PRIVATE_KEY }}
+          # Pass a long-lived PAT so the credentials handed to workers via
+          # `--with-registry-auth` do not expire before the workers pull.
+          # Using the workflow's ephemeral GITHUB_TOKEN (a `ghs_*` token) here
+          # caused workers to reject tasks with "No such image" — see the
+          # incident on 21 Apr 2026. The PAT must have `read:packages` scope.
+          envs: GHCR_DEPLOY_PAT,GHCR_DEPLOY_USER
           script: |
+            set -euo pipefail
             cd /root/itu-minitwit
             git pull origin master
-            echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+            echo "$GHCR_DEPLOY_PAT" | docker login ghcr.io -u "$GHCR_DEPLOY_USER" --password-stdin
             docker stack deploy -c docker-stack.yml minitwit --with-registry-auth
+        env:
+          GHCR_DEPLOY_PAT: ${{ secrets.GHCR_DEPLOY_PAT }}
+          GHCR_DEPLOY_USER: ${{ secrets.GHCR_DEPLOY_USER }}
 
       - name: Deploy to Hetzner (legacy)
         uses: appleboy/ssh-action@v1
