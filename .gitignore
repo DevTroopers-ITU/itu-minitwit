@@ -15,6 +15,9 @@ CLAUDE.md
 # IDE
 .vscode/
 
+# Draw.io backup files
+*.bkp
+
 # Vagrant
 .vagrant/
 
