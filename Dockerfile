@@ -20,6 +20,15 @@ COPY . .
 # Build the Go binary
 RUN CGO_ENABLED=1 go build -o myserver .
 
+# Create non-root user
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+
+# Give the new user ownership of the app directory
+RUN chown -R appuser:appgroup /app
+
+# Switch to non-root user
+USER appuser
+
 # Application listens on port 8080
 EXPOSE 8080
 
