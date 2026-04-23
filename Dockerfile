@@ -1,12 +1,13 @@
 # Go + lightweight Linux
-FROM golang:1.24-alpine
+FROM golang:1.25-alpine
 
 # Working directory inside container
 WORKDIR /app
 
 # Required to build with SQLite (CGO)
 # hadolint ignore=DL3018
-RUN apk add --no-cache build-base sqlite-dev
+# upgrade all Alpine OS packages to their latest patched versions to fix known CVEs.
+RUN apk add --no-cache build-base sqlite-dev && apk upgrade --no-cache
 
 # Go dependency files
 COPY go.mod go.sum ./
