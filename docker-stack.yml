@@ -119,6 +119,8 @@ services:
       - discord_webhook_url
     environment:
       - GF_SERVER_ROOT_URL=https://grafana.devtroopersminitwit.codes/
+    volumes:
+      - grafana-data:/var/lib/grafana
     deploy:
       replicas: 1
       placement:
@@ -169,6 +171,7 @@ volumes:
   prometheus-data:
   loki-data:
   letsencrypt-data:
+  grafana-data:
 
 configs:
   loki_config:
