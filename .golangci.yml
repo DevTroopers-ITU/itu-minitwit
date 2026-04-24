@@ -11,15 +11,15 @@ linters:
     - gofmt
     - goimports
 
-linters-settings:
-  goimports:
-    local-prefixes: github.com/DevTroopers-ITU/itu-minitwit
+  settings:
+    goimports:
+      local-prefixes: github.com/DevTroopers-ITU/itu-minitwit
 
 run:
   timeout: 5m
 
-issues:
-  exclude-rules:
+exclusions:
+  rules:
     - path: _test\.go
       linters:
         - errcheck
