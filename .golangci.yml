@@ -20,7 +20,8 @@ formatters:
     - goimports
   settings:
     goimports:
-      local-prefixes: github.com/DevTroopers-ITU/itu-minitwit
+      local-prefixes:
+        - github.com/DevTroopers-ITU/itu-minitwit
 
 run:
   timeout: 5m
