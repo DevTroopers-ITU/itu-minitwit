@@ -8,18 +8,19 @@ linters:
     - ineffassign
     - unused
     - gosimple
+  exclusions:
+    rules:
+      - path: _test\.go
+        linters:
+          - errcheck
+
+formatters:
+  enable:
     - gofmt
     - goimports
-
   settings:
     goimports:
       local-prefixes: github.com/DevTroopers-ITU/itu-minitwit
 
 run:
   timeout: 5m
-
-exclusions:
-  rules:
-    - path: _test\.go
-      linters:
-        - errcheck
