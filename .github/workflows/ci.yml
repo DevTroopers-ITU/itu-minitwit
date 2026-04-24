@@ -10,10 +10,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
           go-version: '1.25'
+
       - name: Run gofmt
         run: |
           unformatted=$(gofmt -l .)
@@ -22,10 +24,12 @@ jobs:
             echo "$unformatted"
             exit 1
           fi
+
       - name: Run golangci-lint
         uses: golangci/golangci-lint-action@v6
         with:
-          version: latest
+          version: v2.4.0
+
       - name: Run hadolint
         uses: hadolint/hadolint-action@v3.1.0
         with:
@@ -37,6 +41,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
       - name: Run Semgrep
         uses: semgrep/semgrep-action@v1
         with:
@@ -48,16 +53,20 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
       - name: Build application Docker image
         run: docker build -t minitwit:ci .
+
       - name: Run Go tests
         run: docker run --rm minitwit:ci go test -v ./...
+
       - name: Run E2E tests with docker compose
         run: |
           docker compose -f docker-compose.yml -f docker-compose.test.yml up \
-              --build \
-              --abort-on-container-exit \
-              --exit-code-from tests
+            --build \
+            --abort-on-container-exit \
+            --exit-code-from tests
+
       - name: Compose down
         if: always()
         run: |
@@ -69,13 +78,16 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
       - name: Build image for scanning
         run: docker build -t minitwit:ci .
+
       - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
+
       - name: Run Docker Scout
         uses: docker/scout-action@v1
         with:
