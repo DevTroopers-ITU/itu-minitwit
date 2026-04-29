@@ -1,6 +1,9 @@
 package main
 
-import "gorm.io/gorm"
+import (
+	"github.com/lib/pq"
+	"gorm.io/gorm"
+)
 
 type DBStore struct {
 	db *gorm.DB
@@ -135,37 +138,32 @@ func (s *DBStore) UserTimeline(userID, limit int) ([]MessageView, error) {
 }
 
 func (s *DBStore) PersonalTimeline(userID, limit int) ([]MessageView, error) {
-	// First get who the user follows
 	var followedIDs []int
 	s.db.Model(&Follower{}).
 		Select("whom_id").
 		Where("who_id = ?", userID).
 		Pluck("whom_id", &followedIDs)
 
-	// Build the query based on whether they follow anyone
-	var msgs []Message
-	var err error
+	ids := append(followedIDs, userID)
 
-	if len(followedIDs) == 0 {
-		// User follows nobody — just show their own messages
-		err = s.db.
-			Where("flagged = 0 AND author_id = ?", userID).
-			Preload("Author").
-			Order("pub_date desc").
-			Limit(limit).
-			Find(&msgs).Error
-	} else {
-		// Include own messages + followed users
-		ids := append(followedIDs, userID)
-		err = s.db.
-			Where("flagged = 0 AND author_id IN ?", ids).
-			Preload("Author").
-			Order("pub_date desc").
-			Limit(limit).
-			Find(&msgs).Error
+	var msgs []Message
+	err := s.db.Raw(`
+		SELECT * FROM messages
+		WHERE flagged = 0 
+		AND author_id = ANY(?)
+		ORDER BY pub_date DESC
+		LIMIT ?
+	`, pq.Array(ids), limit).Scan(&msgs).Error
+	if err != nil {
+		return nil, err
 	}
 
-	return toViews(msgs), err
+	// Load authors
+	for i := range msgs {
+		s.db.First(&msgs[i].Author, msgs[i].AuthorID)
+	}
+
+	return toViews(msgs), nil
 }
 
 // Simulator state
