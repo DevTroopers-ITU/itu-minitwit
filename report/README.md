@@ -33,6 +33,7 @@ You need a TeX engine installed (`texlive-xetex` on Debian/Arch). CI auto-build 
 
 - Branch `feature/report-<topic>` per section/topic, PR into `dev`.
 - Don't commit `build/MSc_group_q.pdf` until we're freezing for hand-in.
+- for collaborative session use extensions in VSC like "Live Share" by Microsoft (like Helge suggested in lecture)
 
 ## Schedule
 
