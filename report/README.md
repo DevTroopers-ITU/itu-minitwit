@@ -35,7 +35,7 @@ You need a TeX engine installed (`texlive-xetex` on Debian/Arch). CI auto-build 
 
 ## Schedule
 
-Today is 2026-05-01. Hand-in is **Mon 2026-05-18 14:00**, so about 2.5 weeks.
+Today is 2026-05-01. Hand-in is **Mon 2026-05-18 14:00**.
 
 | Date | Goal |
 |------|------|
