@@ -7,7 +7,6 @@ linters:
     - staticcheck
     - ineffassign
     - unused
-    - gosimple
   exclusions:
     rules:
       - path: _test\.go
