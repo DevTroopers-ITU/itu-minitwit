@@ -26,7 +26,7 @@ jobs:
           fi
 
       - name: Run golangci-lint
-        uses: golangci/golangci-lint-action@v7
+        uses: golangci/golangci-lint-action@v8
         with:
           version: v2.4.0
 
@@ -54,11 +54,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Build application Docker image
-        run: docker build -t minitwit:ci .
+      - name: Build builder stage
+        run: docker build --target builder -t minitwit:builder .
 
       - name: Run Go tests
-        run: docker run --rm minitwit:ci go test -v ./...
+        run: docker run --rm minitwit:builder go test -v ./...
+
+      - name: Build final image
+        run: docker build -t minitwit:ci .
 
       - name: Run E2E tests with docker compose
         run: |
