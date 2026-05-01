@@ -27,6 +27,7 @@ You need a TeX engine installed (`texlive-xetex` on Debian/Arch). CI auto-build 
 - Each section starts with `**Author(s):** ...` per spec (group attribution).
 - Reference commits/issues by full GitHub URL or short SHA — needed for the Reflection section.
 - Match figure font size to body text (see session_12 `Documentation.md`).
+- Remember to include screenshots! I.e "We are logging this and that on grafana dashboard" -> bum screenshot showing it.
 
 ## Working flow
 
