@@ -33,9 +33,22 @@ You need a TeX engine installed (`texlive-xetex` on Debian/Arch). CI auto-build 
 - Branch `feature/report-<topic>` per section/topic, PR into `dev`.
 - Don't commit `build/MSc_group_q.pdf` until we're freezing for hand-in.
 
+## Schedule
+
+Today is 2026-05-01. Hand-in is **Mon 2026-05-18 14:00**, so about 2.5 weeks.
+
+| Date | Goal |
+|------|------|
+| Fri 2026-05-08 | Drafts of §1 System and §2 Process done |
+| Mon 2026-05-12 | Drafts of §3 Reflection and §4 Generative AI done; CI build wired up |
+| Fri 2026-05-15 | Internal review, figures finalized, word count under 2500 |
+| Mon 2026-05-18 | WISEflow submission + PR to lecture-notes `final_report_urls.py` |
+
+Dates are guidelines, not hard internal deadlines — adjust as we go.
+
 ## Hand-in
 
-Deadline: **Mon 18/5/2026 14:00**.
+Deadline: **Mon 2026-05-18 14:00**.
 
 1. Submit PDF on WISEflow.
 2. PR to `final_report_urls.py` in the lecture-notes repo with the link to our final release.
