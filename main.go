@@ -89,6 +89,18 @@ func setupRouter() *mux.Router {
 		http.ServeFile(w, r, "swagger.json")
 	}).Methods("GET")
 
+	// Health check (before /{username} catch-all)
+	r.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		if err := db.Exec("SELECT 1").Error; err != nil {
+			w.WriteHeader(http.StatusServiceUnavailable)
+			_, _ = w.Write([]byte(`{"status":"DOWN"}`))
+			return
+		}
+		w.WriteHeader(http.StatusOK)
+		_, _ = w.Write([]byte(`{"status":"UP"}`))
+	}).Methods("GET")
+
 	// Sim API (before /{username} catch-all)
 	r.HandleFunc("/latest", getLatest).Methods("GET")
 	r.HandleFunc("/msgs", simMessages).Methods("GET")
@@ -106,15 +118,6 @@ func setupRouter() *mux.Router {
 	r.HandleFunc("/{username}/follow", followHandler).Methods("GET")
 	r.HandleFunc("/{username}/unfollow", unfollowHandler).Methods("GET")
 	r.HandleFunc("/{username}", userTimelineHandler).Methods("GET")
-
-	// Health check
-	r.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
-		if err := db.Exec("SELECT 1").Error; err != nil {
-			w.WriteHeader(http.StatusServiceUnavailable)
-			return
-		}
-		w.WriteHeader(http.StatusOK)
-	}).Methods("GET")
 
 	// Root
 	r.HandleFunc("/", timelineHandler).Methods("GET")
