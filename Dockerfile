@@ -1,27 +1,25 @@
-# Go + lightweight Linux
-FROM golang:1.24-alpine
-
-# Working directory inside container
+# Stage 1 - Builder (has build tools, binutils etc. - thrown away after)
+FROM golang:1.25-alpine AS builder
 WORKDIR /app
-
-# Required to build with SQLite (CGO)
 # hadolint ignore=DL3018
 RUN apk add --no-cache build-base sqlite-dev
-
-# Go dependency files
 COPY go.mod go.sum ./
-
-# Download the copied dependencies
 RUN go mod download
-
-# Application source code
 COPY . .
-
-# Build the Go binary
 RUN CGO_ENABLED=1 go build -o myserver .
 
-# Application listens on port 8080
+# Stage 2 - Final image (only the compiled binary, no build tools)
+FROM alpine:3.23
+WORKDIR /app
+# hadolint ignore=DL3018
+RUN apk upgrade --no-cache
+COPY --from=builder /app/myserver .
+COPY --from=builder /app/templates ./templates
+COPY --from=builder /app/static ./static
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup \
+    && chown -R appuser:appgroup /app
+USER appuser
 EXPOSE 8080
-
-# Start the server
 CMD ["./myserver"]
+
+

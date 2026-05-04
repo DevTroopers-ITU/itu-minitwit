@@ -2,7 +2,11 @@
 
 ## Deployment
 
-Vagrant + Hetzner Cloud. (can be changed at any point)
+Production runs on a 3-node Docker Swarm cluster on DigitalOcean fronted by Traefik with Let's Encrypt TLS. Pushes to `master` trigger GitHub Actions, which builds the images, pushes them to GHCR, and runs `docker stack deploy` on the manager. See [docs/operations/docker-swarm.md](docs/operations/docker-swarm.md) for the full setup and [docs/architecture/architecture.md](docs/architecture/architecture.md) for the topology.
+
+## Spinning up a dev VM (optional)
+
+Vagrant + Hetzner Cloud. (can be changed at any point — Terraform replacement planned.)
 
 ### You need
 
