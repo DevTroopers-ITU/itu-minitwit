@@ -363,10 +363,15 @@
     "list": []
   },
   "time": {
-    "from": "now-30m",
+    "from": "now-7d",
     "to": "now"
   },
-  "timepicker": {},
+  "timepicker": {
+    "quick_ranges": [
+      { "display": "Last 7 days", "from": "now-7d", "to": "now" },
+      { "display": "Last 30 days", "from": "now-30d", "to": "now" }
+    ]
+  },
   "timezone": "browser",
   "title": "Minitwit Example Dashboard",
   "uid": "fegau3n6gywaoa",
