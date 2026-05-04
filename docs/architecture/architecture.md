@@ -95,7 +95,3 @@ graph TB
 - **External database**: DigitalOcean managed PostgreSQL handles backups and availability, keeping webserver replicas stateless.
 - **CookieStore sessions**: Session data lives in client cookies — no sticky sessions needed across replicas.
 - **Swarm secrets**: Sensitive config (DATABASE_URL, SECRET_KEY, DISCORD_WEBHOOK_URL) stored as Docker secrets at `/run/secrets/`, with `getSecretOrEnv()` fallback for local dev.
-
-## Legacy
-
-A single-server Hetzner Cloud VPS (46.224.144.214) running docker-compose is kept as a legacy fallback. The CD pipeline deploys to both Hetzner and DO Swarm in parallel. Hetzner will be decommissioned once the Swarm is fully verified.
