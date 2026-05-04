@@ -107,6 +107,15 @@ func setupRouter() *mux.Router {
 	r.HandleFunc("/{username}/unfollow", unfollowHandler).Methods("GET")
 	r.HandleFunc("/{username}", userTimelineHandler).Methods("GET")
 
+	// Health check
+	r.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
+		if err := db.Exec("SELECT 1").Error; err != nil {
+			w.WriteHeader(http.StatusServiceUnavailable)
+			return
+		}
+		w.WriteHeader(http.StatusOK)
+	}).Methods("GET")
+
 	// Root
 	r.HandleFunc("/", timelineHandler).Methods("GET")
 	return r
