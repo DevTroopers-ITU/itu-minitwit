@@ -1,8 +1,10 @@
-# CI Security Update — Semgrep + Docker Scout
+# CI Security Update — Semgrep, Docker Scout, and Codacy
 
 ## Overview
 
 Two security scanning tools have been added to the CI pipeline to catch vulnerabilities early — before code reaches production. This follows the "shift-left" security principle: find problems as early as possible in the development process, not after deployment.
+
+Codacy is also used as a code-quality and maintainability gate for the repository. It complements the security scanners by surfacing issues that are not always vulnerabilities, but still matter for long-term maintenance, readability, and technical debt.
 
 ---
 
@@ -32,6 +34,18 @@ Two security scanning tools have been added to the CI pipeline to catch vulnerab
 **Severity threshold:** Fails the pipeline on any `CRITICAL` or `HIGH` findings, blocking deployment automatically.
 
 **If it fails:** The pipeline stops and the image is never pushed to GHCR or deployed to the swarm.
+
+---
+
+### 3. Codacy — Maintainability and Tech Debt Tracking
+
+**What it does:** Codacy analyzes the repository for quality issues such as code smells, maintainability problems, duplicated logic, and patterns that make future changes harder.
+
+**Why it matters here:** The project has a fairly large mix of application code, monitoring config, CI workflows, Dockerfiles, and docs. Codacy helps catch issues across those files before they turn into extra maintenance work.
+
+**How it fits in:** Codacy is not a replacement for Semgrep or Docker Scout. Instead, it sits alongside them as a quality layer for the repository, especially useful once the project is already deployed and mostly in maintenance mode.
+
+**If it flags something:** Triage the finding first. Fix it if it is a real issue, or tune Codacy if the warning is noisy for intentionally generated or legacy files.
 
 ---
 
@@ -83,3 +97,4 @@ These CI additions are part of a broader security hardening effort that also inc
 - `apk upgrade --no-cache` added to Dockerfile to patch Alpine OS packages
 - UFW firewall configured on all three swarm nodes
 - `pgx/v5` dependency bumped to `v5.9.2` to fix 2 CRITICAL CVEs
+- Codacy connected to the repository to track maintainability and tech debt over time

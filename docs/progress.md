@@ -97,7 +97,7 @@ Cross-referenced from course session tasks and git history. Updated April 2026.
 
 **Gaps:**
 - [ ] **SonarCloud:** Was configured on feature/code-quality branch with sonar-project.properties + CI step, but was never merged to master. Not running in production CI.
-- [ ] **Codacy:** Never set up. No config, no CI step, no references in repo.
+- [ ] **Codacy:** Repository connected and being triaged. Findings still need tuning / follow-up, but the repo is now tracked in Codacy.
 - [ ] **Browser-based UI test:** No Selenium/Playwright test like `test_itu_minitwit_ui.py` from lecture. Go tests cover UI endpoints via HTTP but not via a real browser.
 
 ## Session 8 (20 Mar) — Logging

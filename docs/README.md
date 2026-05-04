@@ -24,6 +24,11 @@ Start here. Each file is linked once below with a one-line summary of what's in 
 
 - [`monitoring/alerting.md`](monitoring/alerting.md) — Grafana alert rules and Discord webhook integration.
 
+## Security & quality
+
+- [`security/ci-security-update.md`](security/ci-security-update.md) — Semgrep, Docker Scout, and Codacy overview for the security/quality CI checks.
+- [`security/docker-scout-scan.md`](security/docker-scout-scan.md) — How the Docker Scout image scan is run and interpreted.
+
 ## Incident notes
 
 - [`incidents/session11-ops-debug.md`](incidents/session11-ops-debug.md) — Debug diary from the Traefik v3.6 / host-mode incident (April 2026). Read before touching Traefik config.
