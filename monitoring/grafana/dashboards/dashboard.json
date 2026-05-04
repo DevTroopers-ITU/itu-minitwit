@@ -340,6 +340,41 @@
         "type": "prometheus",
         "uid": "prometheus-uid"
       },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percentunit",
+          "min": 0,
+          "max": 1,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "dark-red", "value": 0 },
+              { "color": "yellow", "value": 0.95 },
+              { "color": "green", "value": 0.99 }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 20 },
+      "id": 8,
+      "title": "HTTP success rate (non-5xx)",
+      "type": "timeseries",
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus-uid" },
+          "expr": "sum(rate(minitwit_http_responses_total{status!~\"5..\"}[5m])) / sum(rate(minitwit_http_responses_total[5m]))",
+          "legendFormat": "Success rate",
+          "range": true,
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus-uid"
+      },
       "gridPos": { "h": 8, "w": 12, "x": 0, "y": 20 },
       "id": 5,
       "title": "Error rate (4xx and 5xx)",
