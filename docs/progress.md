@@ -165,7 +165,7 @@ Cross-referenced from course session tasks and git history. Updated April 2026.
 ### Recent merges
 - Docker Swarm, Traefik, alerting, logging — merged to master via PRs #112, #114, #120
 - PR #122 (dev → master) approved, pending merge by Peter
-- CD pipeline deploys to both DigitalOcean Swarm (primary) and Hetzner (legacy)
+- CD pipeline initially deployed to both DigitalOcean Swarm (primary) and Hetzner (legacy); Hetzner decommissioned 2026-05-04, CD now Swarm-only
 
 ### Outstanding debt (across all sessions)
 
