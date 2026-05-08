@@ -14,6 +14,10 @@ WORKDIR /app
 # hadolint ignore=DL3018
 RUN apk upgrade --no-cache
 COPY --from=builder /app/myserver .
+COPY --from=builder /app/templates ./templates
+COPY --from=builder /app/static ./static
+COPY --from=builder /app/swagger.html ./swagger.html
+COPY --from=builder /app/swagger.json ./swagger.json
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup \
     && chown -R appuser:appgroup /app
 USER appuser
