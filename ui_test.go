@@ -30,11 +30,11 @@ func TestRegisterPageUI(t *testing.T) {
 	body := getBody(t, ts, client, "/register")
 	for _, want := range []string{
 		"Sign Up",
-		`form action="/register" method=post`,
-		`name=username`,
-		`name=email`,
-		`name=password`,
-		`name=password2`,
+		`form action="/register" method="post"`,
+		`name="username"`,
+		`name="email"`,
+		`name="password"`,
+		`name="password2"`,
 		`value="Sign Up"`,
 	} {
 		if !strings.Contains(body, want) {
