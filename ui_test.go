@@ -12,9 +12,9 @@ func TestLoginPageUI(t *testing.T) {
 	body := getBody(t, ts, client, "/login")
 	for _, want := range []string{
 		"Sign In",
-		`form action="/login" method=post`,
-		`name=username`,
-		`name=password`,
+		`form action="/login" method="post"`,
+		`name="username"`,
+		`name="password"`,
 		`value="Sign In"`,
 	} {
 		if !strings.Contains(body, want) {
