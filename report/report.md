@@ -85,7 +85,7 @@ and why.
 <!-- Biggest issues and how we solved them. Link commits/issues. -->
 
 ## Operation
-**Author(s):** Apoorva
+**Author(s):** Leo and Apoorva
 <!-- Incidents, on-call lessons, what changed in how we run the system. -->
 
 Choices about servers, droplets, databases
