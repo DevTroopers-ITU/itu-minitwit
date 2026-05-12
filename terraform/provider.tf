@@ -10,6 +10,15 @@ variable "region" {}
 variable "pub_key" {}
 variable "pvt_key" {}
 
+# database password for building the connection string
+variable "db_password" {}
+
+# secret key for signing session cookies/tokens in the Go app
+variable "secret_key" {}
+
+# discord webhook url for grafana alerting notifications
+variable "discord_webhook_url" {}
+
 # setup the provider
 terraform {
         required_providers {

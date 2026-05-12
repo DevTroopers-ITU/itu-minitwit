@@ -10,3 +10,4 @@ resource "digitalocean_floating_ip_assignment" "public-ip" {
 output "public_ip" {
   value = digitalocean_floating_ip.public-ip.ip_address
 }
+
