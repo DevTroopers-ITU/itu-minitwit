@@ -54,8 +54,8 @@ func TestTimelinePageUI(t *testing.T) {
 	for _, want := range []string{
 		"My Timeline",
 		"What's on your mind foo?",
-		`form action="/add_message" method=post`,
-		`name=text`,
+		`form action="/add_message" method="post"`,
+		`name="text"`,
 		`value="Share"`,
 		`href="/logout"`,
 		`href="/public"`,
