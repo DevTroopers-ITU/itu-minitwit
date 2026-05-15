@@ -8,7 +8,7 @@ BASE_URL = os.getenv("BASE_URL", "http://127.0.0.1:8080")
 
 def test_browser_ui_flow():
     username = f"ui_{os.getpid()}"
-    login_secret = "default"
+    login_secret = os.urandom(16).hex()
     email = f"{username}@example.com"
 
     with sync_playwright() as p:
