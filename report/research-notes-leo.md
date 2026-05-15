@@ -2,6 +2,16 @@
 
 > **Start here tomorrow.** Skim §0–§5 first. Deep research is in the appendix.
 
+> 🚨 **URGENT — read first.** The DO production snapshot confirmed:
+> **the username/password Apoorva posted in `#generelt` on 2026-05-04
+> (`helgeandfriends` / `sesame0uvr3toi`) is the *live* Grafana admin
+> password right now.** Anyone with that Discord transcript or a
+> `docker inspect` on the manager can log into Grafana as admin.
+> Rotate it before submission. Update `monitoring/grafana/...` (or
+> wherever it's set), redeploy, confirm new password works, share the
+> new credentials only via the Wisepass / report PDF — never Discord.
+> Also worth removing the old message from `#generelt` history.
+
 ---
 
 ## §0 Hard constraints (REPORT.md, 2026 spring)
@@ -74,12 +84,20 @@ you. Say so out loud.**
    data plane fail independently**. (PR #131 fix; `docs/incidents/session11-ops-debug.md`.)
 2. **The horizontal-scaling honest admission.** We chose 3 Swarm replicas
    because the session asked for it, not because we measured. Tiny nodes
-   (1 GB RAM, "662/961 MB used"). Discord 2026-03-11 shows DO was picked
-   over Hetzner because of **student credits** (Apoorva had credits, Leo
-   said "use student discounts — that would be optimal"), not because
-   "Apoorva already had droplets" as the doc claims. Rewrite that sentence.
+   (1 GB RAM, **84% used right now per the 2026-05-15 snapshot**). Discord
+   2026-03-11 shows DO was picked over Hetzner because of **student
+   credits**, not because "Apoorva already had droplets" as the doc claims.
+   Rewrite that sentence.
 3. **Zero-downtime parallel run for 4 weeks** (Hetzner + Swarm both live
    Apr 10 → May 4) is the strongest single operational decision. Say it.
+
+**Honest gap to acknowledge** (from the live snapshot): both incidents
+(17 Apr, 29 Apr) are now **outside Prometheus retention** (15 days,
+TSDB starts 2026-04-30) and **outside Docker log retention** (~24h
+because of write volume). The only durable evidence for both is in
+`docs/incidents/` and Discord screenshots. **Manager is a single point
+of failure** for Traefik + Prometheus + Grafana + Loki + 1 webserver
+replica — clean answer to the "SPOF" exam question.
 
 ### §2.3 Evolution and Refactoring (150 words)
 
@@ -110,6 +128,20 @@ you. Say so out loud.**
    simulator auth is a hardcoded base64 string (functionally open API);
    GHCR PAT in plaintext on all three droplets, parked follow-up never
    rotated. Tests are thin (11 functions total, none on `store.go`).
+
+**New from the live snapshot (2026-05-15):**
+- **~2900 `superfluous response.WriteHeader call from main.go:50`
+  warnings per replica per day.** Real recurring code bug in the
+  middleware, silently logged since the cutover. Cheap concrete
+  "still ugly" data point.
+- **Grafana admin password baked into the Compose env** —
+  `helgeandfriends:sesame0uvr3toi`, recoverable via `docker inspect` by
+  anyone with shell on the manager. Belongs on the secret-leak surface
+  next to the GHCR PAT.
+- **2026-05-15 03:18–03:20 UTC slow-query spike:** INSERT messages 8.7s,
+  UPDATE sim_states 5.1s on the manager+Worker-2 replicas; Worker-1
+  untouched. Postgres-side contention (this morning). Not in the report
+  necessarily, but useful context if asked about recent operational state.
 
 ### §2.5 DevOps Style (150 words)
 
@@ -233,8 +265,13 @@ done, a free deduction if not.
 - [ ] **Risk matrix in the report** — session 11 README_TASKS lists 6
   bullets to follow as substructure. Peter J's security hardening section.
 - [ ] **Report PDF built via CI** — not yet wired. Flag to the team.
-- [ ] **Rotate the May 4 plaintext credentials** posted in Discord
-  `#generelt` (helgeandfriends / sesame...). Do it before submission.
+- [ ] 🚨 **Rotate the Grafana admin password** — the credentials
+  Apoorva posted in Discord `#generelt` on 2026-05-04
+  (`helgeandfriends:sesame0uvr3toi`) **are the live admin password**
+  (confirmed via DO snapshot, `docker inspect` on the Grafana service).
+  Anyone with the Discord transcript or shell on the manager can log in.
+  Update the Compose/Stack env, redeploy, confirm. Highest-priority
+  pre-submission item.
 - [ ] **`terraform/README.md` opens with `Author - Claude`** — verify the
   content actually matches the built infra. 2-minute check.
 
@@ -333,6 +370,11 @@ Things the slides emphasise that REPORT.md doesn't spell out:
 - `~/Dev/itu-minitwit-discord-export/` (856 KB) — DM + 5 server channels.
   `#standup` (504 msgs) is the richest. The Apr 17 outage thread is
   invaluable for the GAI section's "Claude posts as Claude" anecdote.
+- `~/Dev/itu-minitwit-do-snapshot/` (2.6 MB, 28 files) — live DO state as
+  of 2026-05-15: `swarm-state.txt`, gzipped container logs, Prometheus
+  query JSON (both incident windows are outside retention), Grafana
+  dashboards + datasources + provisioning files, active alerts, Loki
+  error sample. Read-only pull.
 - `~/.config/discord-dce-token` — **delete with `shred -u` before bed.**
 - This file — `report/research-notes-leo.md`. Branch
   `docs/report-leo-sections` (local). Push/commit when ready.
