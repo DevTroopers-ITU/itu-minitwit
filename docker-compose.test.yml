@@ -37,8 +37,7 @@ services:
       sh -c "
           pip install --upgrade pip &&
           pip install -r requirements.txt &&
-          pytest python-references/minitwit_sim_api_test.py -v &&
-          pytest python-references/minitwit_ui_browser_test.py -v
+          pytest python-references/ -v
         "
 
   clidownload:
