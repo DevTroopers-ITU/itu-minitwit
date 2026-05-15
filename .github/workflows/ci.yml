@@ -76,7 +76,6 @@ jobs:
           docker compose -f docker-compose.yml -f docker-compose.test.yml run --rm tests sh -c "
             pip install --upgrade pip &&
             pip install -r requirements.txt &&
-            playwright install --with-deps &&
             pytest python-references/minitwit_ui_browser_test.py -v
           "
 
