@@ -3,7 +3,7 @@ import os
 from playwright.sync_api import sync_playwright, expect
 
 
-BASE_URL = os.getenv("BASE_URL", "http://127.0.0.1:8080")
+BASE_URL = os.getenv("BASE_URL", "http://webserver:8080")
 
 
 def test_browser_ui_flow():
