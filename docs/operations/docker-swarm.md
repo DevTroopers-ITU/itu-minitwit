@@ -41,7 +41,7 @@ We created a 3-node Docker Swarm cluster on DigitalOcean to provide high availab
 
 6. **Grafana** — Added an entrypoint script to export Swarm secrets as environment variables (needed for the Discord webhook URL in alerting).
 
-7. **CD pipeline** — Builds and pushes 3 Docker images (app, prometheus, grafana) to GHCR. Deploys to both DigitalOcean Swarm and Hetzner (legacy) in parallel.
+7. **CD pipeline** — Builds and pushes 3 Docker images (app, prometheus, grafana) to GHCR. Initially deployed to both DigitalOcean Swarm and Hetzner (legacy) in parallel; the Hetzner half was removed on 2026-05-04 once the Swarm migration was complete.
 
 ## Service distribution across nodes
 
@@ -105,9 +105,7 @@ Once the Swarm is verified working, update the A records at Name.com to point to
 
 ### 7. Decommission Hetzner
 
-Once DNS is pointing to DO and the simulator URL is updated:
-1. Remove the Hetzner deploy step from `cd.yml`
-2. Shut down the Hetzner server
+**Done 2026-05-04.** Removed the Hetzner deploy step from `cd.yml` and powered off the legacy droplet at 46.224.144.214. End of the single-server era — CD is Swarm-only from this point on.
 
 ## Decisions and rationale
 

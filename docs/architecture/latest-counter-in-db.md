@@ -12,7 +12,7 @@ var latest int = -1
 
 That worked fine while we ran a single webserver process. Once we moved to Docker Swarm with `replicas: 3` spread across all three nodes, each replica ended up with its own copy of `latest`. Requests from the grader are load-balanced across replicas, so after writing `latest=5` on replica A, a subsequent `GET /latest` might land on replica B and return a stale value.
 
-We did not observe this bug in production yet because the grader still points at the old single-server Hetzner deployment. The moment the simulator URL flips to `devtroopersminitwit.codes` (DO Swarm), the counter becomes inconsistent.
+We did not observe this bug in production initially because the grader was still pointing at the old single-server Hetzner deployment. Once the simulator URL flipped to `devtroopersminitwit.codes` (DO Swarm), the counter would have become inconsistent — which is why we made this change.
 
 ## What Changed
 

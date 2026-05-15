@@ -9,7 +9,6 @@ Quick-lookup commands for operating the Swarm cluster, debugging a service, and 
 | Manager | 64.226.116.162 | Traefik, Grafana, Prometheus, Loki live here |
 | Worker-1 | 134.122.90.176 | Webserver replica |
 | Worker-2 | 206.189.59.60 | Webserver replica |
-| Legacy | 46.224.144.214 | Old Hetzner single-server deploy |
 | Domain | devtroopersminitwit.codes | A-record → Manager IP |
 
 ```bash
