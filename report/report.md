@@ -156,11 +156,11 @@ The main takeaway is that DevOps was not just about adding tools. It became conc
 # Use of Generative AI
 **Author(s):** Leo
 
-We used Anthropic Claude, mainly through the Code interface, throughout the project for infrastructure work, debugging, documentation, and implementation support in unfamiliar technical areas. AI-assisted commits were marked with `Co-Authored-By: Claude`, and `.mailmap` maps the tool to `LLM <none>` as required by the course.
+We used Anthropic Claude, mainly through the Code interface, throughout the project. AI-assisted commits carry `Co-Authored-By: Claude`, and `.mailmap` maps the tool to `LLM <none>` as required by the course.
 
-This was particularly useful when working with Docker Swarm, Traefik, PostgreSQL migration, CI/CD setup, and security tooling. AI reduced iteration time by helping explain errors, suggest configurations, and accelerate exploration of possible solutions.
+The clearest place AI helped was the early refactor of the inherited Python/Flask app into Go (PR #15). None of us knew Go; Claude helped us scaffold the package structure and read errors as we learned the type system. Without it, the rewrite would likely have taken much longer. The same was true later for Docker Swarm, Traefik, the PostgreSQL migration, CI/CD setup, and security tooling: AI reduced iteration time by helping explain errors and suggest configurations.
 
-However, its usefulness depended entirely on active validation. Plausible but incorrect suggestions occasionally slowed debugging rather than helping. We found that AI worked best as a fast exploratory assistant, not as an authoritative source.
+Its usefulness depended on active validation, though. Plausible but wrong suggestions sometimes slowed debugging rather than helping, and we came to treat AI as a fast exploratory assistant rather than an authoritative source.
 
 A further reflection is that AI use was not evenly distributed within the team. While it increased individual productivity, it also created some asymmetry in how quickly contributors could work across unfamiliar technical areas.
 
