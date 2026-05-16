@@ -9,6 +9,10 @@
           <mxGeometry x="0" y="0" width="1500" height="900" as="geometry"/>
         </mxCell>
 
+        <mxCell id="sim_band" value="Simulator live — Mar 6 → May 8 (we are a real service)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#EEE9DA;strokeColor=#C9C4B8;strokeWidth=0.5;fontSize=9;fontStyle=2;fontFamily=Georgia;fontColor=#5A5048;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="560" y="64" width="885" height="11" as="geometry"/>
+        </mxCell>
+
         <mxCell id="title" value="ITU-MiniTwit — Project storyboard (Jan–May 2026)" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=22;fontStyle=1;fontColor=#1A1A1A;" vertex="1" parent="1">
           <mxGeometry x="100" y="10" width="1300" height="32" as="geometry"/>
         </mxCell>
@@ -329,6 +333,13 @@
           <mxGeometry x="1160" y="210" width="5" height="55" as="geometry"/>
         </mxCell>
 
+        <mxCell id="p_hardening" value="PR #143&#10;Semgrep + Docker Scout&#10;non-root container&#10;Apr 23" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#E5E2DA;strokeWidth=1;fontSize=8;align=center;verticalAlign=middle;spacingLeft=6;" vertex="1" parent="1">
+          <mxGeometry x="1060" y="272" width="85" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="p_hardening_stripe" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#A04040;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry x="1060" y="272" width="5" height="55" as="geometry"/>
+        </mxCell>
+
         <mxCell id="lane_sep_1" style="endArrow=none;html=1;rounded=0;strokeColor=#D4D0C4;strokeWidth=0.5;dashed=1;" edge="1" parent="1">
           <mxGeometry relative="1" as="geometry">
             <mxPoint x="50" y="345" as="sourcePoint"/>
@@ -469,51 +480,8 @@
           <mxGeometry x="890" y="707" width="55" height="30" as="geometry"/>
         </mxCell>
 
-        <mxCell id="rail_gap" value="↑  No releases tagged from Mar 27 through May 16. Weekly cadence didn't survive the Swarm scramble." style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=9;fontStyle=2;fontFamily=Georgia;fontColor=#666666;rotation=-3;" vertex="1" parent="1">
-          <mxGeometry x="980" y="722" width="500" height="20" as="geometry"/>
-        </mxCell>
 
-        <mxCell id="ann_easter" value="Easter ate two weeks here" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=9;fontStyle=2;fontFamily=Georgia;fontColor=#555555;whiteSpace=wrap;" vertex="1" parent="1">
-          <mxGeometry x="845" y="182" width="180" height="14" as="geometry"/>
-        </mxCell>
-        <mxCell id="ann_easter_arrow" style="endArrow=open;endSize=4;html=1;rounded=0;strokeColor=#999999;strokeWidth=0.75;curved=1;" edge="1" parent="1">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint x="965" y="180" as="sourcePoint"/>
-            <mxPoint x="990" y="172" as="targetPoint"/>
-          </mxGeometry>
-        </mxCell>
-
-        <mxCell id="ann_hetzner" value="we kept Hetzner alive so the simulator never noticed" style="text;html=1;strokeColor=none;fillColor=none;align=right;verticalAlign=middle;fontSize=9;fontStyle=2;fontFamily=Georgia;fontColor=#555555;whiteSpace=wrap;" vertex="1" parent="1">
-          <mxGeometry x="660" y="540" width="290" height="14" as="geometry"/>
-        </mxCell>
-        <mxCell id="ann_hetzner_arrow" style="endArrow=open;endSize=4;html=1;rounded=0;strokeColor=#999999;strokeWidth=0.75;curved=1;" edge="1" parent="1">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint x="952" y="548" as="sourcePoint"/>
-            <mxPoint x="970" y="565" as="targetPoint"/>
-          </mxGeometry>
-        </mxCell>
-
-        <mxCell id="ann_gossip" value="ports we didn't know existed: 2377, 7946, 4789" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=9;fontStyle=2;fontFamily=Georgia;fontColor=#555555;whiteSpace=wrap;" vertex="1" parent="1">
-          <mxGeometry x="855" y="685" width="200" height="14" as="geometry"/>
-        </mxCell>
-        <mxCell id="ann_gossip_arrow" style="endArrow=open;endSize=4;html=1;rounded=0;strokeColor=#999999;strokeWidth=0.75;curved=1;" edge="1" parent="1">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint x="1055" y="690" as="sourcePoint"/>
-            <mxPoint x="1075" y="678" as="targetPoint"/>
-          </mxGeometry>
-        </mxCell>
-
-        <mxCell id="ann_final2" value="these all landed in the last 2 weeks" style="text;html=1;strokeColor=none;fillColor=none;align=right;verticalAlign=middle;fontSize=9;fontStyle=2;fontFamily=Georgia;fontColor=#555555;whiteSpace=wrap;" vertex="1" parent="1">
-          <mxGeometry x="1075" y="345" width="225" height="14" as="geometry"/>
-        </mxCell>
-        <mxCell id="ann_final2_arrow" style="endArrow=open;endSize=4;html=1;rounded=0;strokeColor=#999999;strokeWidth=0.75;curved=1;" edge="1" parent="1">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint x="1300" y="353" as="sourcePoint"/>
-            <mxPoint x="1380" y="378" as="targetPoint"/>
-          </mxGeometry>
-        </mxCell>
-
-        <mxCell id="legend_body" value="88 merged PRs · 69% self-merged · 5 commits carry a Co-Authored-By: Claude trailer. Five tags before Mar 27, none for 49 days after. Hetzner died May 15." style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;fontSize=9;fontStyle=2;fontFamily=Georgia;whiteSpace=wrap;fontColor=#777777;" vertex="1" parent="1">
+        <mxCell id="legend_body" value="88 merged PRs · 69% self-merged · 5 commits carry a Co-Authored-By: Claude trailer · 5 release tags, all before Mar 27." style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;fontSize=9;fontStyle=2;fontFamily=Georgia;whiteSpace=wrap;fontColor=#777777;" vertex="1" parent="1">
           <mxGeometry x="55" y="770" width="1395" height="20" as="geometry"/>
         </mxCell>
 
