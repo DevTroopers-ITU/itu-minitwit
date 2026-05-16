@@ -119,7 +119,7 @@ The monitoring services (Prometheus, Grafana, Loki) each run as a single replica
 
 <!-- DRAFT — anchored to docs/evolution.md (6-phase categorisation). Reflection threads cut across the phases. -->
 
-The project moved through six phases — bootstrapping, CI/CD, observability, production infra, hardening, wrap-up (see `docs/evolution.md`). Three threads cut across them.
+The project moved through six phases roughly — bootstrapping, CI/CD, observability, production infra, hardening, wrap-up (see `docs/evolution.md`). Three threads cut across them.
 
 **Reactive refactoring.** Most architectural fixes only happened once the next phase exposed the previous as wrong. `latest` was a process-local `var` until three replicas were about to disagree (PR #138); SQLite stayed local until we needed replicas (PR #79); the personal timeline took 41–49 s for a real user before we rewrote it (PR #135).
 
@@ -160,11 +160,11 @@ What nobody hit, didn't get fixed. `helpers.go:55` swallows the bcrypt error. `s
 
 Session 5 asked us about the DevOps Handbook's Three Ways.
 
-**Flow.** PR-only + CD-on-green from week one (PR #65); batch sizes never shrank — PRs #146–#160 are 10 self-merged hardening retries, and Python→Go was one 1288-line PR.
+**Flow.** PR-only + CD-on-green from week one (PR #65); batch sizes never shrank — PRs #146–#160 are 10 self-merged hardening retries.
 
-**Feedback.** The 29 April timeline blow-up surfaced through a DigitalOcean CPU alert in `#generelt` at 10:01, before symptoms reached the rest of us.
+**Feedback.** The 29 April timeline blow-up surfaced through the alert loop: DigitalOcean CPU alert in `#generelt` at 10:01, diagnosis 10:37, first patch 10:59, root cause confirmed next morning 09:14. What it *didn't* catch: the 20 April site-down was discovered manually before any alert fired.
 
-**Continual Learning.** The 720-line debug doc we wrote live during the 17 April outage is what we'd hand to a new team member. The gap: two firewall incidents in 12 hours that day, no transfer of the morning's lesson to the evening's change.
+**Continual Learning.** The 720-line debug doc we wrote live during the 17 April outage is what we'd hand to a new team member. The gap: two firewall incidents in 12 hours that day, no transfer between them.
 
 For most of us this was the first time owning the Ops half — servers, certs, credentials, on-call. **The Dev/Ops bridge wasn't aspirational; it was the assignment.**
 
