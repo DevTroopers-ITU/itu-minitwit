@@ -116,6 +116,8 @@ The monitoring services (Prometheus, Grafana, Loki) each run as a single replica
 ## Evolution and Refactoring
 **Author(s):** Håkon and Leo
 
+The project moved through roughly six phases: bootstrapping, CI/CD, observability, production infrastructure, hardening, and wrap-up. Between these phases, most refactoring happened through smaller fixes and upgrades rather than one planned redesign.
+
 The largest architectural change was the move from a single Hetzner deployment to a three-node Docker Swarm cluster on DigitalOcean (PR #120 and follow-ups). The migration changed the system from one server running everything to a distributed setup with replicated webservers, Traefik routing, managed PostgreSQL, and Swarm secrets. Running three webserver replicas behind Traefik also forced us to externalise shared state we had previously kept in memory — most visibly the `latest` simulator counter, which we moved into PostgreSQL (PR #138) so the replicas could agree.
 
 The same pattern appeared elsewhere: solutions that worked at one scale often broke at the next. Metrics labels initially used raw paths until cardinality became an issue, and the personal timeline query appeared acceptable until realistic usage caused severe timeouts.
