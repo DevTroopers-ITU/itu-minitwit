@@ -316,13 +316,13 @@
           <mxGeometry x="960" y="210" width="5" height="55" as="geometry"/>
         </mxCell>
 
-        <mxCell id="p_swarmfix" value="PR #129/#131&#10;Swarm cluster fix&#10;Apr 17 — see Inc." style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#E5E2DA;strokeWidth=1;fontSize=8;align=center;verticalAlign=middle;spacingLeft=6;" vertex="1" parent="1">
+        <mxCell id="p_swarmfix" value="PR #129 / #131&#10;where we found gossip ports&#10;we didn't know existed&#10;Apr 17" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#E5E2DA;strokeWidth=1;fontSize=8;align=center;verticalAlign=middle;spacingLeft=6;" vertex="1" parent="1">
           <mxGeometry x="1060" y="210" width="85" height="55" as="geometry"/>
         </mxCell>
         <mxCell id="p_swarmfix_stripe" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#A04040;strokeColor=none;" vertex="1" parent="1">
           <mxGeometry x="1060" y="210" width="5" height="55" as="geometry"/>
         </mxCell>
-        <mxCell id="p_latest" value="PR #138&#10;latest counter → PG&#10;Apr 21  +1w" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#E5E2DA;strokeWidth=1;fontSize=8;align=center;verticalAlign=middle;spacingLeft=6;" vertex="1" parent="1">
+        <mxCell id="p_latest" value="PR #138&#10;the counter we forgot&#10;to put in the database&#10;Apr 21" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#E5E2DA;strokeWidth=1;fontSize=8;align=center;verticalAlign=middle;spacingLeft=6;" vertex="1" parent="1">
           <mxGeometry x="1160" y="210" width="85" height="55" as="geometry"/>
         </mxCell>
         <mxCell id="p_latest_stripe" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#A04040;strokeColor=none;" vertex="1" parent="1">
@@ -360,7 +360,7 @@
           <mxGeometry relative="1" as="geometry"/>
         </mxCell>
 
-        <mxCell id="p_codacy" value="PR #163 — Codacy docs&#10;May 4 (S7 topic)&#10;+7w" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#E5E2DA;strokeWidth=1;fontSize=8;fontStyle=1;align=center;verticalAlign=middle;spacingLeft=6;" vertex="1" parent="1">
+        <mxCell id="p_codacy" value="PR #163&#10;the linter we finally&#10;wired up — 7 weeks late&#10;May 4" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#E5E2DA;strokeWidth=1;fontSize=8;align=center;verticalAlign=middle;spacingLeft=6;" vertex="1" parent="1">
           <mxGeometry x="1360" y="380" width="85" height="60" as="geometry"/>
         </mxCell>
         <mxCell id="p_codacy_stripe" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#3F5F8C;strokeColor=none;" vertex="1" parent="1">
@@ -370,7 +370,7 @@
           <mxGeometry relative="1" as="geometry"/>
         </mxCell>
 
-        <mxCell id="p_terraform" value="PR #167 — Terraform IaC&#10;May 12 (S12 topic)&#10;+3w" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#E5E2DA;strokeWidth=1;fontSize=8;align=center;verticalAlign=middle;spacingLeft=6;" vertex="1" parent="1">
+        <mxCell id="p_terraform" value="PR #167&#10;we codified the cluster&#10;we'd already built by hand&#10;May 12  +3w" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#E5E2DA;strokeWidth=1;fontSize=8;align=center;verticalAlign=middle;spacingLeft=6;" vertex="1" parent="1">
           <mxGeometry x="1260" y="455" width="85" height="60" as="geometry"/>
         </mxCell>
         <mxCell id="p_terraform_stripe" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#6B8A4A;strokeColor=none;" vertex="1" parent="1">
@@ -380,7 +380,7 @@
           <mxGeometry relative="1" as="geometry"/>
         </mxCell>
 
-        <mxCell id="p_playwright" value="PR #168 — Playwright&#10;browser tests, May 16&#10;(S7 topic) +9w" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#E5E2DA;strokeWidth=1;fontSize=8;fontStyle=1;align=center;verticalAlign=middle;spacingLeft=6;" vertex="1" parent="1">
+        <mxCell id="p_playwright" value="PR #168&#10;browser tests we shipped&#10;the week before submission&#10;May 16  +9w" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#E5E2DA;strokeWidth=1;fontSize=8;align=center;verticalAlign=middle;spacingLeft=6;" vertex="1" parent="1">
           <mxGeometry x="1360" y="455" width="85" height="60" as="geometry"/>
         </mxCell>
         <mxCell id="p_playwright_stripe" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#3F5F8C;strokeColor=none;" vertex="1" parent="1">
@@ -415,7 +415,7 @@
           <mxGeometry x="960" y="565" width="5" height="32" as="geometry"/>
         </mxCell>
 
-        <mxCell id="inc_outage" value="OUTAGE&#10;DO cloud firewall&#10;blocks Swarm ports&#10;Apr 16–17 (PR #129)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#A04040;strokeWidth=1.5;fontSize=8;fontStyle=1;align=center;verticalAlign=middle;spacingLeft=6;" vertex="1" parent="1">
+        <mxCell id="inc_outage" value="OUTAGE&#10;the new DO firewall ate&#10;our Swarm gossip ports&#10;Apr 16–17  PR #129" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#A04040;strokeWidth=1.5;fontSize=8;fontStyle=1;align=center;verticalAlign=middle;spacingLeft=6;" vertex="1" parent="1">
           <mxGeometry x="1060" y="610" width="85" height="65" as="geometry"/>
         </mxCell>
         <mxCell id="inc_outage_stripe" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#A04040;strokeColor=none;" vertex="1" parent="1">
@@ -429,7 +429,7 @@
           <mxGeometry x="1160" y="610" width="5" height="55" as="geometry"/>
         </mxCell>
 
-        <mxCell id="inc_timeline" value="Postgres CPU spike +&#10;intermittent 504s&#10;Apr 29 → May 1&#10;Fix: a3dfc3d (LATERAL)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#A04040;strokeWidth=1.5;fontSize=8;fontStyle=1;align=center;verticalAlign=middle;spacingLeft=6;" vertex="1" parent="1">
+        <mxCell id="inc_timeline" value="Postgres CPU spike + 504s&#10;we rewrote the query&#10;as a LATERAL join&#10;Apr 29 → May 1  a3dfc3d" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#A04040;strokeWidth=1.5;fontSize=8;fontStyle=1;align=center;verticalAlign=middle;spacingLeft=6;" vertex="1" parent="1">
           <mxGeometry x="1260" y="610" width="85" height="65" as="geometry"/>
         </mxCell>
         <mxCell id="inc_timeline_stripe" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#A04040;strokeColor=none;" vertex="1" parent="1">
@@ -469,15 +469,52 @@
           <mxGeometry x="890" y="707" width="55" height="30" as="geometry"/>
         </mxCell>
 
-        <mxCell id="rail_gap" value="↑  No releases tagged from Mar 27 through May 16 (49 days). Weekly-release cadence collapsed after S9." style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=9;fontStyle=2;fontColor=#666666;" vertex="1" parent="1">
-          <mxGeometry x="980" y="717" width="500" height="20" as="geometry"/>
+        <mxCell id="rail_gap" value="↑  No releases tagged from Mar 27 through May 16. Weekly cadence didn't survive the Swarm scramble." style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=9;fontStyle=2;fontFamily=Georgia;fontColor=#666666;rotation=-3;" vertex="1" parent="1">
+          <mxGeometry x="980" y="722" width="500" height="20" as="geometry"/>
         </mxCell>
 
-        <mxCell id="legend_title" value="How to read this" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;fontSize=11;fontStyle=1;fontColor=#1A1A1A;" vertex="1" parent="1">
-          <mxGeometry x="55" y="760" width="200" height="20" as="geometry"/>
+        <mxCell id="ann_easter" value="Easter ate two weeks here" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=9;fontStyle=2;fontFamily=Georgia;fontColor=#555555;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="845" y="182" width="180" height="14" as="geometry"/>
         </mxCell>
-        <mxCell id="legend_body" value="The 8 banner bars at the top group our 14 course weeks into thematic arcs. Each session card and PR card carries a coloured left stripe matching its arc.   ·   Three lanes: ON TIME (work within the topic week or +1w), DELAYED (more than 2 weeks late — curved arrow goes from the topic-week session down to where the work actually landed; the delay is also written inside the destination box), INCIDENTS &amp; OPERATIONS (outages outlined in red, end-state markers in grey).   ·   Bottom: git tags. Five tags ship before Mar 27 then nothing for 49 days — weekly releases didn't survive contact with the Swarm migration.   ·   Verified numbers: 88 merged PRs, 69% self-merged, 5 commits with Co-Authored-By: Claude trailer." style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;fontSize=9;whiteSpace=wrap;fontColor=#444444;" vertex="1" parent="1">
-          <mxGeometry x="55" y="780" width="1395" height="80" as="geometry"/>
+        <mxCell id="ann_easter_arrow" style="endArrow=open;endSize=4;html=1;rounded=0;strokeColor=#999999;strokeWidth=0.75;curved=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="965" y="180" as="sourcePoint"/>
+            <mxPoint x="990" y="172" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="ann_hetzner" value="we kept Hetzner alive so the simulator never noticed" style="text;html=1;strokeColor=none;fillColor=none;align=right;verticalAlign=middle;fontSize=9;fontStyle=2;fontFamily=Georgia;fontColor=#555555;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="660" y="540" width="290" height="14" as="geometry"/>
+        </mxCell>
+        <mxCell id="ann_hetzner_arrow" style="endArrow=open;endSize=4;html=1;rounded=0;strokeColor=#999999;strokeWidth=0.75;curved=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="952" y="548" as="sourcePoint"/>
+            <mxPoint x="970" y="565" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="ann_gossip" value="ports we didn't know existed: 2377, 7946, 4789" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=9;fontStyle=2;fontFamily=Georgia;fontColor=#555555;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="855" y="685" width="200" height="14" as="geometry"/>
+        </mxCell>
+        <mxCell id="ann_gossip_arrow" style="endArrow=open;endSize=4;html=1;rounded=0;strokeColor=#999999;strokeWidth=0.75;curved=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1055" y="690" as="sourcePoint"/>
+            <mxPoint x="1075" y="678" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="ann_final2" value="these all landed in the last 2 weeks" style="text;html=1;strokeColor=none;fillColor=none;align=right;verticalAlign=middle;fontSize=9;fontStyle=2;fontFamily=Georgia;fontColor=#555555;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="1075" y="345" width="225" height="14" as="geometry"/>
+        </mxCell>
+        <mxCell id="ann_final2_arrow" style="endArrow=open;endSize=4;html=1;rounded=0;strokeColor=#999999;strokeWidth=0.75;curved=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1300" y="353" as="sourcePoint"/>
+            <mxPoint x="1380" y="378" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="legend_body" value="88 merged PRs · 69% self-merged · 5 commits carry a Co-Authored-By: Claude trailer. Five tags before Mar 27, none for 49 days after. Hetzner died May 15." style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;fontSize=9;fontStyle=2;fontFamily=Georgia;whiteSpace=wrap;fontColor=#777777;" vertex="1" parent="1">
+          <mxGeometry x="55" y="770" width="1395" height="20" as="geometry"/>
         </mxCell>
 
       </root>
