@@ -119,22 +119,18 @@ The monitoring services (Prometheus, Grafana, Loki) each run as a single replica
 
 <!-- DRAFT — anchored to docs/evolution.md (6-phase categorisation). Reflection threads cut across the phases. -->
 
-The project moved through six phases roughly — bootstrapping, CI/CD, observability, production infra, hardening, wrap-up. Three things kept happening.
+The project went through six phases roughly — bootstrapping, CI/CD, observability, production infra, hardening, wrap-up. The same pattern ran through them: we usually only fixed things once they broke in the next phase. The `latest` counter sat in process memory until three replicas were about to disagree (PR #138). Prometheus labels used raw paths until cardinality blew up the scrape memory (PR #98). The personal timeline was fine until a real user hit 41–49 seconds and we rewrote it (PR #135).
 
-**Reactive refactoring.** We usually only fixed things once they broke in the next phase. `latest` was a process-local `var` until three replicas were about to disagree (PR #138); Prometheus labels used raw paths until cardinality blew up the scrape memory (PR #98); the personal timeline took 41–49 s for a real user before we rewrote it (PR #135).
+Big-bang merges did the same thing on the deploy side — the Traefik 504 (#129) and the secret-path crash (#128) both only showed up after a `dev → master` landed in prod. And our hardening work came late: multi-stage Dockerfile, Semgrep, Docker Scout, Hetzner decommission (PRs #143–#160, #162) all landed weeks after the session that asked for them.
 
-**Big-bang merges hid bugs.** The Traefik 504 (#129) and the secret-path crash (#128) both showed up *after* a `dev → master` merge landed in prod.
-
-**Hardening came last.** Container security, Semgrep, Docker Scout, multi-stage Dockerfile, decommission (PRs #143–#160, #162) — most of it landed weeks after the session that asked for it.
-
-**Lesson:** we refactored on demand, not on plan. Kept us moving; left bugs where phases met.
+We refactored on demand, not on plan — kept us moving, but left bugs where phases met.
 
 ## Operation
 **Author(s):** Leo and Apoorva
 
 <!-- DRAFT — Apoorva: feel free to add a sentence about your fixes (firewall hardening / GHCR auth / Grafana persistence) within the word budget. -->
 
-The biggest operational decision was running two production stacks in parallel — Hetzner and DO Swarm, both against the same managed Postgres, 10 April to 4 May. Zero-downtime cutover for the simulator, and the parallel run surfaced our worst outage. On 16–17 April a new DO cloud firewall silently blocked Swarm's overlay ports between our own nodes — `docker node ls` showed both workers Down, but external uptime checks said green. We rolled DNS back to Hetzner, fixed the firewall, bumped Traefik to v3.6 (PR #131), and only re-flipped once `curl --http2` returned 200.
+We ran two production stacks in parallel for most of April — Hetzner and DO Swarm, both against the same managed Postgres, from 10 April to 4 May. The simulator never noticed when we cut over, and the parallel run is what surfaced our worst outage. On the evening of 16 April a new DO cloud firewall silently blocked Swarm's overlay ports between our own nodes; `docker node ls` showed both workers Down, but the external uptime checks were still green. We rolled DNS back to Hetzner, fixed the firewall, bumped Traefik to v3.6 (PR #131), and only re-flipped once `curl --http2` came back 200.
 
 Three replicas behind Traefik gave us the horizontal shape the course asked for, though we never benchmarked it against the single box.
 
@@ -145,11 +141,11 @@ Three replicas behind Traefik gave us the horizontal shape the course asked for,
 
 <!-- DRAFT v5 — trimmed for budget; quality-tool list lives here, not in DevOps Style. -->
 
-On 4 May we turned on Codacy. Within hours it flagged a `/health` route bug live for weeks. We fixed it in `c8ff76c`; the commit message says *"caught by codacy."*
+On 4 May we turned on Codacy. Within a few hours it flagged a `/health` route bug that had been live for weeks. We fixed it in `c8ff76c`; the commit message just says *"caught by codacy."*
 
-That catch is maintenance in miniature. Tooling landed one at a time, by whoever got to it — linters in March (`bdb6c16`), image hardening + Semgrep + Docker Scout in April (PR #160), Codacy in May. Nobody owned maintenance as a thread.
+That catch is basically the whole maintenance story in miniature. Tooling landed one at a time, whenever someone got to it — linters in March (`bdb6c16`), image hardening with Semgrep and Docker Scout in April (PR #160), Codacy in May. Nobody owned maintenance as a thread of its own.
 
-What nobody hit, didn't get fixed. `helpers.go:55` swallows the bcrypt error. `sim_api.go:33` hardcodes the simulator auth header. The webserver log has 64,981 identical `superfluous WriteHeader` warnings nobody read. Eleven test functions total, none on `store.go`. Issue #86 has been open since 13 March.
+What nobody hit didn't get fixed. `helpers.go:55` still swallows the bcrypt error. `sim_api.go:33` still hardcodes the simulator auth header. The webserver log has 64,981 identical `superfluous WriteHeader` warnings nobody ever read. We have eleven test functions total, none on `store.go`. Issue #86 has been open since 13 March.
 
 **What's good is good because someone hit it; what's bad is bad because nobody did. Maintenance needed an owner.**
 
@@ -162,7 +158,7 @@ Session 5 asked us about the DevOps Handbook's Three Ways.
 
 **Flow.** PR-only + CD-on-green from week one (PR #65); batch sizes never shrank — PRs #146–#160 are 10 self-merged hardening retries.
 
-**Feedback.** The 29 April timeline blow-up surfaced through the alert loop: DigitalOcean CPU alert in `#generelt` at 10:01, diagnosis 10:37, first patch 10:59, root cause confirmed next morning 09:14. What it *didn't* catch: the 20 April site-down was discovered manually before any alert fired.
+**Feedback.** Monitoring worked on 29 April. A CPU alert hit `#generelt` at 10:01 and we caught the timeline bug before users complained; by next morning we'd figured out the root cause. On 20 April it didn't — site went down, no alert fired, and we only noticed when someone opened the page.
 
 **Continual Learning.** The 720-line debug doc we wrote live during the 17 April outage is what we'd hand to a new team member. The gap: two firewall incidents in 12 hours that day, no transfer between them.
 
