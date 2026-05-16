@@ -116,7 +116,14 @@ The monitoring services (Prometheus, Grafana, Loki) each run as a single replica
 
 ## Evolution and Refactoring
 **Author(s):** Håkon and Leo
-<!-- Biggest issues and how we solved them. Link commits/issues. -->
+
+<!-- DRAFT — Håkon: feel free to rewrite the Postgres-migration half (first paragraph). -->
+
+Two refactors stand out from the semester.
+
+First, the migration from SQLite to a managed Postgres on DigitalOcean (PR #79, mid-March). We considered keeping the file local with a Hetzner Volume — Discord shows we priced it at €0.55/mo — but pivoted to an external managed DB because we wanted backups outsourced and the webserver to be stateless before we replicated it. The actual cut-over was clean; the work to make it possible was the ORM (GORM) rewrite the week before.
+
+Second, the `latest` simulator counter (PR #138, April 21). It had lived as a process-local `var latest int = -1` since the Go port — fine on the single Hetzner box, fatal on a 3-replica Swarm. We caught it before the grader did because the simulator URL was still pointed at Hetzner. The fix was a one-row `SimState` table in Postgres; the lesson was that scaling exposes hidden shared state.
 
 ## Operation
 **Author(s):** Leo and Apoorva
@@ -129,14 +136,27 @@ We started on a single Hetzner droplet (EU-based, where Leo had prior experience
 
 ## Maintenance
 **Author(s):** Leo
-<!-- What's hard to maintain, what we improved, what's still ugly. -->
+
+<!-- DRAFT — initial pass. -->
+
+Three things we improved, three things still ugly, one thing that's hard.
+
+We added a real CI quality bar over the semester: gofmt, golangci-lint, hadolint, Semgrep, Docker Scout, and Codacy (the last one landed in May, ~7 weeks after Session 7 — Codacy already caught a real route-ordering bug, commit `c8ff76c`). The webserver image shrank from 306 MB to 30 MB after multi-stage hardening dropped binutils CVEs. The `latest` counter moved from process memory to Postgres so it survives replica restarts.
+
+Still ugly: `helpers.go:55` swallows bcrypt errors silently; `sim_api.go:33` uses a hardcoded simulator auth string; the GHCR PAT sits in plaintext on all three droplets. Tests are thin — eleven functions total, none on `store.go`.
+
+The genuinely hard part is configuration sprawl: `DATABASE_URL` lives in four places, and `docker-stack.yml` needs ~70 lines of inline comments to be safe to edit.
 
 ## DevOps Style
 **Author(s):** Leo
-<!--
-What was different from previous projects and how it worked out.
-Be honest about trade-offs.
--->
+
+<!-- DRAFT — initial pass. -->
+
+Our clearest pattern: we ran a strict process loosely. We enforced branch protection and PR-only merges from week one (PR #65), but of the last 30 merged PRs only 9 had a human reviewer — about 70% self-merged. The audit trail is there; the review gate is not.
+
+Some of our biggest decisions were made by individuals and ratified by code. The biggest example: the rewrite from Python/Flask to Go was one person's weekend work with Claude, then ratified by the team via PR review on Monday. That's not how the textbook describes it, but it shipped, and we own the result.
+
+What changed over the semester was the *writing*: live incident notes during outages, runbook commands in `docs/operations/`, and the 720-line debug doc one of us wrote in real time during the 17 April outage. That doc — not chat scrollback — is the audit trail when we have to explain what happened.
 
 # Use of Generative AI
 **Author(s):** Leo
