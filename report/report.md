@@ -117,46 +117,56 @@ The monitoring services (Prometheus, Grafana, Loki) each run as a single replica
 ## Evolution and Refactoring
 **Author(s):** Håkon and Leo
 
-<!-- DRAFT — Håkon: feel free to rewrite the Postgres-migration half (first paragraph). -->
+<!-- DRAFT — re-framed around three rebuilds. Håkon: feel free to edit any rebuild. -->
 
-Two refactors stand out from the semester.
+The project went from a Python file we were handed to a service we operate, in three rebuilds.
 
-First, the migration from SQLite to a managed Postgres on DigitalOcean (PR #79, mid-March). We considered keeping the file local with a Hetzner Volume — Discord shows we priced it at €0.55/mo — but pivoted to an external managed DB because we wanted backups outsourced and the webserver to be stateless before we replicated it. The actual cut-over was clean; the work to make it possible was the ORM (GORM) rewrite the week before.
+**Rebuild 1 — Language (PR #15, Feb 10).** We rewrote the inherited Flask app in Go. Group picked Go in week 1; the real work was learning the language, not rewriting ~600 lines.
 
-Second, the `latest` simulator counter (PR #138, April 21). It had lived as a process-local `var latest int = -1` since the Go port — fine on the single Hetzner box, fatal on a 3-replica Swarm. We caught it before the grader did because the simulator URL was still pointed at Hetzner. The fix was a one-row `SimState` table in Postgres; the lesson was that scaling exposes hidden shared state.
+**Rebuild 2 — Replication (March → April).** Four coupled refactors: GORM (PR #70), SQLite → managed Postgres (PR #79), 3-node Swarm + Traefik (PR #120), and a Postgres-backed simulator counter (PR #138) when we noticed three replicas would disagree about `latest`. Each step reacted to the previous architecture's limits.
+
+**Rebuild 3 — Hardening (late April → May).** Multi-stage Dockerfile, non-root user, Semgrep, Docker Scout, UFW, Codacy, Terraform. Most of it landed weeks late.
+
+**Lesson:** each layer ended up wrong for the next phase. We caught up reactively — fine for momentum, expensive for things like the `latest` counter we should have spotted at design.
 
 ## Operation
 **Author(s):** Leo and Apoorva
 
 <!-- DRAFT — Apoorva: feel free to add a sentence about your fixes (firewall hardening / GHCR auth / Grafana persistence) within the word budget. -->
 
-We started on a single Hetzner droplet (EU-based, where Leo had prior experience): SQLite on a Docker volume, one VM running everything. When simulator load started hurting SQLite, we migrated the database to a DigitalOcean managed Postgres instance (PR #79). From session 9 we ran a 3-node Docker Swarm on DO in parallel with Hetzner for several weeks, both pointing at the same DO Postgres — so we could check Swarm health against real data without flipping DNS. That parallel-run is what let us catch the 17 April Swarm-networking outage before users saw it: a new DO cloud firewall silently blocked the Swarm control-plane ports between our own nodes. External uptime checks said green; the cluster was dead.
+The biggest operational decision was running two production stacks in parallel — Hetzner and DO Swarm, both against the same managed Postgres, 10 April to 4 May. Zero-downtime cutover for the simulator, and the parallel run is what surfaced our worst outage. On 17 April a new DO cloud firewall silently blocked Swarm's overlay ports between our own nodes. `docker node ls` showed both workers Down; external uptime checks said green. We rolled DNS back to Hetzner, fixed the firewall the next day, bumped Traefik to v3.6 in the process (PR #131), and only flipped DNS again once `curl --http2` returned 200 against the cluster.
 
-**Lesson: control plane and data plane fail independently. Running two stacks in parallel during the migration cost us almost nothing and bought us the ability to debug live without risk to users.**
+Three replicas behind Traefik gave us the horizontal-scaling shape the course asked for, though we never benchmarked it against the single box.
+
+**Control plane and data plane fail independently — uptime checks at the edge don't catch it.**
 
 ## Maintenance
 **Author(s):** Leo
 
-<!-- DRAFT — initial pass. -->
+<!-- DRAFT v5 — trimmed for budget; quality-tool list lives here, not in DevOps Style. -->
 
-Three things we improved, three things still ugly, one thing that's hard.
+On 4 May Apoorva turned on Codacy. Within hours it flagged a bug in our `/health` route that had been live for weeks. We fixed it in `c8ff76c`; the commit message says *"caught by codacy."*
 
-We added a real CI quality bar over the semester: gofmt, golangci-lint, hadolint, Semgrep, Docker Scout, and Codacy (the last one landed in May, ~7 weeks after Session 7 — Codacy already caught a real route-ordering bug, commit `c8ff76c`). The webserver image shrank from 306 MB to 30 MB after multi-stage hardening dropped binutils CVEs. The `latest` counter moved from process memory to Postgres so it survives replica restarts.
+That catch is the maintenance story in miniature. Tooling landed one at a time, by whoever got to it — linters and formatters in March (`bdb6c16`), image hardening + Semgrep + Docker Scout in April (PR #160), Codacy in May. Nobody owned maintenance as a thread.
 
-Still ugly: `helpers.go:55` swallows bcrypt errors silently; `sim_api.go:33` uses a hardcoded simulator auth string; the GHCR PAT sits in plaintext on all three droplets. Tests are thin — eleven functions total, none on `store.go`.
+What nobody hit, didn't get fixed. `helpers.go:55` swallows the bcrypt error. `sim_api.go:33` hardcodes the simulator auth header. Eleven test functions total, none on `store.go`. Issue #86 ("Add test suites as described in lecture 7") has been open since 13 March.
 
-The genuinely hard part is configuration sprawl: `DATABASE_URL` lives in four places, and `docker-stack.yml` needs ~70 lines of inline comments to be safe to edit.
+**What's good is good because someone hit it; what's bad is bad because nobody did. Making maintenance somebody's job is what we'd carry into the next project.**
 
 ## DevOps Style
 **Author(s):** Leo
 
-<!-- DRAFT — initial pass. -->
+<!-- DRAFT v4 — Three Ways scoreboard. Quality-gate list moved to Maintenance to avoid duplication. -->
 
-Our clearest pattern: we ran a strict process loosely. We enforced branch protection and PR-only merges from week one (PR #65), but of the last 30 merged PRs only 9 had a human reviewer — about 70% self-merged. The audit trail is there; the review gate is not.
+Session 5 asked us to map ourselves against the DevOps Handbook's Three Ways. Honest scoreboard:
 
-Some of our biggest decisions were made by individuals and ratified by code. The biggest example: the rewrite from Python/Flask to Go was one person's weekend work with Claude, then ratified by the team via PR review on Monday. That's not how the textbook describes it, but it shipped, and we own the result.
+**Flow.** PR-only merges and CD-on-green from week one (PR #65). We loosened protection on `dev` after week 5 ("just extra work") but kept it on `master`. Batch sizes never shrank — PRs #146–#160 are 10 self-merged retries on hardening, and the Python→Go pivot landed as one 1288-line PR (#15) over a weekend.
 
-What changed over the semester was the *writing*: live incident notes during outages, runbook commands in `docs/operations/`, and the 720-line debug doc one of us wrote in real time during the 17 April outage. That doc — not chat scrollback — is the audit trail when we have to explain what happened.
+**Feedback.** Monitoring went up before incidents forced it. The 29 April personal-timeline blow-up surfaced through that loop: a DigitalOcean CPU alert in `#generelt` at 10:01, before symptoms reached the rest of us.
+
+**Continual Learning.** The 720-line debug doc we wrote live during the 17 April outage (`docs/incidents/session11-ops-debug.md`) is the audit trail we'd hand to a new team member. Where we failed: two firewall incidents inside ~12 hours on 16 April — same team, same provider, no transfer of the morning's lesson to the evening's change.
+
+For most of us, this was the first time owning the Ops half — servers, certs, Postgres credentials, an on-call habit. **The Dev/Ops bridge wasn't aspirational; it was the assignment.**
 
 # Use of Generative AI
 **Author(s):** Leo
