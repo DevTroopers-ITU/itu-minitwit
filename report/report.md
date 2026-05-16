@@ -35,6 +35,39 @@ all stages: language/framework, infra, CI/CD, observability, third-party
 services. Group by layer.
 -->
 
+### Language & Framework
+  - **Go 1.25** — backend language
+  - **Gorilla Mux** — Matches incoming HTTP requests to
+  handler functions (eg. /login)
+
+  - **GORM** — ORM for database access 
+  - **Gorilla Sessions** — session management
+
+  ### Database
+  - **PostgreSQL** — primary database (accessed via GORM)
+
+  ### Infrastructure
+  - **Docker & Docker Swarm** — containerisation and
+  orchestration
+  - **DigitalOcean** — cloud hosting
+  - **Terraform** — infrastructure as code
+  - **Traefik v3.6** — reverse proxy and automatic TLS
+
+  ### CI/CD
+  - **GitHub Actions** — automated build, test, and deploy
+  pipeline
+
+  ### Observability
+  - **Prometheus** — metrics collection
+  - **Grafana** — dashboards and visualisation
+  - **Loki + Promtail** — log aggregation
+
+  ### Code Quality & Security
+  - **golangci-lint** — static analysis for Go
+  - **Hadolint** — Dockerfile linting
+  - **Semgrep** — static security analysis
+  - **Docker Scout** — container vulnerability scanning
+
 ## Current State
 **Author(s):** Peter J
 
