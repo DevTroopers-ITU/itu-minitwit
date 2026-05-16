@@ -1,254 +1,331 @@
 <mxfile host="app.diagrams.net" agent="claude-code" version="24.0.0">
   <diagram name="ITU-MiniTwit Storyboard" id="storyboard">
-    <mxGraphModel dx="1200" dy="700" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="826" math="0" shadow="0">
+    <mxGraphModel dx="1500" dy="700" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1500" pageHeight="700" math="0" shadow="0">
       <root>
         <mxCell id="0"/>
         <mxCell id="1" parent="0"/>
 
-        <mxCell id="title" value="ITU-MiniTwit — Project storyboard (Feb–May 2026)" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=20;fontStyle=1;" vertex="1" parent="1">
-          <mxGeometry x="100" y="20" width="1000" height="35" as="geometry"/>
+        <mxCell id="title" value="ITU-MiniTwit — Project storyboard (Jan–May 2026)" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=22;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="100" y="15" width="1300" height="35" as="geometry"/>
         </mxCell>
-        <mxCell id="subtitle" value="Group Q — DevTroopers. Top track = course rhythm. Bottom track = our project work. The red line is time." style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;fontStyle=2;fontColor=#555555;" vertex="1" parent="1">
-          <mxGeometry x="100" y="55" width="1000" height="20" as="geometry"/>
+        <mxCell id="subtitle" value="Group Q — DevTroopers. Top track = course session each week. Red line = time. Bottom track = the work we actually shipped, grouped into phases." style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;fontStyle=2;fontColor=#555555;" vertex="1" parent="1">
+          <mxGeometry x="100" y="50" width="1300" height="20" as="geometry"/>
         </mxCell>
 
-        <mxCell id="course_label" value="COURSE RHYTHM" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=10;fontStyle=1;fontColor=#607D8B;" vertex="1" parent="1">
-          <mxGeometry x="20" y="95" width="150" height="20" as="geometry"/>
+        <mxCell id="course_label" value="COURSE RHYTHM (14 weekly sessions)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=10;fontStyle=1;fontColor=#607D8B;" vertex="1" parent="1">
+          <mxGeometry x="20" y="82" width="300" height="20" as="geometry"/>
         </mxCell>
-        <mxCell id="project_label" value="PROJECT WORK" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=10;fontStyle=1;fontColor=#2E86AB;" vertex="1" parent="1">
-          <mxGeometry x="20" y="540" width="150" height="20" as="geometry"/>
+
+        <mxCell id="s1" value="S1&#10;Jan 30&#10;Setup,&#10;SSH, Bash" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ECEFF1;strokeColor=#607D8B;fontSize=9;fontStyle=2;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="53" y="105" width="85" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="s1_l" style="endArrow=none;html=1;strokeColor=#607D8B;strokeWidth=1;dashed=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="95" y="195" as="sourcePoint"/>
+            <mxPoint x="95" y="260" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="s1_d" style="ellipse;whiteSpace=wrap;html=1;fillColor=#607D8B;strokeColor=#2C3E50;" vertex="1" parent="1">
+          <mxGeometry x="89" y="259" width="12" height="12" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="s2" value="S2&#10;Feb 6&#10;Refactor&#10;+ Docker" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ECEFF1;strokeColor=#607D8B;fontSize=9;fontStyle=2;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="155" y="105" width="85" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="s2_l" style="endArrow=none;html=1;strokeColor=#607D8B;strokeWidth=1;dashed=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="197" y="195" as="sourcePoint"/>
+            <mxPoint x="197" y="260" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="s2_d" style="ellipse;whiteSpace=wrap;html=1;fillColor=#607D8B;strokeColor=#2C3E50;" vertex="1" parent="1">
+          <mxGeometry x="191" y="259" width="12" height="12" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="s3" value="S3&#10;Feb 13&#10;Sim API&#10;+ Cloud" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ECEFF1;strokeColor=#607D8B;fontSize=9;fontStyle=2;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="257" y="105" width="85" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="s3_l" style="endArrow=none;html=1;strokeColor=#607D8B;strokeWidth=1;dashed=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="299" y="195" as="sourcePoint"/>
+            <mxPoint x="299" y="260" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="s3_d" style="ellipse;whiteSpace=wrap;html=1;fillColor=#607D8B;strokeColor=#2C3E50;" vertex="1" parent="1">
+          <mxGeometry x="293" y="259" width="12" height="12" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="s4" value="S4&#10;Feb 20&#10;CI / CD" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ECEFF1;strokeColor=#607D8B;fontSize=9;fontStyle=2;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="359" y="105" width="85" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="s4_l" style="endArrow=none;html=1;strokeColor=#607D8B;strokeWidth=1;dashed=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="401" y="195" as="sourcePoint"/>
+            <mxPoint x="401" y="260" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="s4_d" style="ellipse;whiteSpace=wrap;html=1;fillColor=#607D8B;strokeColor=#2C3E50;" vertex="1" parent="1">
+          <mxGeometry x="395" y="259" width="12" height="12" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="s5" value="S5&#10;Feb 27&#10;DB layer&#10;+ Config" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ECEFF1;strokeColor=#607D8B;fontSize=9;fontStyle=2;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="461" y="105" width="85" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="s5_l" style="endArrow=none;html=1;strokeColor=#607D8B;strokeWidth=1;dashed=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="503" y="195" as="sourcePoint"/>
+            <mxPoint x="503" y="260" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="s5_d" style="ellipse;whiteSpace=wrap;html=1;fillColor=#607D8B;strokeColor=#2C3E50;" vertex="1" parent="1">
+          <mxGeometry x="497" y="259" width="12" height="12" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="s6" value="S6&#10;Mar 6&#10;Monitor&#10;+ DB mig" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ECEFF1;strokeColor=#607D8B;fontSize=9;fontStyle=2;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="563" y="105" width="85" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="s6_l" style="endArrow=none;html=1;strokeColor=#607D8B;strokeWidth=1;dashed=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="605" y="195" as="sourcePoint"/>
+            <mxPoint x="605" y="260" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="s6_d" style="ellipse;whiteSpace=wrap;html=1;fillColor=#607D8B;strokeColor=#2C3E50;" vertex="1" parent="1">
+          <mxGeometry x="599" y="259" width="12" height="12" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="s7" value="S7&#10;Mar 13&#10;Code&#10;quality" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ECEFF1;strokeColor=#607D8B;fontSize=9;fontStyle=2;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="665" y="105" width="85" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="s7_l" style="endArrow=none;html=1;strokeColor=#607D8B;strokeWidth=1;dashed=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="707" y="195" as="sourcePoint"/>
+            <mxPoint x="707" y="260" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="s7_d" style="ellipse;whiteSpace=wrap;html=1;fillColor=#607D8B;strokeColor=#2C3E50;" vertex="1" parent="1">
+          <mxGeometry x="701" y="259" width="12" height="12" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="s8" value="S8&#10;Mar 20&#10;Logging" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ECEFF1;strokeColor=#607D8B;fontSize=9;fontStyle=2;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="767" y="105" width="85" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="s8_l" style="endArrow=none;html=1;strokeColor=#607D8B;strokeWidth=1;dashed=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="809" y="195" as="sourcePoint"/>
+            <mxPoint x="809" y="260" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="s8_d" style="ellipse;whiteSpace=wrap;html=1;fillColor=#607D8B;strokeColor=#2C3E50;" vertex="1" parent="1">
+          <mxGeometry x="803" y="259" width="12" height="12" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="s9" value="S9&#10;Mar 27&#10;Avail&#10;+ Swarm" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ECEFF1;strokeColor=#607D8B;fontSize=9;fontStyle=2;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="869" y="105" width="85" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="s9_l" style="endArrow=none;html=1;strokeColor=#607D8B;strokeWidth=1;dashed=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="911" y="195" as="sourcePoint"/>
+            <mxPoint x="911" y="260" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="s9_d" style="ellipse;whiteSpace=wrap;html=1;fillColor=#607D8B;strokeColor=#2C3E50;" vertex="1" parent="1">
+          <mxGeometry x="905" y="259" width="12" height="12" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="s10" value="S10&#10;Apr 10&#10;TLS&#10;(Easter gap)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ECEFF1;strokeColor=#607D8B;fontSize=9;fontStyle=2;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="971" y="105" width="85" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="s10_l" style="endArrow=none;html=1;strokeColor=#607D8B;strokeWidth=1;dashed=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1013" y="195" as="sourcePoint"/>
+            <mxPoint x="1013" y="260" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="s10_d" style="ellipse;whiteSpace=wrap;html=1;fillColor=#607D8B;strokeColor=#2C3E50;" vertex="1" parent="1">
+          <mxGeometry x="1007" y="259" width="12" height="12" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="s11" value="S11&#10;Apr 17&#10;Security&#10;+ pentest" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FDEBD0;strokeColor=#E76F51;fontSize=9;fontStyle=2;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="1073" y="105" width="85" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="s11_l" style="endArrow=none;html=1;strokeColor=#E76F51;strokeWidth=1;dashed=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1115" y="195" as="sourcePoint"/>
+            <mxPoint x="1115" y="260" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="s11_d" style="ellipse;whiteSpace=wrap;html=1;fillColor=#E76F51;strokeColor=#A0522D;" vertex="1" parent="1">
+          <mxGeometry x="1109" y="259" width="12" height="12" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="s12" value="S12&#10;Apr 24&#10;IaC&#10;(Terraform)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ECEFF1;strokeColor=#607D8B;fontSize=9;fontStyle=2;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="1175" y="105" width="85" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="s12_l" style="endArrow=none;html=1;strokeColor=#607D8B;strokeWidth=1;dashed=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1217" y="195" as="sourcePoint"/>
+            <mxPoint x="1217" y="260" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="s12_d" style="ellipse;whiteSpace=wrap;html=1;fillColor=#607D8B;strokeColor=#2C3E50;" vertex="1" parent="1">
+          <mxGeometry x="1211" y="259" width="12" height="12" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="s13" value="S13&#10;May 1&#10;K8s + Docs" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ECEFF1;strokeColor=#607D8B;fontSize=9;fontStyle=2;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="1277" y="105" width="85" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="s13_l" style="endArrow=none;html=1;strokeColor=#607D8B;strokeWidth=1;dashed=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1319" y="195" as="sourcePoint"/>
+            <mxPoint x="1319" y="260" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="s13_d" style="ellipse;whiteSpace=wrap;html=1;fillColor=#607D8B;strokeColor=#2C3E50;" vertex="1" parent="1">
+          <mxGeometry x="1313" y="259" width="12" height="12" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="s14" value="S14&#10;May 8&#10;Exam prep" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ECEFF1;strokeColor=#607D8B;fontSize=9;fontStyle=2;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="1379" y="105" width="85" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="s14_l" style="endArrow=none;html=1;strokeColor=#607D8B;strokeWidth=1;dashed=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1421" y="195" as="sourcePoint"/>
+            <mxPoint x="1421" y="260" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="s14_d" style="ellipse;whiteSpace=wrap;html=1;fillColor=#607D8B;strokeColor=#2C3E50;" vertex="1" parent="1">
+          <mxGeometry x="1415" y="259" width="12" height="12" as="geometry"/>
         </mxCell>
 
         <mxCell id="spine" style="endArrow=none;html=1;rounded=0;strokeColor=#CC0000;strokeWidth=5;" edge="1" parent="1">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="60" y="290" as="sourcePoint"/>
-            <mxPoint x="1140" y="290" as="targetPoint"/>
+            <mxPoint x="40" y="265" as="sourcePoint"/>
+            <mxPoint x="1470" y="265" as="targetPoint"/>
           </mxGeometry>
         </mxCell>
 
-        <mxCell id="start_node" value="START&#10;Inherited&#10;Python/Flask" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F4F4F4;strokeColor=#888888;fontStyle=1;align=center;verticalAlign=middle;fontSize=9;" vertex="1" parent="1">
-          <mxGeometry x="10" y="260" width="60" height="60" as="geometry"/>
+        <mxCell id="start_node" value="START" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F4F4F4;strokeColor=#888888;fontStyle=1;align=center;verticalAlign=middle;fontSize=9;" vertex="1" parent="1">
+          <mxGeometry x="10" y="250" width="35" height="30" as="geometry"/>
         </mxCell>
-        <mxCell id="end_node" value="END&#10;3-node Swarm&#10;+ managed PG&#10;+ obs + IaC" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E8F5E9;strokeColor=#2A9D8F;fontStyle=1;align=center;verticalAlign=middle;fontSize=9;" vertex="1" parent="1">
-          <mxGeometry x="1130" y="255" width="60" height="70" as="geometry"/>
+        <mxCell id="end_node" value="END" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E8F5E9;strokeColor=#2A9D8F;fontStyle=1;align=center;verticalAlign=middle;fontSize=9;" vertex="1" parent="1">
+          <mxGeometry x="1465" y="250" width="35" height="30" as="geometry"/>
         </mxCell>
 
-        <mxCell id="c1" value="Session 3&#10;Feb 13&#10;IaaS + Vagrant" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ECEFF1;strokeColor=#607D8B;fontSize=10;fontStyle=2;align=center;verticalAlign=middle;" vertex="1" parent="1">
-          <mxGeometry x="100" y="110" width="120" height="80" as="geometry"/>
-        </mxCell>
-        <mxCell id="c1_line" style="endArrow=none;html=1;strokeColor=#607D8B;strokeWidth=1;dashed=1;" edge="1" parent="1">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint x="160" y="190" as="sourcePoint"/>
-            <mxPoint x="160" y="285" as="targetPoint"/>
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="c1_dot" style="ellipse;whiteSpace=wrap;html=1;fillColor=#607D8B;strokeColor=#2C3E50;" vertex="1" parent="1">
-          <mxGeometry x="154" y="284" width="12" height="12" as="geometry"/>
-        </mxCell>
-        <mxCell id="d1" value="Feb 10–18" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=9;fontStyle=1;" vertex="1" parent="1">
-          <mxGeometry x="120" y="298" width="80" height="15" as="geometry"/>
-        </mxCell>
         <mxCell id="p1_line" style="endArrow=none;html=1;strokeColor=#2E86AB;strokeWidth=1;dashed=1;" edge="1" parent="1">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="160" y="296" as="sourcePoint"/>
-            <mxPoint x="160" y="330" as="targetPoint"/>
+            <mxPoint x="146" y="271" as="sourcePoint"/>
+            <mxPoint x="146" y="310" as="targetPoint"/>
           </mxGeometry>
         </mxCell>
-        <mxCell id="p1" value="PR #15&#10;Python → Go port&#10;(Leo + Claude)&#10;&#10;Hetzner droplet&#10;Vagrant + SQLite&#10;single VM" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#D6EAF8;strokeColor=#2E86AB;fontSize=9;align=center;verticalAlign=middle;" vertex="1" parent="1">
-          <mxGeometry x="100" y="330" width="120" height="170" as="geometry"/>
+        <mxCell id="p1" value="PHASE 1 — Refactoring foundation&#10;&#10;• Python 2 → Python 3 port (PR #1)&#10;• Group picks Go (Leo + Claude weekend port)&#10;• PR #15: full Go rewrite, 4 tests&#10;• Multi-stage Dockerfile + Alpine&#10;• v1.0.0 tagged (Feb 12)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#D6EAF8;strokeColor=#2E86AB;fontSize=10;align=left;verticalAlign=top;spacing=8;" vertex="1" parent="1">
+          <mxGeometry x="53" y="310" width="187" height="200" as="geometry"/>
         </mxCell>
 
-        <mxCell id="c2" value="Session 5&#10;Feb 27&#10;IaC, idempotency,&#10;ephemeral containers" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ECEFF1;strokeColor=#607D8B;fontSize=10;fontStyle=2;align=center;verticalAlign=middle;" vertex="1" parent="1">
-          <mxGeometry x="245" y="110" width="120" height="80" as="geometry"/>
-        </mxCell>
-        <mxCell id="c2_line" style="endArrow=none;html=1;strokeColor=#607D8B;strokeWidth=1;dashed=1;" edge="1" parent="1">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint x="305" y="190" as="sourcePoint"/>
-            <mxPoint x="305" y="285" as="targetPoint"/>
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="c2_dot" style="ellipse;whiteSpace=wrap;html=1;fillColor=#607D8B;strokeColor=#2C3E50;" vertex="1" parent="1">
-          <mxGeometry x="299" y="284" width="12" height="12" as="geometry"/>
-        </mxCell>
-        <mxCell id="d2" value="late Feb" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=9;fontStyle=1;" vertex="1" parent="1">
-          <mxGeometry x="265" y="298" width="80" height="15" as="geometry"/>
-        </mxCell>
         <mxCell id="p2_line" style="endArrow=none;html=1;strokeColor=#5C6B73;strokeWidth=1;dashed=1;" edge="1" parent="1">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="305" y="296" as="sourcePoint"/>
-            <mxPoint x="305" y="330" as="targetPoint"/>
+            <mxPoint x="350" y="271" as="sourcePoint"/>
+            <mxPoint x="350" y="310" as="targetPoint"/>
           </mxGeometry>
         </mxCell>
-        <mxCell id="p2" value="Docker volume&#10;for SQLite&#10;persistence&#10;&#10;CI workflow&#10;scaffolded&#10;(PR #65)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EAECEE;strokeColor=#5C6B73;fontSize=9;align=center;verticalAlign=middle;" vertex="1" parent="1">
-          <mxGeometry x="245" y="330" width="120" height="170" as="geometry"/>
+        <mxCell id="p2" value="PHASE 2 — Single-VM + CI/CD&#10;&#10;• Vagrantfile for Hetzner Cloud&#10;• Hetzner droplet live Feb 18 (SQLite&#10;  on Docker volume, one VM all-in-one)&#10;• Simulator API + Swagger&#10;• GitHub Actions CI (Feb 24)&#10;• CD: ghcr.io + SSH deploy (Mar 6)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EAECEE;strokeColor=#5C6B73;fontSize=10;align=left;verticalAlign=top;spacing=8;" vertex="1" parent="1">
+          <mxGeometry x="257" y="310" width="187" height="200" as="geometry"/>
         </mxCell>
 
-        <mxCell id="c3" value="Session 7–8&#10;Mar 13–20&#10;Code quality&#10;+ Logging" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ECEFF1;strokeColor=#607D8B;fontSize=10;fontStyle=2;align=center;verticalAlign=middle;" vertex="1" parent="1">
-          <mxGeometry x="390" y="110" width="120" height="80" as="geometry"/>
-        </mxCell>
-        <mxCell id="c3_line" style="endArrow=none;html=1;strokeColor=#607D8B;strokeWidth=1;dashed=1;" edge="1" parent="1">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint x="450" y="190" as="sourcePoint"/>
-            <mxPoint x="450" y="285" as="targetPoint"/>
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="c3_dot" style="ellipse;whiteSpace=wrap;html=1;fillColor=#607D8B;strokeColor=#2C3E50;" vertex="1" parent="1">
-          <mxGeometry x="444" y="284" width="12" height="12" as="geometry"/>
-        </mxCell>
-        <mxCell id="d3" value="mid–late Mar" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=9;fontStyle=1;" vertex="1" parent="1">
-          <mxGeometry x="405" y="298" width="90" height="15" as="geometry"/>
-        </mxCell>
         <mxCell id="p3_line" style="endArrow=none;html=1;strokeColor=#2E86AB;strokeWidth=1;dashed=1;" edge="1" parent="1">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="450" y="296" as="sourcePoint"/>
-            <mxPoint x="450" y="330" as="targetPoint"/>
+            <mxPoint x="554" y="271" as="sourcePoint"/>
+            <mxPoint x="554" y="310" as="targetPoint"/>
           </mxGeometry>
         </mxCell>
-        <mxCell id="p3" value="PR #77 — static&#10;analysis in CI&#10;(gofmt + lint +&#10;hadolint)&#10;&#10;Loki + Promtail&#10;Discord alerts" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#D6EAF8;strokeColor=#2E86AB;fontSize=9;align=center;verticalAlign=middle;" vertex="1" parent="1">
-          <mxGeometry x="390" y="330" width="120" height="170" as="geometry"/>
+        <mxCell id="p3" value="PHASE 3 — Data + monitoring&#10;&#10;• GORM ORM (no more raw SQL)&#10;• v1.1.0 tagged (Mar 6) — last tag&#10;• Hetzner Volume considered, dropped&#10;• PR #79: SQLite → DO managed PG&#10;• Prom + Grafana wired (Mar 18)&#10;• Custom HTTP metrics middleware" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#D6EAF8;strokeColor=#2E86AB;fontSize=10;align=left;verticalAlign=top;spacing=8;" vertex="1" parent="1">
+          <mxGeometry x="461" y="310" width="187" height="200" as="geometry"/>
         </mxCell>
 
-        <mxCell id="c4" value="Session 9&#10;Mar 27&#10;Scaling +&#10;statelessness" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ECEFF1;strokeColor=#607D8B;fontSize=10;fontStyle=2;align=center;verticalAlign=middle;" vertex="1" parent="1">
-          <mxGeometry x="535" y="110" width="120" height="80" as="geometry"/>
-        </mxCell>
-        <mxCell id="c4_line" style="endArrow=none;html=1;strokeColor=#607D8B;strokeWidth=1;dashed=1;" edge="1" parent="1">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint x="595" y="190" as="sourcePoint"/>
-            <mxPoint x="595" y="285" as="targetPoint"/>
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="c4_dot" style="ellipse;whiteSpace=wrap;html=1;fillColor=#607D8B;strokeColor=#2C3E50;" vertex="1" parent="1">
-          <mxGeometry x="589" y="284" width="12" height="12" as="geometry"/>
-        </mxCell>
-        <mxCell id="d4" value="Mar 18 / Apr 10" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=9;fontStyle=1;" vertex="1" parent="1">
-          <mxGeometry x="545" y="298" width="100" height="15" as="geometry"/>
-        </mxCell>
         <mxCell id="p4_line" style="endArrow=none;html=1;strokeColor=#2E86AB;strokeWidth=1;dashed=1;" edge="1" parent="1">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="595" y="296" as="sourcePoint"/>
-            <mxPoint x="595" y="330" as="targetPoint"/>
+            <mxPoint x="758" y="271" as="sourcePoint"/>
+            <mxPoint x="758" y="310" as="targetPoint"/>
           </mxGeometry>
         </mxCell>
-        <mxCell id="p4" value="PR #79&#10;SQLite → managed&#10;Postgres (DO)&#10;&#10;PR #120&#10;3-node Swarm&#10;parallel run begins" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#D6EAF8;strokeColor=#2E86AB;fontSize=9;align=center;verticalAlign=middle;" vertex="1" parent="1">
-          <mxGeometry x="535" y="330" width="120" height="170" as="geometry"/>
+        <mxCell id="p4" value="PHASE 4 — Quality + logging&#10;&#10;• PR #77: gofmt + golangci-lint&#10;  + hadolint in CI (Mar 13)&#10;• errcheck, govet, staticcheck enabled&#10;• Loki + Promtail (Mar 30) — global&#10;• Discord webhook alerts wired" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#D6EAF8;strokeColor=#2E86AB;fontSize=10;align=left;verticalAlign=top;spacing=8;" vertex="1" parent="1">
+          <mxGeometry x="665" y="310" width="187" height="200" as="geometry"/>
         </mxCell>
 
-        <mxCell id="c5" value="Session 11&#10;Apr 17&#10;Security +&#10;pentesting" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ECEFF1;strokeColor=#607D8B;fontSize=10;fontStyle=2;align=center;verticalAlign=middle;" vertex="1" parent="1">
-          <mxGeometry x="680" y="110" width="120" height="80" as="geometry"/>
-        </mxCell>
-        <mxCell id="c5_line" style="endArrow=none;html=1;strokeColor=#607D8B;strokeWidth=1;dashed=1;" edge="1" parent="1">
+        <mxCell id="p5_line" style="endArrow=none;html=1;strokeColor=#5C6B73;strokeWidth=1;dashed=1;" edge="1" parent="1">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="740" y="190" as="sourcePoint"/>
-            <mxPoint x="740" y="285" as="targetPoint"/>
+            <mxPoint x="962" y="271" as="sourcePoint"/>
+            <mxPoint x="962" y="310" as="targetPoint"/>
           </mxGeometry>
         </mxCell>
-        <mxCell id="c5_dot" style="ellipse;whiteSpace=wrap;html=1;fillColor=#E76F51;strokeColor=#A0522D;" vertex="1" parent="1">
-          <mxGeometry x="734" y="284" width="12" height="12" as="geometry"/>
-        </mxCell>
-        <mxCell id="d5" value="Apr 16–21" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=9;fontStyle=1;fontColor=#E76F51;" vertex="1" parent="1">
-          <mxGeometry x="695" y="298" width="90" height="15" as="geometry"/>
-        </mxCell>
-        <mxCell id="p5_line" style="endArrow=none;html=1;strokeColor=#E76F51;strokeWidth=1;dashed=1;" edge="1" parent="1">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint x="740" y="296" as="sourcePoint"/>
-            <mxPoint x="740" y="330" as="targetPoint"/>
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="p5" value="Cluster outage&#10;DO cloud firewall&#10;blocks Swarm ports&#10;&#10;PR #131 — Traefik&#10;v3.6 + overlay fix&#10;PR #138 — latest&#10;counter → PG" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FDEBD0;strokeColor=#E76F51;fontSize=9;align=center;verticalAlign=middle;" vertex="1" parent="1">
-          <mxGeometry x="680" y="330" width="120" height="170" as="geometry"/>
+        <mxCell id="p5" value="PHASE 5 — Swarm + TLS&#10;&#10;• PR #120: 3-node DO Swarm (Apr 10)&#10;• Manager + 2 workers, 3 webserver&#10;  replicas, spread placement&#10;• Traefik + Let's Encrypt (Apr 10)&#10;• Parallel run with Hetzner begins&#10;• Three alert rules in Prometheus" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EAECEE;strokeColor=#5C6B73;fontSize=10;align=left;verticalAlign=top;spacing=8;" vertex="1" parent="1">
+          <mxGeometry x="869" y="310" width="187" height="200" as="geometry"/>
         </mxCell>
 
-        <mxCell id="c6" value="Session 12&#10;Apr 24&#10;IaC / Terraform" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ECEFF1;strokeColor=#607D8B;fontSize=10;fontStyle=2;align=center;verticalAlign=middle;" vertex="1" parent="1">
-          <mxGeometry x="825" y="110" width="120" height="80" as="geometry"/>
-        </mxCell>
-        <mxCell id="c6_line" style="endArrow=none;html=1;strokeColor=#607D8B;strokeWidth=1;dashed=1;" edge="1" parent="1">
+        <mxCell id="p6_line" style="endArrow=none;html=1;strokeColor=#E76F51;strokeWidth=1;dashed=1;" edge="1" parent="1">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="885" y="190" as="sourcePoint"/>
-            <mxPoint x="885" y="285" as="targetPoint"/>
+            <mxPoint x="1115" y="271" as="sourcePoint"/>
+            <mxPoint x="1115" y="310" as="targetPoint"/>
           </mxGeometry>
         </mxCell>
-        <mxCell id="c6_dot" style="ellipse;whiteSpace=wrap;html=1;fillColor=#607D8B;strokeColor=#2C3E50;" vertex="1" parent="1">
-          <mxGeometry x="879" y="284" width="12" height="12" as="geometry"/>
+        <mxCell id="p6" value="PHASE 6 — The outage" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FDEBD0;strokeColor=#E76F51;fontSize=10;fontStyle=1;align=center;verticalAlign=top;spacing=5;" vertex="1" parent="1">
+          <mxGeometry x="1073" y="310" width="85" height="20" as="geometry"/>
         </mxCell>
-        <mxCell id="d6" value="late Apr" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=9;fontStyle=1;" vertex="1" parent="1">
-          <mxGeometry x="845" y="298" width="80" height="15" as="geometry"/>
-        </mxCell>
-        <mxCell id="p6_line" style="endArrow=none;html=1;strokeColor=#2E86AB;strokeWidth=1;dashed=1;" edge="1" parent="1">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint x="885" y="296" as="sourcePoint"/>
-            <mxPoint x="885" y="330" as="targetPoint"/>
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="p6" value="Container hardening&#10;multi-stage build,&#10;non-root user,&#10;Docker Scout&#10;&#10;Codacy enabled&#10;PR #141 — GHCR&#10;PAT fix" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#D6EAF8;strokeColor=#2E86AB;fontSize=9;align=center;verticalAlign=middle;" vertex="1" parent="1">
-          <mxGeometry x="825" y="330" width="120" height="170" as="geometry"/>
+        <mxCell id="p6_body" value="&#10;DO cloud firewall&#10;blocked Swarm ports&#10;between our own&#10;nodes&#10;&#10;PR #131: Traefik&#10;v3.6 + overlay fix&#10;&#10;PR #138: latest&#10;counter → PG&#10;&#10;UFW + tag rules&#10;PR #141: GHCR&#10;PAT fix" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FDEBD0;strokeColor=#E76F51;fontSize=9;align=center;verticalAlign=top;spacing=3;" vertex="1" parent="1">
+          <mxGeometry x="1073" y="330" width="85" height="180" as="geometry"/>
         </mxCell>
 
-        <mxCell id="c7" value="Session 14&#10;May 8&#10;Evolution +&#10;maintenance" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ECEFF1;strokeColor=#607D8B;fontSize=10;fontStyle=2;align=center;verticalAlign=middle;" vertex="1" parent="1">
-          <mxGeometry x="970" y="110" width="120" height="80" as="geometry"/>
-        </mxCell>
-        <mxCell id="c7_line" style="endArrow=none;html=1;strokeColor=#607D8B;strokeWidth=1;dashed=1;" edge="1" parent="1">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint x="1030" y="190" as="sourcePoint"/>
-            <mxPoint x="1030" y="285" as="targetPoint"/>
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="c7_dot" style="ellipse;whiteSpace=wrap;html=1;fillColor=#2A9D8F;strokeColor=#1E6F65;" vertex="1" parent="1">
-          <mxGeometry x="1024" y="284" width="12" height="12" as="geometry"/>
-        </mxCell>
-        <mxCell id="d7" value="May 4–15" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=9;fontStyle=1;fontColor=#2A9D8F;" vertex="1" parent="1">
-          <mxGeometry x="990" y="298" width="80" height="15" as="geometry"/>
-        </mxCell>
         <mxCell id="p7_line" style="endArrow=none;html=1;strokeColor=#2A9D8F;strokeWidth=1;dashed=1;" edge="1" parent="1">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="1030" y="296" as="sourcePoint"/>
-            <mxPoint x="1030" y="330" as="targetPoint"/>
+            <mxPoint x="1319" y="271" as="sourcePoint"/>
+            <mxPoint x="1319" y="310" as="targetPoint"/>
           </mxGeometry>
         </mxCell>
-        <mxCell id="p7" value="PR #162 — Hetzner&#10;decommissioned&#10;from CD&#10;&#10;PR #167 — Terraform&#10;cluster IaC&#10;&#10;May 15: droplet&#10;deleted" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E8F5E9;strokeColor=#2A9D8F;fontSize=9;align=center;verticalAlign=middle;" vertex="1" parent="1">
-          <mxGeometry x="970" y="330" width="120" height="170" as="geometry"/>
+        <mxCell id="p7" value="PHASE 7 — Endgame&#10;&#10;• Container hardening: multi-stage build, non-root user, Docker Scout (PR #143–#160)&#10;• Codacy enabled (PR #163, May 4) — already caught a real bug (commit c8ff76c)&#10;• Personal timeline 234s → 5.7s (a3dfc3d, LATERAL join, May 1)&#10;• PR #162: Hetzner step removed from CD (May 4)&#10;• PR #167: Terraform — cluster declaratively (May 12)&#10;• PR #168: Playwright browser-UI tests in CI&#10;• May 15: Hetzner droplet deleted, end of single-server era&#10;• Report drafted, exam prep" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E8F5E9;strokeColor=#2A9D8F;fontSize=10;align=left;verticalAlign=top;spacing=8;" vertex="1" parent="1">
+          <mxGeometry x="1175" y="310" width="289" height="200" as="geometry"/>
         </mxCell>
 
-        <mxCell id="legend_title" value="Legend" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=10;fontStyle=1;" vertex="1" parent="1">
-          <mxGeometry x="20" y="570" width="60" height="15" as="geometry"/>
+        <mxCell id="project_label" value="PROJECT WORK (grouped into 7 phases — see legend below)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=10;fontStyle=1;fontColor=#2E86AB;" vertex="1" parent="1">
+          <mxGeometry x="20" y="520" width="450" height="20" as="geometry"/>
         </mxCell>
 
         <mxCell id="leg1_swatch" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ECEFF1;strokeColor=#607D8B;" vertex="1" parent="1">
-          <mxGeometry x="90" y="572" width="20" height="14" as="geometry"/>
+          <mxGeometry x="40" y="550" width="22" height="15" as="geometry"/>
         </mxCell>
-        <mxCell id="leg1_label" value="Course session (rhythm marker)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=9;" vertex="1" parent="1">
-          <mxGeometry x="115" y="568" width="200" height="20" as="geometry"/>
+        <mxCell id="leg1_label" value="Course session (weekly rhythm marker)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=9;" vertex="1" parent="1">
+          <mxGeometry x="68" y="547" width="240" height="20" as="geometry"/>
         </mxCell>
 
         <mxCell id="leg2_swatch" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#D6EAF8;strokeColor=#2E86AB;" vertex="1" parent="1">
-          <mxGeometry x="320" y="572" width="20" height="14" as="geometry"/>
+          <mxGeometry x="310" y="550" width="22" height="15" as="geometry"/>
         </mxCell>
         <mxCell id="leg2_label" value="Refactor / architecture decision" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=9;" vertex="1" parent="1">
-          <mxGeometry x="345" y="568" width="200" height="20" as="geometry"/>
+          <mxGeometry x="338" y="547" width="220" height="20" as="geometry"/>
         </mxCell>
 
         <mxCell id="leg3_swatch" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EAECEE;strokeColor=#5C6B73;" vertex="1" parent="1">
-          <mxGeometry x="555" y="572" width="20" height="14" as="geometry"/>
+          <mxGeometry x="565" y="550" width="22" height="15" as="geometry"/>
         </mxCell>
         <mxCell id="leg3_label" value="Infrastructure milestone" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=9;" vertex="1" parent="1">
-          <mxGeometry x="580" y="568" width="200" height="20" as="geometry"/>
+          <mxGeometry x="593" y="547" width="170" height="20" as="geometry"/>
         </mxCell>
 
         <mxCell id="leg4_swatch" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FDEBD0;strokeColor=#E76F51;" vertex="1" parent="1">
-          <mxGeometry x="745" y="572" width="20" height="14" as="geometry"/>
+          <mxGeometry x="770" y="550" width="22" height="15" as="geometry"/>
         </mxCell>
         <mxCell id="leg4_label" value="Incident / learning moment" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=9;" vertex="1" parent="1">
-          <mxGeometry x="770" y="568" width="200" height="20" as="geometry"/>
+          <mxGeometry x="798" y="547" width="200" height="20" as="geometry"/>
         </mxCell>
 
         <mxCell id="leg5_swatch" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E8F5E9;strokeColor=#2A9D8F;" vertex="1" parent="1">
-          <mxGeometry x="935" y="572" width="20" height="14" as="geometry"/>
+          <mxGeometry x="1005" y="550" width="22" height="15" as="geometry"/>
         </mxCell>
-        <mxCell id="leg5_label" value="End state / wrap-up" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=9;" vertex="1" parent="1">
-          <mxGeometry x="960" y="568" width="200" height="20" as="geometry"/>
+        <mxCell id="leg5_label" value="Endgame / wrap-up" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=9;" vertex="1" parent="1">
+          <mxGeometry x="1033" y="547" width="170" height="20" as="geometry"/>
         </mxCell>
 
-        <mxCell id="thread_note" value="Red line = elapsed time. The work was mostly in lock-step with the course rhythm — Session 11 (security) and our cluster outage landed on the same day; Session 12 (Terraform) we deferred by ~3 weeks." style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=9;fontStyle=2;fontColor=#666666;whiteSpace=wrap;" vertex="1" parent="1">
-          <mxGeometry x="100" y="610" width="1000" height="35" as="geometry"/>
+        <mxCell id="thread_note" value="Pacing: Phases 1–4 tracked the course rhythm closely. Phase 5 (Swarm) landed ~2 weeks after Session 9 — we bundled it with TLS work. Phase 6 (outage) landed exactly on Session 11 (Security) — the cloud firewall Peter added the night before silently blocked Swarm's control-plane ports between our own nodes. Phase 7 (Terraform IaC) landed ~3 weeks after Session 12 — we deferred it for container hardening." style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=9;fontStyle=2;fontColor=#666666;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="40" y="585" width="1420" height="50" as="geometry"/>
         </mxCell>
 
       </root>
