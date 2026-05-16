@@ -116,7 +116,7 @@ The monitoring services (Prometheus, Grafana, Loki) each run as a single replica
 ## Evolution and Refactoring
 **Author(s):** Håkon and Leo
 
-Several decisions that worked early in the project became problematic as the system evolved. A clear example was the `latest` simulator counter, which was initially stored as in-memory application state. This worked in the single-instance deployment, but failed once we introduced three webserver replicas in Docker Swarm, since each replica maintained its own copy. We resolved this by moving the state into PostgreSQL (PR #138), making the application properly stateless.
+The largest refactor of the project was the move from a single Hetzner deployment to a three-node Docker Swarm cluster on DigitalOcean (PR #120 and follow-ups). The migration surfaced hidden assumptions around networking, secrets, and service communication that the single-server architecture had let us ignore. Running three webserver replicas behind Traefik also forced us to externalise shared state we had previously kept in memory — most visibly the `latest` simulator counter, which we moved into PostgreSQL (PR #138) so the replicas could agree.
 
 The same pattern appeared elsewhere: solutions that worked at one scale often broke at the next. Metrics labels initially used raw paths until cardinality became an issue, and the personal timeline query appeared acceptable until realistic usage caused severe timeouts.
 
