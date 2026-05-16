@@ -120,7 +120,7 @@ The largest refactor of the project was the move from a single Hetzner deploymen
 
 The same pattern appeared elsewhere: solutions that worked at one scale often broke at the next. Metrics labels initially used raw paths until cardinality became an issue, and the personal timeline query appeared acceptable until realistic usage caused severe timeouts.
 
-The migration from a single Hetzner deployment to a distributed Docker Swarm setup also surfaced hidden assumptions around networking, secrets, and service communication. In hindsight, our refactoring was largely reactive rather than planned. This kept development moving, but also meant architectural weaknesses were often discovered only under operational pressure.
+In hindsight, our refactoring was largely reactive rather than planned. This kept development moving, but also meant architectural weaknesses were often discovered only under operational pressure.
 
 ## Operation
 **Author(s):** Leo and Apoorva
