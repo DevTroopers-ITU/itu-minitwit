@@ -118,9 +118,9 @@ The monitoring services (Prometheus, Grafana, Loki) each run as a single replica
 
 The project moved through roughly six phases: bootstrapping, CI/CD, observability, production infrastructure, hardening, and wrap-up. Between these phases, most refactoring happened through smaller fixes and upgrades rather than one planned redesign.
 
-The largest architectural change was the move from a single Hetzner deployment to a three-node Docker Swarm cluster on DigitalOcean (PR #120 and follow-ups). The migration changed the system from one server running everything to a distributed setup with replicated webservers, Traefik routing, managed PostgreSQL, and Swarm secrets. Running three webserver replicas behind Traefik also forced us to externalise shared state we had previously kept in memory — most visibly the `latest` simulator counter, which we moved into PostgreSQL (PR #138) so the replicas could agree.
+The largest architectural change was the move from a single Hetzner deployment to a three-node Docker Swarm cluster on DigitalOcean (PR #120 and follow-ups). The migration changed the system from one server running everything to a distributed setup with replicated webservers, Traefik routing, managed PostgreSQL, and Swarm secrets. Running three webserver replicas behind Traefik also forced us to externalise shared state we had previously kept in memory, such as the `latest` simulator counter, which we moved into PostgreSQL (PR #138).
 
-The same pattern appeared elsewhere: solutions that worked at one scale often broke at the next. Metrics labels initially used raw paths until cardinality became an issue, and the personal timeline query appeared acceptable until realistic usage caused severe timeouts.
+The same pattern appeared elsewhere. The personal timeline query seemed acceptable in early testing, but realistic usage later exposed severe timeouts for users with many follows. It took several rounds of diagnosis across the team before we landed on the query rewrite that fixed it (`a3dfc3d`).
 
 In hindsight, our refactoring was largely reactive rather than planned. This kept development moving, but also meant architectural weaknesses were often discovered only under operational pressure.
 
