@@ -120,10 +120,12 @@ The monitoring services (Prometheus, Grafana, Loki) each run as a single replica
 
 ## Operation
 **Author(s):** Leo and Apoorva
-<!-- Incidents, on-call lessons, what changed in how we run the system. -->
 
-Choices about servers, droplets, databases
-Vertical/horisontal scaling
+<!-- DRAFT — Apoorva: feel free to add a sentence about your fixes (firewall hardening / GHCR auth / Grafana persistence) within the word budget. -->
+
+We started on a single Hetzner droplet (EU-based, where Leo had prior experience): SQLite on a Docker volume, one VM running everything. When simulator load started hurting SQLite, we migrated the database to a DigitalOcean managed Postgres instance (PR #79). From session 9 we ran a 3-node Docker Swarm on DO in parallel with Hetzner for several weeks, both pointing at the same DO Postgres — so we could check Swarm health against real data without flipping DNS. That parallel-run is what let us catch the 17 April Swarm-networking outage before users saw it: a new DO cloud firewall silently blocked the Swarm control-plane ports between our own nodes. External uptime checks said green; the cluster was dead.
+
+**Lesson: control plane and data plane fail independently. Running two stacks in parallel during the migration cost us almost nothing and bought us the ability to debug live without risk to users.**
 
 ## Maintenance
 **Author(s):** Leo
