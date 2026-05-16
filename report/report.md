@@ -117,26 +117,26 @@ The monitoring services (Prometheus, Grafana, Loki) each run as a single replica
 ## Evolution and Refactoring
 **Author(s):** Håkon and Leo
 
-<!-- DRAFT — re-framed around three rebuilds. Håkon: feel free to edit any rebuild. -->
+<!-- DRAFT — anchored to docs/evolution.md (6-phase categorisation). Reflection threads cut across the phases. -->
 
-The project went from a Python file we were handed to a service we operate, in three rebuilds.
+The project moved through six phases — bootstrapping, CI/CD, observability, production infra, hardening, wrap-up (see `docs/evolution.md`). Three threads cut across them.
 
-**Rebuild 1 — Language (PR #15, Feb 10).** We rewrote the inherited Flask app in Go. Group picked Go in week 1; the real work was learning the language, not rewriting ~600 lines.
+**Reactive refactoring.** Most architectural fixes only happened once the next phase exposed the previous as wrong. `latest` was a process-local `var` until three replicas were about to disagree (PR #138); SQLite stayed local until we needed replicas (PR #79); the personal timeline took 41–49 s for a real user before we rewrote it (PR #135).
 
-**Rebuild 2 — Replication (March → April).** Four coupled refactors: GORM (PR #70), SQLite → managed Postgres (PR #79), 3-node Swarm + Traefik (PR #120), and a Postgres-backed simulator counter (PR #138) when we noticed three replicas would disagree about `latest`. Each step reacted to the previous architecture's limits.
+**Big-bang merges hid bugs.** The Traefik 504 (#129) and the secret-path crash (#128) both surfaced *after* a multi-PR `dev → master` merge landed in prod.
 
-**Rebuild 3 — Hardening (late April → May).** Multi-stage Dockerfile, non-root user, Semgrep, Docker Scout, UFW, Codacy, Terraform. Most of it landed weeks late.
+**Hardening as a phase, not a habit.** Container security, Semgrep, Docker Scout, multi-stage Dockerfile, decommission — phase 5 of 6 (PRs #143–#160, #162). Most of it landed weeks after the session that asked for it.
 
-**Lesson:** each layer ended up wrong for the next phase. We caught up reactively — fine for momentum, expensive for things like the `latest` counter we should have spotted at design.
+**Lesson:** each layer ended up wrong for the next phase. Reactive kept us moving; cost us the `latest` bug and the 504 — both spottable at design.
 
 ## Operation
 **Author(s):** Leo and Apoorva
 
 <!-- DRAFT — Apoorva: feel free to add a sentence about your fixes (firewall hardening / GHCR auth / Grafana persistence) within the word budget. -->
 
-The biggest operational decision was running two production stacks in parallel — Hetzner and DO Swarm, both against the same managed Postgres, 10 April to 4 May. Zero-downtime cutover for the simulator, and the parallel run is what surfaced our worst outage. On 17 April a new DO cloud firewall silently blocked Swarm's overlay ports between our own nodes. `docker node ls` showed both workers Down; external uptime checks said green. We rolled DNS back to Hetzner, fixed the firewall the next day, bumped Traefik to v3.6 in the process (PR #131), and only flipped DNS again once `curl --http2` returned 200 against the cluster.
+The biggest operational decision was running two production stacks in parallel — Hetzner and DO Swarm, both against the same managed Postgres, 10 April to 4 May. Zero-downtime cutover for the simulator, and the parallel run surfaced our worst outage. On 17 April a new DO cloud firewall silently blocked Swarm's overlay ports between our own nodes — `docker node ls` showed both workers Down, but external uptime checks said green. We rolled DNS back to Hetzner, fixed the firewall, bumped Traefik to v3.6 (PR #131), and only re-flipped once `curl --http2` returned 200.
 
-Three replicas behind Traefik gave us the horizontal-scaling shape the course asked for, though we never benchmarked it against the single box.
+Three replicas behind Traefik gave us the horizontal shape the course asked for, though we never benchmarked it against the single box.
 
 **Control plane and data plane fail independently — uptime checks at the edge don't catch it.**
 
@@ -145,28 +145,28 @@ Three replicas behind Traefik gave us the horizontal-scaling shape the course as
 
 <!-- DRAFT v5 — trimmed for budget; quality-tool list lives here, not in DevOps Style. -->
 
-On 4 May Apoorva turned on Codacy. Within hours it flagged a bug in our `/health` route that had been live for weeks. We fixed it in `c8ff76c`; the commit message says *"caught by codacy."*
+On 4 May we turned on Codacy. Within hours it flagged a `/health` route bug live for weeks. We fixed it in `c8ff76c`; the commit message says *"caught by codacy."*
 
-That catch is the maintenance story in miniature. Tooling landed one at a time, by whoever got to it — linters and formatters in March (`bdb6c16`), image hardening + Semgrep + Docker Scout in April (PR #160), Codacy in May. Nobody owned maintenance as a thread.
+That catch is maintenance in miniature. Tooling landed one at a time, by whoever got to it — linters in March (`bdb6c16`), image hardening + Semgrep + Docker Scout in April (PR #160), Codacy in May. Nobody owned maintenance as a thread.
 
-What nobody hit, didn't get fixed. `helpers.go:55` swallows the bcrypt error. `sim_api.go:33` hardcodes the simulator auth header. Eleven test functions total, none on `store.go`. Issue #86 ("Add test suites as described in lecture 7") has been open since 13 March.
+What nobody hit, didn't get fixed. `helpers.go:55` swallows the bcrypt error. `sim_api.go:33` hardcodes the simulator auth header. Eleven test functions total, none on `store.go`. Issue #86 has been open since 13 March.
 
-**What's good is good because someone hit it; what's bad is bad because nobody did. Making maintenance somebody's job is what we'd carry into the next project.**
+**What's good is good because someone hit it; what's bad is bad because nobody did. Maintenance needed an owner.**
 
 ## DevOps Style
 **Author(s):** Leo
 
 <!-- DRAFT v4 — Three Ways scoreboard. Quality-gate list moved to Maintenance to avoid duplication. -->
 
-Session 5 asked us to map ourselves against the DevOps Handbook's Three Ways. Honest scoreboard:
+Session 5 asked us about the DevOps Handbook's Three Ways.
 
-**Flow.** PR-only merges and CD-on-green from week one (PR #65). We loosened protection on `dev` after week 5 ("just extra work") but kept it on `master`. Batch sizes never shrank — PRs #146–#160 are 10 self-merged retries on hardening, and the Python→Go pivot landed as one 1288-line PR (#15) over a weekend.
+**Flow.** PR-only + CD-on-green from week one (PR #65); batch sizes never shrank — PRs #146–#160 are 10 self-merged hardening retries, and Python→Go was one 1288-line PR.
 
-**Feedback.** Monitoring went up before incidents forced it. The 29 April personal-timeline blow-up surfaced through that loop: a DigitalOcean CPU alert in `#generelt` at 10:01, before symptoms reached the rest of us.
+**Feedback.** The 29 April timeline blow-up surfaced through a DigitalOcean CPU alert in `#generelt` at 10:01, before symptoms reached the rest of us.
 
-**Continual Learning.** The 720-line debug doc we wrote live during the 17 April outage (`docs/incidents/session11-ops-debug.md`) is the audit trail we'd hand to a new team member. Where we failed: two firewall incidents inside ~12 hours on 16 April — same team, same provider, no transfer of the morning's lesson to the evening's change.
+**Continual Learning.** The 720-line debug doc we wrote live during the 17 April outage is what we'd hand to a new team member. The gap: two firewall incidents in 12 hours that day, no transfer of the morning's lesson to the evening's change.
 
-For most of us, this was the first time owning the Ops half — servers, certs, Postgres credentials, an on-call habit. **The Dev/Ops bridge wasn't aspirational; it was the assignment.**
+For most of us this was the first time owning the Ops half — servers, certs, credentials, on-call. **The Dev/Ops bridge wasn't aspirational; it was the assignment.**
 
 # Use of Generative AI
 **Author(s):** Leo
