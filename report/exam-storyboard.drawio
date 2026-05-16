@@ -259,7 +259,7 @@
         <mxCell id="p_simapi_stripe" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#B85C7A;strokeColor=none;" vertex="1" parent="1">
           <mxGeometry x="260" y="210" width="5" height="55" as="geometry"/>
         </mxCell>
-        <mxCell id="p_hetzner" value="PR #41&#10;Hetzner droplet&#10;+ Vagrant, Feb 18" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#E5E2DA;strokeWidth=1;fontSize=8;align=center;verticalAlign=middle;spacingLeft=6;" vertex="1" parent="1">
+        <mxCell id="p_hetzner" value="PR #41&#10;Hetzner VM&#10;+ Vagrant, Feb 18" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#E5E2DA;strokeWidth=1;fontSize=8;align=center;verticalAlign=middle;spacingLeft=6;" vertex="1" parent="1">
           <mxGeometry x="260" y="272" width="85" height="55" as="geometry"/>
         </mxCell>
         <mxCell id="p_hetzner_stripe" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#B85C7A;strokeColor=none;" vertex="1" parent="1">
@@ -447,7 +447,7 @@
           <mxGeometry x="1260" y="610" width="5" height="65" as="geometry"/>
         </mxCell>
 
-        <mxCell id="inc_decomm" value="PR #162&#10;Hetzner removed&#10;from CD, May 4&#10;Droplet deleted May 15" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#E5E2DA;strokeWidth=1.5;fontSize=8;fontStyle=1;align=center;verticalAlign=middle;spacingLeft=6;" vertex="1" parent="1">
+        <mxCell id="inc_decomm" value="PR #162&#10;Hetzner removed&#10;from CD, May 4&#10;VM deleted May 15" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#E5E2DA;strokeWidth=1.5;fontSize=8;fontStyle=1;align=center;verticalAlign=middle;spacingLeft=6;" vertex="1" parent="1">
           <mxGeometry x="1360" y="610" width="85" height="65" as="geometry"/>
         </mxCell>
         <mxCell id="inc_decomm_stripe" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#7A7268;strokeColor=none;" vertex="1" parent="1">
