@@ -141,7 +141,12 @@ Be honest about trade-offs.
 
 <!-- Suggested word budget: ~200. Required per ITU GAI policy. -->
 
-<!--
-Which tools we used, for which tasks, how, and a short reflection on
-whether they helped or hindered the work.
--->
+<!-- DRAFT — to revisit after other sections are written. -->
+
+We used **Claude Code (Anthropic Opus 4.6, later 4.7)** all semester, in thinking mode mostly via the CLI; no other tools meaningfully. Commits where Claude helped carry a `Co-Authored-By: Claude` trailer, and `.mailmap` maps the tool to `LLM <none>` as the course requires.
+
+Our group is five people, four without a CS bachelor. The DevOps stack — Go, Docker Swarm, Prometheus, Grafana, Postgres, Traefik, Terraform — was new to all of us. We leaned on Claude as a guide through unfamiliar stuff, as a scribe for running notes, and as a second pair of eyes before anything irreversible. We also got specific about *how* we used it (model, mode, context) and tried to write our own PRs and comments even when Claude had helped — both as ways of showing we'd actually understood the work, not just shipped it.
+
+It didn't help us when we didn't know enough to lead it. Debugging turned into pasting things back and forth instead of thinking. Under time pressure it was tempting to take output we hadn't really understood.
+
+**AI worked best when we already knew enough to check what it said, and worst when we wanted it to do the thinking for us.**
