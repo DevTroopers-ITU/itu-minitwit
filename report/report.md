@@ -112,69 +112,56 @@ Each replica runs a health check every 30 seconds (`wget --spider` against local
 The monitoring services (Prometheus, Grafana, Loki) each run as a single replica pinned to the manager node. We could have run them in a more resilient configuration, but these services all hold persistent state that is genuinely tricky to replicate without extra tooling, and a brief monitoring outage is much less bad than a complex distributed setup breaking in production. The webserver replicas are stateless and are the only part of the system we actually scale horizontally. If we ever needed more capacity on the database or monitoring side, vertical scaling (resizing the droplet) is the more practical option.
 
 # Reflection Perspective
-<!-- Suggested word budget: ~500 -->
 
 ## Evolution and Refactoring
 **Author(s):** Håkon and Leo
 
-<!-- DRAFT — anchored to docs/evolution.md (6-phase categorisation). Reflection threads cut across the phases. -->
+Several decisions that worked early in the project became problematic as the system evolved. A clear example was the `latest` simulator counter, which was initially stored as in-memory application state. This worked in the single-instance deployment, but failed once we introduced three webserver replicas in Docker Swarm, since each replica maintained its own copy. We resolved this by moving the state into PostgreSQL (PR #138), making the application properly stateless.
 
-The project went through six phases roughly — bootstrapping, CI/CD, observability, production infra, hardening, wrap-up. The same pattern ran through them: we usually only fixed things once they broke in the next phase. The `latest` counter sat in process memory until three replicas were about to disagree (PR #138). Prometheus labels used raw paths until cardinality blew up the scrape memory (PR #98). The personal timeline was fine until a real user hit 41–49 seconds and we rewrote it (PR #135).
+The same pattern appeared elsewhere: solutions that worked at one scale often broke at the next. Metrics labels initially used raw paths until cardinality became an issue, and the personal timeline query appeared acceptable until realistic usage caused severe timeouts.
 
-Big-bang merges did the same thing on the deploy side — the Traefik 504 (#129) and the secret-path crash (#128) both only showed up after a `dev → master` landed in prod. And our hardening work came late: multi-stage Dockerfile, Semgrep, Docker Scout, Hetzner decommission (PRs #143–#160, #162) all landed weeks after the session that asked for them.
-
-We refactored on demand, not on plan — kept us moving, but left bugs where phases met.
+The migration from a single Hetzner deployment to a distributed Docker Swarm setup also surfaced hidden assumptions around networking, secrets, and service communication. In hindsight, our refactoring was largely reactive rather than planned. This kept development moving, but also meant architectural weaknesses were often discovered only under operational pressure.
 
 ## Operation
 **Author(s):** Leo and Apoorva
 
-<!-- DRAFT — Apoorva: feel free to add a sentence about your fixes (firewall hardening / GHCR auth / Grafana persistence) within the word budget. -->
+We operated two production environments in parallel for most of April: a single-node Hetzner deployment and a Docker Swarm cluster on DigitalOcean, both connected to the same managed PostgreSQL instance. This allowed a gradual migration without interrupting the simulator.
 
-We ran two production stacks in parallel for most of April — Hetzner and DO Swarm, both against the same managed Postgres, from 10 April to 4 May. The simulator never noticed when we cut over, and the parallel run is what surfaced our worst outage. On the evening of 16 April a new DO cloud firewall silently blocked Swarm's overlay ports between our own nodes; `docker node ls` showed both workers Down, but the external uptime checks were still green. We rolled DNS back to Hetzner, fixed the firewall, bumped Traefik to v3.6 (PR #131), and only re-flipped once `curl --http2` came back 200.
+That parallel setup also exposed our most important operational lesson. On 16 April, a newly configured DigitalOcean firewall blocked Docker Swarm's internal overlay traffic between nodes. The manager continued serving traffic through its local replica, so external uptime checks remained green while cluster redundancy had silently failed for nearly 18 hours; PR #131 later addressed related Swarm routing issues.
 
-Three replicas behind Traefik gave us the horizontal shape the course asked for, though we never benchmarked it against the single box.
-
-**Control plane and data plane fail independently — uptime checks at the edge don't catch it.**
+The incident reinforced that control-plane and data-plane failures are not the same, and that edge-level uptime checks alone are insufficient. Running three replicas behind Traefik gave us horizontal replication, though we never benchmarked whether this was meaningfully better than the simpler single-node setup. The manager also remains a single point of failure for several critical services.
 
 ## Maintenance
 **Author(s):** Leo
 
-<!-- DRAFT v5 — trimmed for budget; quality-tool list lives here, not in DevOps Style. -->
+Our maintenance story was largely reactive. Tooling improved steadily throughout the project, with linting, security scanning, and image hardening added over time rather than as part of an explicit maintenance strategy. A concrete example was Codacy, which immediately identified a `/health` route bug that had gone unnoticed for weeks (fixed in commit `c8ff76c`, whose message reads *"caught by codacy"*).
 
-On 4 May we turned on Codacy. Within a few hours it flagged a `/health` route bug that had been live for weeks. We fixed it in `c8ff76c`; the commit message just says *"caught by codacy."*
+More generally, issues that affected visible behaviour were fixed, while quieter problems remained. For example, bcrypt errors are still swallowed in helper code, simulator authentication contains hardcoded values, test coverage remains limited, and logs accumulated recurring warnings that nobody investigated.
 
-That catch is basically the whole maintenance story in miniature. Tooling landed one at a time, whenever someone got to it — linters in March (`bdb6c16`), image hardening with Semgrep and Docker Scout in April (PR #160), Codacy in May. Nobody owned maintenance as a thread of its own.
-
-What nobody hit didn't get fixed. `helpers.go:55` still swallows the bcrypt error. `sim_api.go:33` still hardcodes the simulator auth header. The webserver log has 64,981 identical `superfluous WriteHeader` warnings nobody ever read. We have eleven test functions total, none on `store.go`. Issue #86 has been open since 13 March.
-
-**What's good is good because someone hit it; what's bad is bad because nobody did. Maintenance needed an owner.**
+The main lesson is that maintenance requires ownership. Improvements happened when a specific issue became painful enough to address, not because we systematically worked to improve maintainability.
 
 ## DevOps Style
 **Author(s):** Leo
 
-<!-- DRAFT v4 — Three Ways scoreboard. Quality-gate list moved to Maintenance to avoid duplication. -->
+This was the first project where most of us were responsible not only for development, but also for deployment and operations. That changed how we worked.
 
-Session 5 asked us about the DevOps Handbook's Three Ways.
+Applying the DevOps Handbook's Three Ways, our strongest area was flow. We established pull requests and continuous deployment early (PR #65), which created a clear delivery path and fast iteration.
 
-**Flow.** PR-only + CD-on-green from week one (PR #65); batch sizes never shrank — PRs #146–#160 are 10 self-merged hardening retries.
+Feedback was more mixed. Monitoring helped us detect some operational issues quickly, including performance degradation in the timeline query, but other failures went unnoticed because our monitoring assumptions were incomplete.
 
-**Feedback.** Monitoring worked on 29 April. A CPU alert hit `#generelt` at 10:01 and we caught the timeline bug before users complained; by next morning we'd figured out the root cause. On 20 April it didn't — site went down, no alert fired, and we only noticed when someone opened the page.
+Continual learning improved over time. Incident documentation and operational runbooks became increasingly important as the infrastructure grew more complex. However, knowledge was still unevenly distributed, and some operational understanding remained concentrated among a few contributors.
 
-**Continual Learning.** The 720-line debug doc we wrote live during the 17 April outage is what we'd hand to a new team member. The gap: two firewall incidents in 12 hours that day, no transfer between them.
-
-For most of us this was the first time owning the Ops half — servers, certs, credentials, on-call. **The Dev/Ops bridge wasn't aspirational; it was the assignment.**
+The main takeaway is that DevOps was not just about adding tools. It became concrete when we had to operate the system ourselves.
 
 # Use of Generative AI
 **Author(s):** Leo
 
-<!-- Suggested word budget: ~200. Required per ITU GAI policy. -->
+We used Anthropic Claude, mainly through the Code interface, throughout the project for infrastructure work, debugging, documentation, and implementation support in unfamiliar technical areas. AI-assisted commits were marked with `Co-Authored-By: Claude`, and `.mailmap` maps the tool to `LLM <none>` as required by the course.
 
-<!-- DRAFT — to revisit after other sections are written. -->
+This was particularly useful when working with Docker Swarm, Traefik, PostgreSQL migration, CI/CD setup, and security tooling. AI reduced iteration time by helping explain errors, suggest configurations, and accelerate exploration of possible solutions.
 
-We used **Claude Code (Anthropic Opus 4.6, later 4.7)** all semester, in thinking mode mostly via the CLI; no other tools meaningfully. Claude commits carry `Co-Authored-By` trailers, and `.mailmap` maps the tool to `LLM <none>` as required.
+However, its usefulness depended entirely on active validation. Plausible but incorrect suggestions occasionally slowed debugging rather than helping. We found that AI worked best as a fast exploratory assistant, not as an authoritative source.
 
-Our group is five people, four without a CS bachelor. The DevOps stack — Go, Docker Swarm, Prometheus, Grafana, Postgres, Traefik, Terraform — was new to all of us, and we leaned on Claude to explain concepts we didn't yet have a feel for and as a scribe for running notes and incident write-ups. Looking back, two things we'd carry into a next project: declaring AI use more specifically (model, mode, context), and writing our own PRs and comments even when Claude had helped — both ways of showing we'd actually understood the work, not just shipped it.
+A further reflection is that AI use was not evenly distributed within the team. While it increased individual productivity, it also created some asymmetry in how quickly contributors could work across unfamiliar technical areas.
 
-It didn't help us when we wanted it to deliver answers in territory we couldn't read — debugging then turned into pasting things back and forth instead of thinking. Under time pressure it was tempting to take output we hadn't really understood.
-
-**AI worked best at explaining and at checking work we already understood — worst when we wanted it to deliver answers we couldn't yet evaluate.**
+Overall, generative AI improved development speed, but did not replace technical judgment or understanding.
