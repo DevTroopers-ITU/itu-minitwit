@@ -116,52 +116,52 @@ The monitoring services (Prometheus, Grafana, Loki) each run as a single replica
 ## Evolution and Refactoring
 **Author(s):** Håkon and Leo
 
-The project moved through roughly six phases: bootstrapping, CI/CD, observability, production infrastructure, hardening, and wrap-up. Between these phases, most refactoring happened through smaller fixes and upgrades rather than one planned redesign.
+The project moved through roughly six phases: bootstrapping, CI/CD, observability, production infrastructure, hardening, and wrap-up. In practice, most refactoring happened as smaller fixes between those phases, not as one planned redesign.
 
-The largest architectural change was the move from a single Hetzner deployment to a three-node Docker Swarm cluster on DigitalOcean (PR #120 and follow-ups). The migration changed the system from one server running everything to a distributed setup with replicated webservers, Traefik routing, managed PostgreSQL, and Swarm secrets. Running three webserver replicas behind Traefik also forced us to externalise shared state we had previously kept in memory, such as the `latest` simulator counter, which we moved into PostgreSQL (PR #138).
+The largest architectural change was the move from a single Hetzner deployment to a three-node Docker Swarm cluster on DigitalOcean (PR #120 and follow-ups). This changed the system from one server running everything to replicated webservers, Traefik routing, managed PostgreSQL, and Swarm secrets. Running three webserver replicas also forced us to move shared state out of memory. One example was the `latest` simulator counter, which we moved into PostgreSQL (PR #138).
 
-The same pattern appeared elsewhere. The personal timeline query seemed acceptable in early testing, but realistic usage later exposed severe timeouts for users with many follows. It took several rounds of diagnosis across the team before we landed on the query rewrite that fixed it (`a3dfc3d`).
+The same pattern appeared elsewhere. The personal timeline query seemed fine in early testing, but later timed out for users with many follows. It took several rounds of diagnosis across the team before we landed on the query rewrite that fixed it (`a3dfc3d`).
 
-In hindsight, our refactoring was largely reactive rather than planned. This kept development moving, but also meant architectural weaknesses were often discovered only under operational pressure.
+In hindsight, we mostly refactored when something forced us to. That kept the project moving, but it also meant that some weaknesses only became visible when the system was under pressure.
 
 ## Operation
 **Author(s):** Leo and Apoorva
 
-We operated two production environments in parallel for most of April: a single-node Hetzner deployment and a Docker Swarm cluster on DigitalOcean, both connected to the same managed PostgreSQL instance. This allowed a gradual migration without interrupting the simulator.
+We ran two production environments in parallel for most of April: a single-node Hetzner deployment and a Docker Swarm cluster on DigitalOcean, both connected to the same managed PostgreSQL instance. This let us migrate gradually without interrupting the simulator.
 
-That parallel setup also exposed our most important operational lesson. On 16 April, a newly configured DigitalOcean firewall blocked Docker Swarm's internal overlay traffic between nodes. The manager continued serving traffic through its local replica, so external uptime checks remained green while cluster redundancy had silently failed for nearly 18 hours; PR #131 later addressed related Swarm routing issues.
+One sharp operational lesson came from that parallel-run window. On 16 April, a new DigitalOcean firewall blocked Docker Swarm's internal overlay traffic between nodes. The manager kept serving traffic through its local replica, so external uptime checks stayed green while cluster redundancy had silently failed for nearly 18 hours. PR #131 later addressed related Swarm routing issues.
 
-The incident reinforced that control-plane and data-plane failures are not the same, and that edge-level uptime checks alone are insufficient. Running three replicas behind Traefik gave us horizontal replication, though we never benchmarked whether this was meaningfully better than the simpler single-node setup. The manager also remains a single point of failure for several critical services.
+The incident showed that control-plane and data-plane failures are different things. Edge-level uptime checks were not enough. Three replicas behind Traefik gave us horizontal replication, but we never benchmarked whether it was better than the simpler single-node setup. The manager also remained a single point of failure for several critical services.
 
 ## Maintenance
 **Author(s):** Leo
 
-Our maintenance story was largely reactive. Tooling improved steadily throughout the project, with linting, security scanning, and image hardening added over time rather than as part of an explicit maintenance strategy. A concrete example was Codacy, which immediately identified a `/health` route bug that had gone unnoticed for weeks (fixed in commit `c8ff76c`, whose message reads *"caught by codacy"*).
+Our maintenance work was mostly reactive. Tooling improved during the project, with linting, security scanning, and image hardening added over time rather than from the start. A concrete example was Codacy, which identified a `/health` route bug that had been live for weeks (fixed in commit `c8ff76c`, whose message reads *"caught by codacy"*).
 
-More generally, issues that affected visible behaviour were fixed, while quieter problems remained. For example, bcrypt errors are still swallowed in helper code, simulator authentication contains hardcoded values, test coverage remains limited, and logs accumulated recurring warnings that nobody investigated.
+More generally, bugs that affected visible behaviour were fixed, while quieter problems remained. For example, bcrypt errors are still swallowed in helper code, simulator authentication contains hardcoded values, test coverage is limited, and logs accumulated recurring warnings that nobody investigated.
 
-The main lesson is that maintenance requires ownership. Improvements happened when a specific issue became painful enough to address, not because we systematically worked to improve maintainability.
+The lesson is that maintenance needs an owner. Improvements happened when a problem became painful enough to fix, not because we had a regular practice for improving maintainability.
 
 ## DevOps Style
 **Author(s):** Leo
 
 This was the first project where most of us were responsible not only for development, but also for deployment and operations. That changed how we worked.
 
-Applying the DevOps Handbook's Three Ways, our strongest area was flow. We established pull requests and continuous deployment early (PR #65), which created a clear delivery path and fast iteration. Initial branch protection on both `dev` and `master` felt too heavy for day-to-day work, so we relaxed `dev` and kept `master` as the stricter integration gate. In practice, PRs often functioned more as coordination and deployment checkpoints than as strict human review gates.
+Using the DevOps Handbook's Three Ways as a lens, flow was our strongest area. We set up pull requests and continuous deployment early (PR #65). Iteration stayed fast. Branch protection on both `dev` and `master` felt too heavy for daily work, so we relaxed `dev` and kept `master` as the stricter integration gate. In practice, PRs often worked more as coordination checkpoints than as strict human review gates.
 
-Feedback was more mixed. Monitoring helped us detect some operational issues quickly, including performance degradation in the timeline query, but other failures went unnoticed because our monitoring assumptions were incomplete.
+Feedback was more mixed. Monitoring helped us catch some issues, including the timeline performance problem, but other failures went unnoticed because our monitoring assumptions were incomplete.
 
-Continual learning was ad-hoc rather than systematic. We never established a documentation or estimation practice. Coordination mostly happened through Discord pings on PRs, while deeper docs were written only for larger refactors or incidents, such as the live debug doc from the 17 April outage (`docs/incidents/session11-ops-debug.md`). Operational knowledge therefore remained concentrated among a few contributors.
+Continual learning stayed informal. We never established a documentation or estimation practice. Most coordination happened through Discord pings on PRs, while deeper docs were written only for larger refactors or incidents, such as the retrospective debug doc from the April Swarm debugging (`docs/incidents/session11-ops-debug.md`). Operational knowledge therefore stayed concentrated among a few contributors.
 
-The main takeaway is that DevOps was not just about adding tools. It became concrete when we had to operate the system ourselves.
+The main takeaway is that DevOps was not just about adding tools. It became real when we had to operate the system ourselves.
 
 # Use of Generative AI
 **Author(s):** Leo
 
 We used Anthropic Claude, mainly through the Code interface, throughout the project. AI-assisted commits carry `Co-Authored-By: Claude`, and `.mailmap` maps the tool to `LLM <none>` as required by the course.
 
-The clearest place AI helped was the early refactor of the inherited Python/Flask app into Go (PR #15). None of us knew Go; Claude helped us scaffold the package structure and read errors as we learned the type system. Without it, the rewrite would likely have taken much longer. The same was true later for Docker Swarm, Traefik, the PostgreSQL migration, CI/CD setup, and security tooling: AI reduced iteration time by helping explain errors and suggest configurations.
+The clearest place AI helped was the early refactor of the inherited Python/Flask app into Go (PR #15). None of us knew Go, and Claude helped us scaffold the package structure and understand compiler errors while we learned the type system. Later, the same kind of help was useful for Docker Swarm, Traefik, the PostgreSQL migration, CI/CD setup, and security tooling.
 
-Its usefulness depended on active validation, though. Plausible but wrong suggestions sometimes slowed debugging rather than helping, and we came to treat AI as a fast exploratory assistant rather than an authoritative source.
+It only helped when we could evaluate the suggestions. Plausible but wrong answers sometimes slowed debugging down, so we learned to treat AI as a fast helper for exploration, not as an authority.
 
-A further reflection is that AI use was not evenly distributed within the team. It increased individual productivity, but also created asymmetry in how quickly contributors could work across unfamiliar technical areas. Overall, generative AI improved development speed, but only when paired with technical judgment and active validation.
+AI use was also uneven across the team. It increased individual productivity, but it also meant that some contributors could move faster through unfamiliar technical areas than others. Overall, generative AI helped us move faster, but only when paired with our own understanding.
