@@ -119,22 +119,22 @@ The monitoring services (Prometheus, Grafana, Loki) each run as a single replica
 
 <!-- DRAFT — anchored to docs/evolution.md (6-phase categorisation). Reflection threads cut across the phases. -->
 
-The project moved through six phases roughly — bootstrapping, CI/CD, observability, production infra, hardening, wrap-up (see `docs/evolution.md`). Three threads cut across them.
+The project moved through six phases roughly — bootstrapping, CI/CD, observability, production infra, hardening, wrap-up. Three things kept happening.
 
-**Reactive refactoring.** Most architectural fixes only happened once the next phase exposed the previous as wrong. `latest` was a process-local `var` until three replicas were about to disagree (PR #138); SQLite stayed local until we needed replicas (PR #79); the personal timeline took 41–49 s for a real user before we rewrote it (PR #135).
+**Reactive refactoring.** We usually only fixed things once they broke in the next phase. `latest` was a process-local `var` until three replicas were about to disagree (PR #138); Prometheus labels used raw paths until cardinality blew up the scrape memory (PR #98); the personal timeline took 41–49 s for a real user before we rewrote it (PR #135).
 
-**Big-bang merges hid bugs.** The Traefik 504 (#129) and the secret-path crash (#128) both surfaced *after* a multi-PR `dev → master` merge landed in prod.
+**Big-bang merges hid bugs.** The Traefik 504 (#129) and the secret-path crash (#128) both showed up *after* a `dev → master` merge landed in prod.
 
-**Hardening as a phase, not a habit.** Container security, Semgrep, Docker Scout, multi-stage Dockerfile, decommission — phase 5 of 6 (PRs #143–#160, #162). Most of it landed weeks after the session that asked for it.
+**Hardening came last.** Container security, Semgrep, Docker Scout, multi-stage Dockerfile, decommission (PRs #143–#160, #162) — most of it landed weeks after the session that asked for it.
 
-**Lesson:** each layer ended up wrong for the next phase. Reactive kept us moving; cost us the `latest` bug and the 504 — both spottable at design.
+**Lesson:** we refactored on demand, not on plan. Kept us moving; left bugs where phases met.
 
 ## Operation
 **Author(s):** Leo and Apoorva
 
 <!-- DRAFT — Apoorva: feel free to add a sentence about your fixes (firewall hardening / GHCR auth / Grafana persistence) within the word budget. -->
 
-The biggest operational decision was running two production stacks in parallel — Hetzner and DO Swarm, both against the same managed Postgres, 10 April to 4 May. Zero-downtime cutover for the simulator, and the parallel run surfaced our worst outage. On 17 April a new DO cloud firewall silently blocked Swarm's overlay ports between our own nodes — `docker node ls` showed both workers Down, but external uptime checks said green. We rolled DNS back to Hetzner, fixed the firewall, bumped Traefik to v3.6 (PR #131), and only re-flipped once `curl --http2` returned 200.
+The biggest operational decision was running two production stacks in parallel — Hetzner and DO Swarm, both against the same managed Postgres, 10 April to 4 May. Zero-downtime cutover for the simulator, and the parallel run surfaced our worst outage. On 16–17 April a new DO cloud firewall silently blocked Swarm's overlay ports between our own nodes — `docker node ls` showed both workers Down, but external uptime checks said green. We rolled DNS back to Hetzner, fixed the firewall, bumped Traefik to v3.6 (PR #131), and only re-flipped once `curl --http2` returned 200.
 
 Three replicas behind Traefik gave us the horizontal shape the course asked for, though we never benchmarked it against the single box.
 
@@ -149,7 +149,7 @@ On 4 May we turned on Codacy. Within hours it flagged a `/health` route bug live
 
 That catch is maintenance in miniature. Tooling landed one at a time, by whoever got to it — linters in March (`bdb6c16`), image hardening + Semgrep + Docker Scout in April (PR #160), Codacy in May. Nobody owned maintenance as a thread.
 
-What nobody hit, didn't get fixed. `helpers.go:55` swallows the bcrypt error. `sim_api.go:33` hardcodes the simulator auth header. Eleven test functions total, none on `store.go`. Issue #86 has been open since 13 March.
+What nobody hit, didn't get fixed. `helpers.go:55` swallows the bcrypt error. `sim_api.go:33` hardcodes the simulator auth header. The webserver log has 64,981 identical `superfluous WriteHeader` warnings nobody read. Eleven test functions total, none on `store.go`. Issue #86 has been open since 13 March.
 
 **What's good is good because someone hit it; what's bad is bad because nobody did. Maintenance needed an owner.**
 
