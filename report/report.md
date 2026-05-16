@@ -92,7 +92,13 @@ Stages and tools, from push to deployed replica. Cover deploy and release.
 Activity diagram fits well here.
 -->
 
-  - Docker swarm in CD pipeline 
+The pipeline has two workflows: **CI** runs on every pull request to `master`; **CD** runs on every merge into `master`.
+
+**CI** runs four jobs. `lint` runs first — `gofmt`, `golangci-lint`, and `hadolint`. `semgrep` and `test` run in parallel after `lint`. `semgrep` does SAST across three rulesets; `test` builds the image and runs unit tests, API tests, and Playwright browser tests inside Docker Compose. `docker-scout` runs last and scans the final image for CVEs, failing on any critical or high severity finding.
+
+**CD** builds and pushes three images to GHCR (`minitwit`, `minitwit-prometheus`, `minitwit-grafana`), then SSHes into the Swarm manager and runs `docker stack deploy --with-registry-auth`. The flag passes registry credentials from the manager to worker nodes so they can pull from the private registry. We use a long-lived PAT for this rather than the ephemeral `GITHUB_TOKEN` — workers schedule pulls asynchronously, and the short-lived token had expired by the time workers pulled, causing "No such image" failures (incident: 21 Apr 2026).
+
+Swarm then rolls out the update one replica at a time (`order: start-first`), so the new replica passes its health check before the old one is taken down.
 
 ## Monitoring
 **Author(s):** Peter J, Apoorva
