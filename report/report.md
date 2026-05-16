@@ -145,11 +145,11 @@ The main lesson is that maintenance requires ownership. Improvements happened wh
 
 This was the first project where most of us were responsible not only for development, but also for deployment and operations. That changed how we worked.
 
-Applying the DevOps Handbook's Three Ways, our strongest area was flow. We established pull requests and continuous deployment early (PR #65), which created a clear delivery path and fast iteration. In practice, however, PRs often functioned more as coordination and deployment checkpoints than as strict human review gates.
+Applying the DevOps Handbook's Three Ways, our strongest area was flow. We established pull requests and continuous deployment early (PR #65), which created a clear delivery path and fast iteration. Initial branch protection on both `dev` and `master` felt too heavy for day-to-day work, so we relaxed `dev` and kept the stricter rules on `master`, where the heavier testing happens. In practice, PRs often functioned more as coordination and deployment checkpoints than as strict human review gates.
 
 Feedback was more mixed. Monitoring helped us detect some operational issues quickly, including performance degradation in the timeline query, but other failures went unnoticed because our monitoring assumptions were incomplete.
 
-Continual learning improved over time. Incident documentation and operational runbooks became increasingly important as the infrastructure grew more complex. However, knowledge was still unevenly distributed, and some operational understanding remained concentrated among a few contributors.
+Continual learning was ad-hoc rather than systematic. We never established a documentation or estimation practice. Coordination mostly happened through Discord pings on PRs, and some of us wrote deeper docs for bigger refactors or bug fixes — for example the live debug doc from the 17 April outage (`docs/incidents/session11-ops-debug.md`). It stayed informal, and operational knowledge remained concentrated among a few contributors.
 
 The main takeaway is that DevOps was not just about adding tools. It became concrete when we had to operate the system ourselves.
 
