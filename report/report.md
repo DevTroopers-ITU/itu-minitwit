@@ -116,7 +116,7 @@ The monitoring services (Prometheus, Grafana, Loki) each run as a single replica
 ## Evolution and Refactoring
 **Author(s):** Håkon and Leo
 
-The largest refactor of the project was the move from a single Hetzner deployment to a three-node Docker Swarm cluster on DigitalOcean (PR #120 and follow-ups). The migration surfaced hidden assumptions around networking, secrets, and service communication that the single-server architecture had let us ignore. Running three webserver replicas behind Traefik also forced us to externalise shared state we had previously kept in memory — most visibly the `latest` simulator counter, which we moved into PostgreSQL (PR #138) so the replicas could agree.
+The largest architectural change was the move from a single Hetzner deployment to a three-node Docker Swarm cluster on DigitalOcean (PR #120 and follow-ups). The migration changed the system from one server running everything to a distributed setup with replicated webservers, Traefik routing, managed PostgreSQL, and Swarm secrets. Running three webserver replicas behind Traefik also forced us to externalise shared state we had previously kept in memory — most visibly the `latest` simulator counter, which we moved into PostgreSQL (PR #138) so the replicas could agree.
 
 The same pattern appeared elsewhere: solutions that worked at one scale often broke at the next. Metrics labels initially used raw paths until cardinality became an issue, and the personal timeline query appeared acceptable until realistic usage caused severe timeouts.
 
@@ -145,7 +145,7 @@ The main lesson is that maintenance requires ownership. Improvements happened wh
 
 This was the first project where most of us were responsible not only for development, but also for deployment and operations. That changed how we worked.
 
-Applying the DevOps Handbook's Three Ways, our strongest area was flow. We established pull requests and continuous deployment early (PR #65), which created a clear delivery path and fast iteration.
+Applying the DevOps Handbook's Three Ways, our strongest area was flow. We established pull requests and continuous deployment early (PR #65), which created a clear delivery path and fast iteration. In practice, however, PRs often functioned more as coordination and deployment checkpoints than as strict human review gates.
 
 Feedback was more mixed. Monitoring helped us detect some operational issues quickly, including performance degradation in the timeline query, but other failures went unnoticed because our monitoring assumptions were incomplete.
 
@@ -162,6 +162,4 @@ The clearest place AI helped was the early refactor of the inherited Python/Flas
 
 Its usefulness depended on active validation, though. Plausible but wrong suggestions sometimes slowed debugging rather than helping, and we came to treat AI as a fast exploratory assistant rather than an authoritative source.
 
-A further reflection is that AI use was not evenly distributed within the team. While it increased individual productivity, it also created some asymmetry in how quickly contributors could work across unfamiliar technical areas.
-
-Overall, generative AI improved development speed, but did not replace technical judgment or understanding.
+A further reflection is that AI use was not evenly distributed within the team. It increased individual productivity, but also created asymmetry in how quickly contributors could work across unfamiliar technical areas. Overall, generative AI improved development speed, but only when paired with technical judgment and active validation.
