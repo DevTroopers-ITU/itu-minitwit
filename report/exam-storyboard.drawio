@@ -16,9 +16,6 @@
         <mxCell id="title" value="ITU-MiniTwit — Project storyboard (Jan–May 2026)" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=22;fontStyle=1;fontColor=#1A1A1A;" vertex="1" parent="1">
           <mxGeometry x="100" y="10" width="1300" height="32" as="geometry"/>
         </mxCell>
-        <mxCell id="subtitle" value="14 course weeks grouped into 8 thematic arcs. Three lanes below: what we shipped on time, what slipped, and what happened operationally underneath." style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=11;fontStyle=2;fontColor=#666666;whiteSpace=wrap;" vertex="1" parent="1">
-          <mxGeometry x="100" y="42" width="1300" height="20" as="geometry"/>
-        </mxCell>
 
         <mxCell id="rule_s1" style="endArrow=none;html=1;rounded=0;strokeColor=#E5E2DA;strokeWidth=1;" edge="1" parent="1">
           <mxGeometry relative="1" as="geometry">
@@ -306,13 +303,6 @@
         <mxCell id="p_loki_stripe" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#3F5F8C;strokeColor=none;" vertex="1" parent="1">
           <mxGeometry x="860" y="210" width="5" height="55" as="geometry"/>
         </mxCell>
-        <mxCell id="p_alerts" value="PR #114&#10;Discord alerts&#10;Mar 30" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#E5E2DA;strokeWidth=1;fontSize=8;align=center;verticalAlign=middle;spacingLeft=6;" vertex="1" parent="1">
-          <mxGeometry x="860" y="272" width="85" height="55" as="geometry"/>
-        </mxCell>
-        <mxCell id="p_alerts_stripe" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#5A8A8E;strokeColor=none;" vertex="1" parent="1">
-          <mxGeometry x="860" y="272" width="5" height="55" as="geometry"/>
-        </mxCell>
-
         <mxCell id="p_tls" value="PR #118&#10;Traefik + Let's&#10;Encrypt, Apr 10" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#E5E2DA;strokeWidth=1;fontSize=8;align=center;verticalAlign=middle;spacingLeft=6;" vertex="1" parent="1">
           <mxGeometry x="960" y="210" width="85" height="55" as="geometry"/>
         </mxCell>
@@ -320,24 +310,24 @@
           <mxGeometry x="960" y="210" width="5" height="55" as="geometry"/>
         </mxCell>
 
-        <mxCell id="p_swarmfix" value="PR #129 / #131&#10;where we found gossip ports&#10;we didn't know existed&#10;Apr 17" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#E5E2DA;strokeWidth=1;fontSize=8;align=center;verticalAlign=middle;spacingLeft=6;" vertex="1" parent="1">
-          <mxGeometry x="1060" y="210" width="85" height="55" as="geometry"/>
+        <mxCell id="p_swarmfix" value="PR #129 / #131&#10;Traefik routing fixes&#10;before the DNS flip&#10;Apr 17–20" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#E5E2DA;strokeWidth=1;fontSize=8;align=center;verticalAlign=middle;spacingLeft=6;" vertex="1" parent="1">
+          <mxGeometry x="1060" y="210" width="85" height="72" as="geometry"/>
         </mxCell>
         <mxCell id="p_swarmfix_stripe" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#A04040;strokeColor=none;" vertex="1" parent="1">
-          <mxGeometry x="1060" y="210" width="5" height="55" as="geometry"/>
+          <mxGeometry x="1060" y="210" width="5" height="72" as="geometry"/>
         </mxCell>
-        <mxCell id="p_latest" value="PR #138&#10;the counter we forgot&#10;to put in the database&#10;Apr 21" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#E5E2DA;strokeWidth=1;fontSize=8;align=center;verticalAlign=middle;spacingLeft=6;" vertex="1" parent="1">
-          <mxGeometry x="1160" y="210" width="85" height="55" as="geometry"/>
+        <mxCell id="p_latest" value="PR #138&#10;the counter we&#10;forgot to put in&#10;the database&#10;Apr 21" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#E5E2DA;strokeWidth=1;fontSize=8;align=center;verticalAlign=middle;spacingLeft=6;" vertex="1" parent="1">
+          <mxGeometry x="1160" y="210" width="85" height="72" as="geometry"/>
         </mxCell>
         <mxCell id="p_latest_stripe" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#A04040;strokeColor=none;" vertex="1" parent="1">
-          <mxGeometry x="1160" y="210" width="5" height="55" as="geometry"/>
+          <mxGeometry x="1160" y="210" width="5" height="72" as="geometry"/>
         </mxCell>
 
-        <mxCell id="p_hardening" value="PR #143&#10;Semgrep + Docker Scout&#10;non-root container&#10;Apr 23" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#E5E2DA;strokeWidth=1;fontSize=8;align=center;verticalAlign=middle;spacingLeft=6;" vertex="1" parent="1">
-          <mxGeometry x="1060" y="272" width="85" height="55" as="geometry"/>
+        <mxCell id="p_hardening" value="PR #143&#10;Semgrep, Docker&#10;Scout, non-root&#10;container, Apr 23" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#E5E2DA;strokeWidth=1;fontSize=8;align=center;verticalAlign=middle;spacingLeft=6;" vertex="1" parent="1">
+          <mxGeometry x="1060" y="285" width="85" height="60" as="geometry"/>
         </mxCell>
         <mxCell id="p_hardening_stripe" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#A04040;strokeColor=none;" vertex="1" parent="1">
-          <mxGeometry x="1060" y="272" width="5" height="55" as="geometry"/>
+          <mxGeometry x="1060" y="285" width="5" height="60" as="geometry"/>
         </mxCell>
 
         <mxCell id="lane_sep_1" style="endArrow=none;html=1;rounded=0;strokeColor=#D4D0C4;strokeWidth=0.5;dashed=1;" edge="1" parent="1">
@@ -371,31 +361,31 @@
           <mxGeometry relative="1" as="geometry"/>
         </mxCell>
 
-        <mxCell id="p_codacy" value="PR #146&#10;lint setup drifted —&#10;fixed when Go 1.25 broke it&#10;Apr 24  +6w" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#E5E2DA;strokeWidth=1;fontSize=8;align=center;verticalAlign=middle;spacingLeft=6;" vertex="1" parent="1">
-          <mxGeometry x="1360" y="380" width="85" height="60" as="geometry"/>
+        <mxCell id="p_codacy" value="PR #146&#10;lint drifted —&#10;Go 1.25 forced&#10;the fix&#10;Apr 24  +6w" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#E5E2DA;strokeWidth=1;fontSize=8;align=center;verticalAlign=middle;spacingLeft=6;" vertex="1" parent="1">
+          <mxGeometry x="1360" y="380" width="85" height="72" as="geometry"/>
         </mxCell>
         <mxCell id="p_codacy_stripe" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#3F5F8C;strokeColor=none;" vertex="1" parent="1">
-          <mxGeometry x="1360" y="380" width="5" height="60" as="geometry"/>
+          <mxGeometry x="1360" y="380" width="5" height="72" as="geometry"/>
         </mxCell>
         <mxCell id="arrow_codacy" style="endArrow=classic;html=1;rounded=0;strokeColor=#3F5F8C;strokeWidth=1.5;curved=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="s7" target="p_codacy">
           <mxGeometry relative="1" as="geometry"/>
         </mxCell>
 
-        <mxCell id="p_terraform" value="PR #167&#10;we codified the cluster&#10;we'd already built by hand&#10;May 12  +3w" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#E5E2DA;strokeWidth=1;fontSize=8;align=center;verticalAlign=middle;spacingLeft=6;" vertex="1" parent="1">
-          <mxGeometry x="1260" y="455" width="85" height="60" as="geometry"/>
+        <mxCell id="p_terraform" value="PR #167&#10;codified cluster&#10;we'd already&#10;built by hand&#10;May 12  +3w" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#E5E2DA;strokeWidth=1;fontSize=8;align=center;verticalAlign=middle;spacingLeft=6;" vertex="1" parent="1">
+          <mxGeometry x="1260" y="455" width="85" height="72" as="geometry"/>
         </mxCell>
         <mxCell id="p_terraform_stripe" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#6B8A4A;strokeColor=none;" vertex="1" parent="1">
-          <mxGeometry x="1260" y="455" width="5" height="60" as="geometry"/>
+          <mxGeometry x="1260" y="455" width="5" height="72" as="geometry"/>
         </mxCell>
         <mxCell id="arrow_tf" style="endArrow=classic;html=1;rounded=0;strokeColor=#6B8A4A;strokeWidth=1.5;curved=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="s12" target="p_terraform">
           <mxGeometry relative="1" as="geometry"/>
         </mxCell>
 
-        <mxCell id="p_playwright" value="PR #168&#10;browser tests we shipped&#10;the week before submission&#10;May 16  +9w" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#E5E2DA;strokeWidth=1;fontSize=8;align=center;verticalAlign=middle;spacingLeft=6;" vertex="1" parent="1">
-          <mxGeometry x="1360" y="455" width="85" height="60" as="geometry"/>
+        <mxCell id="p_playwright" value="PR #168&#10;browser tests&#10;the week before&#10;submission&#10;May 16  +9w" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#E5E2DA;strokeWidth=1;fontSize=8;align=center;verticalAlign=middle;spacingLeft=6;" vertex="1" parent="1">
+          <mxGeometry x="1360" y="455" width="85" height="72" as="geometry"/>
         </mxCell>
         <mxCell id="p_playwright_stripe" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#3F5F8C;strokeColor=none;" vertex="1" parent="1">
-          <mxGeometry x="1360" y="455" width="5" height="60" as="geometry"/>
+          <mxGeometry x="1360" y="455" width="5" height="72" as="geometry"/>
         </mxCell>
         <mxCell id="arrow_pw" style="endArrow=classic;html=1;rounded=0;strokeColor=#3F5F8C;strokeWidth=1.5;curved=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="s7" target="p_playwright">
           <mxGeometry relative="1" as="geometry"/>
@@ -426,25 +416,25 @@
           <mxGeometry x="960" y="565" width="5" height="32" as="geometry"/>
         </mxCell>
 
-        <mxCell id="inc_outage" value="OUTAGE&#10;the new DO firewall ate&#10;our Swarm gossip ports&#10;Apr 16–17  PR #129" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#A04040;strokeWidth=1.5;fontSize=8;fontStyle=1;align=center;verticalAlign=middle;spacingLeft=6;" vertex="1" parent="1">
-          <mxGeometry x="1060" y="610" width="85" height="46" as="geometry"/>
+        <mxCell id="inc_outage" value="OUTAGE&#10;DO firewall ate&#10;Swarm gossip&#10;ports — Apr 16–17&#10;no PR" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#A04040;strokeWidth=1.5;fontSize=8;fontStyle=1;align=center;verticalAlign=middle;spacingLeft=6;" vertex="1" parent="1">
+          <mxGeometry x="1060" y="610" width="85" height="65" as="geometry"/>
         </mxCell>
         <mxCell id="inc_outage_stripe" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#A04040;strokeColor=none;" vertex="1" parent="1">
-          <mxGeometry x="1060" y="610" width="5" height="46" as="geometry"/>
+          <mxGeometry x="1060" y="610" width="5" height="65" as="geometry"/>
         </mxCell>
 
         <mxCell id="inc_ghcr" value="PR #141&#10;GHCR PAT fix&#10;Apr 21 — silent&#10;CD failure" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#A04040;strokeWidth=1;fontSize=8;align=center;verticalAlign=middle;spacingLeft=6;" vertex="1" parent="1">
-          <mxGeometry x="1060" y="658" width="85" height="44" as="geometry"/>
+          <mxGeometry x="1060" y="678" width="85" height="44" as="geometry"/>
         </mxCell>
         <mxCell id="inc_ghcr_stripe" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#A04040;strokeColor=none;" vertex="1" parent="1">
-          <mxGeometry x="1060" y="658" width="5" height="44" as="geometry"/>
+          <mxGeometry x="1060" y="678" width="5" height="44" as="geometry"/>
         </mxCell>
 
-        <mxCell id="inc_timeline" value="Postgres CPU spike + 504s&#10;we rewrote the query&#10;as a LATERAL join&#10;Apr 29 → May 1  a3dfc3d" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#A04040;strokeWidth=1.5;fontSize=8;fontStyle=1;align=center;verticalAlign=middle;spacingLeft=6;" vertex="1" parent="1">
-          <mxGeometry x="1160" y="610" width="85" height="65" as="geometry"/>
+        <mxCell id="inc_timeline" value="Postgres CPU&#10;spike + 504s&#10;rewrote query as&#10;a LATERAL join&#10;Apr 29 → May 1&#10;a3dfc3d" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#A04040;strokeWidth=1.5;fontSize=8;fontStyle=1;align=center;verticalAlign=middle;spacingLeft=6;" vertex="1" parent="1">
+          <mxGeometry x="1160" y="610" width="85" height="85" as="geometry"/>
         </mxCell>
         <mxCell id="inc_timeline_stripe" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#A04040;strokeColor=none;" vertex="1" parent="1">
-          <mxGeometry x="1160" y="610" width="5" height="65" as="geometry"/>
+          <mxGeometry x="1160" y="610" width="5" height="85" as="geometry"/>
         </mxCell>
 
         <mxCell id="inc_decomm" value="PR #162&#10;Hetzner removed&#10;from CD, May 4&#10;VM deleted May 15" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#E5E2DA;strokeWidth=1.5;fontSize=8;fontStyle=1;align=center;verticalAlign=middle;spacingLeft=6;" vertex="1" parent="1">

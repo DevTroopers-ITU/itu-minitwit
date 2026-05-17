@@ -120,7 +120,7 @@ The storyboard below puts the whole project on one page: course topics across th
 
 ![Project storyboard: thematic arcs, on-time vs delayed PRs, and operational incidents from Jan to May 2026](exam-storyboard.drawio.png)
 
-The largest architectural change was the move from a single Hetzner deployment to a three-node Docker Swarm cluster on DigitalOcean (PR #120 and follow-ups). This changed the system from one server running everything to replicated webservers, Traefik routing, managed PostgreSQL, and Swarm secrets. Running three webserver replicas also forced us to move shared state out of memory. One example was the `latest` simulator counter, which we moved into PostgreSQL (PR #138).
+The project had two main architectural rewrites: an early Python-to-Go port (PR #15, week 2) and the later move from a single Hetzner deployment to a three-node Docker Swarm cluster on DigitalOcean (PR #120 and follow-ups). The Swarm migration was the more consequential — it changed the system from one server running everything to replicated webservers, Traefik routing, managed PostgreSQL, and Swarm secrets. Running three webserver replicas also forced us to move shared state out of memory. One example was the `latest` simulator counter, which we moved into PostgreSQL (PR #138).
 
 The same pattern appeared elsewhere. The personal timeline query seemed fine in early testing, but later timed out for users with many follows. It took several rounds of diagnosis across the team before we landed on the query rewrite that fixed it (`a3dfc3d`).
 
@@ -147,13 +147,11 @@ The lesson is that maintenance needs an owner. Improvements happened when a prob
 ## DevOps Style
 **Author(s):** Leo
 
-This was the first project where most of us were responsible not only for development, but also for deployment and operations. That changed how we worked.
+Using the DevOps Handbook's Three Ways as a lens, flow was actually our weakest area. We had CI/CD and PRs from early on (PR #65), but we never set up a project board, issue tracking, an estimation practice, or a Kanban view. Work was visible only through Discord pings and the PR queue. Batches were often too large — the 69% self-merge rate shown in the storyboard reflects PRs that grew too big and too sole-authored to be reviewed.
 
-Using the DevOps Handbook's Three Ways as a lens, flow was our strongest area. We set up pull requests and continuous deployment early (PR #65). Iteration stayed fast. Branch protection on both `dev` and `master` felt too heavy for daily work, so we relaxed `dev` and kept `master` as the stricter integration gate. In practice, PRs often worked more as coordination checkpoints than as strict human review gates — the 69% self-merge rate shown in the storyboard above is consistent with this.
+Feedback was mixed. Prometheus and Loki were up by the end, but for most of the project we read server health by SSH-ing into the containers manually rather than through dashboards. When things broke we did swarm on Discord and people grabbed tasks fast — that informal feedback loop worked, even if the tooling-driven one didn't. The 16 April firewall outage is the clearest evidence the formal loop was incomplete: edge uptime stayed green for 18 hours.
 
-Feedback was more mixed. Monitoring helped us catch some issues, including the timeline performance problem, but other failures went unnoticed because our monitoring assumptions were incomplete.
-
-Continual learning stayed informal. We never established a documentation or estimation practice. Most coordination happened through Discord pings on PRs, while deeper docs were written only for larger refactors or incidents, such as the retrospective debug doc from the April Swarm debugging (`docs/incidents/session11-ops-debug.md`). Operational knowledge therefore stayed concentrated among a few contributors.
+Continual learning was probably our strongest area, but informally so. We met collaboratively each week to understand work done over the weekends, drew architecture on the whiteboard together, and briefed each other on Discord. The one written post-mortem was the live-debug doc from the April Swarm outage (`docs/incidents/session11-ops-debug.md`). We did not write more of them, and we did not allocate dedicated improvement time — the project pressure pushed those out. In hindsight, two sessions a week instead of one would have helped.
 
 The main takeaway is that DevOps was not just about adding tools. It became real when we had to operate the system ourselves.
 
