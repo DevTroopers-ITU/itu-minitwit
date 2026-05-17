@@ -432,11 +432,25 @@
           <mxGeometry x="80" y="625" width="200" height="14" as="geometry"/>
         </mxCell>
 
+        <mxCell id="inc_lc_hetzner" value="Hetzner up&#10;first prod VM&#10;Feb 18" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#7A7268;strokeWidth=1;fontSize=8;align=center;verticalAlign=middle;spacingLeft=6;" vertex="1" parent="1">
+          <mxGeometry x="260" y="565" width="85" height="42" as="geometry"/>
+        </mxCell>
+        <mxCell id="inc_lc_hetzner_stripe" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#7A7268;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry x="260" y="565" width="5" height="42" as="geometry"/>
+        </mxCell>
+
         <mxCell id="inc_storage" value="Storage debate&#10;SQLite volume vs&#10;external DB&#10;on Discord&#10;Mar 2–8" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#E5E2DA;strokeWidth=1;fontSize=8;align=center;verticalAlign=middle;spacingLeft=6;" vertex="1" parent="1">
           <mxGeometry x="460" y="565" width="180" height="62" as="geometry"/>
         </mxCell>
         <mxCell id="inc_storage_stripe" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#6B5B95;strokeColor=none;" vertex="1" parent="1">
           <mxGeometry x="460" y="565" width="5" height="62" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="inc_lc_pg" value="DO PG cutover&#10;SQLite → managed PG&#10;Mar 18" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#7A7268;strokeWidth=1;fontSize=8;align=center;verticalAlign=middle;spacingLeft=6;" vertex="1" parent="1">
+          <mxGeometry x="660" y="565" width="85" height="42" as="geometry"/>
+        </mxCell>
+        <mxCell id="inc_lc_pg_stripe" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#7A7268;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry x="660" y="565" width="5" height="42" as="geometry"/>
         </mxCell>
 
         <mxCell id="inc_parallel" value="Hetzner + DO Swarm running in parallel — Apr 10 → May 4" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#7A7268;strokeWidth=1;fontSize=9;fontStyle=1;align=center;verticalAlign=middle;spacingLeft=6;" vertex="1" parent="1">
@@ -488,7 +502,7 @@
           <mxGeometry x="1160" y="610" width="5" height="85" as="geometry"/>
         </mxCell>
 
-        <mxCell id="inc_decomm" value="PR #162&#10;Hetzner removed&#10;from CD May 4&#10;VM deleted&#10;May 15" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#E5E2DA;strokeWidth=1.5;fontSize=8;fontStyle=1;align=center;verticalAlign=middle;spacingLeft=6;" vertex="1" parent="1">
+        <mxCell id="inc_decomm" value="PR #162&#10;Hetzner removed&#10;from CD May 4&#10;VM deleted&#10;May 15" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#7A7268;strokeWidth=1;fontSize=8;fontStyle=1;align=center;verticalAlign=middle;spacingLeft=6;" vertex="1" parent="1">
           <mxGeometry x="1260" y="610" width="85" height="72" as="geometry"/>
         </mxCell>
         <mxCell id="inc_decomm_stripe" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#7A7268;strokeColor=none;" vertex="1" parent="1">

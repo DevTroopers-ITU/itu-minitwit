@@ -120,7 +120,7 @@ The storyboard below puts the whole project on one page: course topics across th
 
 ![Project storyboard: thematic arcs, on-time vs delayed PRs, and operational incidents from Jan to May 2026](exam-storyboard.drawio.png)
 
-The project had two main architectural rewrites: an early Python-to-Go port (PR #15, week 2) and the later move from a single Hetzner deployment to a three-node Docker Swarm cluster on DigitalOcean (PR #120 and follow-ups). The Swarm migration was the more consequential as it changed the system from one server running everything to replicated webservers, Traefik routing, managed PostgreSQL, and Swarm secrets. Running three webserver replicas also forced us to move shared state out of memory. One example was the `latest` simulator counter, which we moved into PostgreSQL (PR #138).
+The project had two main architectural rewrites following the course outline: an early Python-to-Go port (PR #15, week 2) and the later move from a single Hetzner deployment to a three-node Docker Swarm cluster on DigitalOcean (PR #120 and follow-ups). The Swarm migration was the more consequential as it changed the system from one server running everything to replicated webservers, Traefik routing, managed PostgreSQL, and Swarm secrets. Running three webserver replicas also forced us to move shared state out of memory. One example was the `latest` simulator counter, which we moved into PostgreSQL (PR #138).
 
 The same pattern appeared elsewhere. The personal timeline query seemed fine in early testing, but later timed out for users with many follows. It took several rounds of diagnosis across the team before we landed on the query rewrite that fixed it (`a3dfc3d`).
 
