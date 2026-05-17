@@ -100,12 +100,18 @@ The pipeline has two workflows: **CI** runs on every pull request to `master`; *
 
 Swarm then rolls out the update one replica at a time (`order: start-first`), so the new replica passes its health check before the old one is taken down.
 
+**Browser tests** are split out from API tests so failures became easier to diagnose, and the workflow was corrected when an invalid severity input caused the analysis step to misbehave. This keeps the quality gates useful instead of noisy.
+
+`Codacy` was added late enough that some maintainability issues were only diagnosed after the fact, but it still provided a useful backstop during the final stages of the project. The pipeline was also exercised manually whenever the YAML changed, especially when `Playwright` was introduced, so the team could confirm the workflow still ran the expected jobs and that `Docker Scout` continued to gate only critical and high vulnerabilities.
+
 ## Monitoring
 **Author(s):** Peter J, Apoorva
 
 For monitoring we use Prometheus to scrape metrics from the app, and Grafana to visualize them. Inside the Go application we added a middleware that wraps every HTTP handler and records two custom metrics: `minitwit_http_responses_total` (a counter per route, method, and status code) and `minitwit_http_duration_seconds` (a latency histogram). These get exposed on `/metrics` and Prometheus scrapes all three webserver replicas every 15 seconds using DNS-based service discovery on the Swarm overlay network — so adding or removing replicas requires no config changes.
 
 We set up three alert rules in Prometheus: one that fires if a webserver replica has been unreachable for over a minute, one for when more than 10% of responses are 5xx errors over a five-minute window, and one for when P95 latency goes above 1 second for five minutes. All alerts are routed to a Discord channel through a Grafana contact point, using a webhook URL stored as a Docker Swarm secret so it never ends up in the codebase.
+
+DigitalOcean alert policies were also applied directly to the managed PostgreSQL instance. The database monitors disk usage, CPU usage, and memory usage, and the CPU policy in particular uses a 90% threshold over five minutes. When that limit is reached, the database emits the familiar "CPU is running high" warning for `db-postgresql-fra1-53911`, which gives the project early notice that the managed database is under pressure.
 
 The Grafana setup is fully provisioned from code — datasources and dashboards are baked into a custom Docker image. The main dashboard covers uptime and availability across all replicas, total HTTP responses broken down by route, P95 response time, and a combined error rate panel. Over the week of 9–15 May we saw 100% uptime, and P95 response times stayed comfortably under 50 ms for the vast majority of the time.
 
@@ -150,6 +156,11 @@ Each replica runs a health check every 30 seconds (`wget --spider` against local
 
 The monitoring services (Prometheus, Grafana, Loki) each run as a single replica pinned to the manager node. We could have run them in a more resilient configuration, but these services all hold persistent state that is genuinely tricky to replicate without extra tooling, and a brief monitoring outage is much less bad than a complex distributed setup breaking in production. The webserver replicas are stateless and are the only part of the system we actually scale horizontally. If we ever needed more capacity on the database or monitoring side, vertical scaling (resizing the droplet) is the more practical option.
 
+As mentioned above, the database tier follows a different scaling model from the web tier. The managed PostgreSQL instance on DigitalOcean serves as a vertically scalable service, so CPU, memory, or disk pressure is handled by upgrading the managed database rather than introducing our own multi-node database topology. That keeps the operational surface smaller while still matching simulator load.
+
+We follow the same split across the project. We scaled our webservers horizontally in Swarm, and kept persistence and alerts easy to control by keeping the database and monitoring services centralized on the manager node.
+
+
 # Reflection Perspective
 
 ## Evolution and Refactoring
@@ -173,6 +184,16 @@ As mentioned, we ran two production environments in parallel for most of April: 
 One sharp operational lesson came from that parallel-run window. On 16 April, a new DigitalOcean firewall blocked Docker Swarm's internal overlay traffic between nodes. The manager kept serving traffic through its local replica, so external uptime checks stayed green while cluster redundancy had silently failed for nearly 18 hours. Later Swarm routing follow-ups on DigitalOcean (PR #129 / #131) addressed a separate set of overlay-routing bugs in the lead-up to the DNS migration.
 
 The incident showed that control-plane and data-plane failures are different things. Edge-level uptime checks were not enough. Three replicas behind Traefik gave us horizontal replication, but we never benchmarked whether it was better than the simpler single-node setup. The manager also remained a single point of failure for several critical services.
+
+The project’s operational work also tied monitoring back to deployment quality and observability: in the later stages, CI reliability was improved around Codacy and Playwright, and follow-up work around managed PostgreSQL alerts and Grafana credential handling made the stack easier to operate after deploys.
+
+The alerting setup also reflects an operational tradeoff: the DigitalOcean database alerts were kept sensitive enough to catch CPU, memory, and disk pressure early, but not so aggressive that they would interrupt ongoing work with false alarms.
+
+Setting up the Grafana credentials highlighted a key operational constraint: mounting a persistent volume is not enough to preserve the admin password across redeploys, because the password is still governed by container startup configuration. That meant a redeploy from `master` could overwrite the password even when persistent storage remained intact.
+
+Additionally, to verify the functionality of our CI/CD pipelines, whenever the workflow YAML changed significantly, the pipeline was triggered manually to verify jobs such as Playwright and Codacy, and to confirm that Docker Scout still failed only on critical and high vulnerabilities while lower-severity findings could continue to be observed during development.
+
+
 
 ## Maintenance
 **Author(s):** Leo
