@@ -185,6 +185,16 @@ One sharp operational lesson came from that parallel-run window. On 16 April, a 
 
 The incident showed that control-plane and data-plane failures are different things. Edge-level uptime checks were not enough. Three replicas behind Traefik gave us horizontal replication, but we never benchmarked whether it was better than the simpler single-node setup. The manager also remained a single point of failure for several critical services.
 
+The project’s operational work also tied monitoring back to deployment quality and observability: in the later stages, CI reliability was improved around Codacy and Playwright, and follow-up work around managed PostgreSQL alerts and Grafana credential handling made the stack easier to operate after deploys.
+
+The alerting setup also reflects an operational tradeoff: the DigitalOcean database alerts were kept sensitive enough to catch CPU, memory, and disk pressure early, but not so aggressive that they would interrupt ongoing work with false alarms.
+
+Setting up the Grafana credentials highlighted a key operational constraint: mounting a persistent volume is not enough to preserve the admin password across redeploys, because the password is still governed by container startup configuration. That meant a redeploy from `master` could overwrite the password even when persistent storage remained intact.
+
+Additionally, to verify the functionality of our CI/CD pipelines, whenever the workflow YAML changed significantly, the pipeline was triggered manually to verify jobs such as Playwright and Codacy, and to confirm that Docker Scout still failed only on critical and high vulnerabilities while lower-severity findings could continue to be observed during development.
+
+
+
 ## Maintenance
 **Author(s):** Leo
 
