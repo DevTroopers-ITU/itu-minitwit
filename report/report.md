@@ -118,6 +118,10 @@ The monitoring services (Prometheus, Grafana, Loki) each run as a single replica
 
 The project moved through roughly six phases: bootstrapping, CI/CD, observability, production infrastructure, hardening, and wrap-up. In practice, most refactoring happened as smaller fixes between those phases, not as one planned redesign.
 
+The storyboard below puts the whole project on one page: thematic arcs across the top, three lanes for what shipped on time vs >2 weeks late, and operational incidents underneath. We refer back to it from the later Reflection sections.
+
+![Project storyboard: thematic arcs, on-time vs delayed PRs, and operational incidents from Jan to May 2026](exam-storyboard.drawio.png)
+
 The largest architectural change was the move from a single Hetzner deployment to a three-node Docker Swarm cluster on DigitalOcean (PR #120 and follow-ups). This changed the system from one server running everything to replicated webservers, Traefik routing, managed PostgreSQL, and Swarm secrets. Running three webserver replicas also forced us to move shared state out of memory. One example was the `latest` simulator counter, which we moved into PostgreSQL (PR #138).
 
 The same pattern appeared elsewhere. The personal timeline query seemed fine in early testing, but later timed out for users with many follows. It took several rounds of diagnosis across the team before we landed on the query rewrite that fixed it (`a3dfc3d`).
@@ -129,7 +133,7 @@ In hindsight, we mostly refactored when something forced us to. That kept the pr
 
 We ran two production environments in parallel for most of April: a single-node Hetzner deployment and a Docker Swarm cluster on DigitalOcean, both connected to the same managed PostgreSQL instance. This let us migrate gradually without interrupting the simulator.
 
-One sharp operational lesson came from that parallel-run window. On 16 April, a new DigitalOcean firewall blocked Docker Swarm's internal overlay traffic between nodes. The manager kept serving traffic through its local replica, so external uptime checks stayed green while cluster redundancy had silently failed for nearly 18 hours. PR #131 later addressed related Swarm routing issues.
+One sharp operational lesson came from that parallel-run window. On 16 April, a new DigitalOcean firewall blocked Docker Swarm's internal overlay traffic between nodes. The manager kept serving traffic through its local replica, so external uptime checks stayed green while cluster redundancy had silently failed for nearly 18 hours. Later Swarm routing follow-ups on DigitalOcean (PR #129 / #131) addressed a separate set of overlay-routing bugs in the lead-up to the DNS migration.
 
 The incident showed that control-plane and data-plane failures are different things. Edge-level uptime checks were not enough. Three replicas behind Traefik gave us horizontal replication, but we never benchmarked whether it was better than the simpler single-node setup. The manager also remained a single point of failure for several critical services.
 
@@ -138,7 +142,7 @@ The incident showed that control-plane and data-plane failures are different thi
 
 Our maintenance work was mostly reactive. Tooling improved during the project, with linting, security scanning, and image hardening added over time rather than from the start. A concrete example was Codacy, which identified a `/health` route bug that had been live for weeks (fixed in commit `c8ff76c`, whose message reads *"caught by codacy"*).
 
-More generally, bugs that affected visible behaviour were fixed, while quieter problems remained. For example, bcrypt errors are still swallowed in helper code, simulator authentication contains hardcoded values, test coverage is limited, and logs accumulated recurring warnings that nobody investigated.
+The storyboard above shows the same pattern in the DELAYED lane: maintenance tooling often arrived only after problems became visible. PR #146 updated the lint setup when it drifted out of sync with newer Go versions, and PR #168 added browser tests in the week before submission. More generally, bugs that affected visible behaviour were fixed, while quieter problems remained. For example, bcrypt errors are still swallowed in helper code, simulator authentication contains hardcoded values, test coverage is limited, and logs accumulated recurring warnings that nobody investigated.
 
 The lesson is that maintenance needs an owner. Improvements happened when a problem became painful enough to fix, not because we had a regular practice for improving maintainability.
 
@@ -147,7 +151,7 @@ The lesson is that maintenance needs an owner. Improvements happened when a prob
 
 This was the first project where most of us were responsible not only for development, but also for deployment and operations. That changed how we worked.
 
-Using the DevOps Handbook's Three Ways as a lens, flow was our strongest area. We set up pull requests and continuous deployment early (PR #65). Iteration stayed fast. Branch protection on both `dev` and `master` felt too heavy for daily work, so we relaxed `dev` and kept `master` as the stricter integration gate. In practice, PRs often worked more as coordination checkpoints than as strict human review gates.
+Using the DevOps Handbook's Three Ways as a lens, flow was our strongest area. We set up pull requests and continuous deployment early (PR #65). Iteration stayed fast. Branch protection on both `dev` and `master` felt too heavy for daily work, so we relaxed `dev` and kept `master` as the stricter integration gate. In practice, PRs often worked more as coordination checkpoints than as strict human review gates — the 69% self-merge rate shown in the storyboard above is consistent with this.
 
 Feedback was more mixed. Monitoring helped us catch some issues, including the timeline performance problem, but other failures went unnoticed because our monitoring assumptions were incomplete.
 
@@ -158,7 +162,7 @@ The main takeaway is that DevOps was not just about adding tools. It became real
 # Use of Generative AI
 **Author(s):** Leo
 
-We used Anthropic Claude, mainly through the Code interface, throughout the project. AI-assisted commits carry `Co-Authored-By: Claude`, and `.mailmap` maps the tool to `LLM <none>` as required by the course.
+We used Anthropic Claude, mainly through the Code interface, throughout the project. AI-assisted commits carry `Co-Authored-By: Claude`, and `.mailmap` maps the tool to `LLM <none>` as required by the course. Across merged PRs, the trailer appears on 11 commits in 9 PRs (shown in the storyboard footer above). The real number is higher: squash-merging strips trailers (only 5 survive on master), and much of the AI help during debugging, exploration, and prose never made it into a tagged commit.
 
 The clearest place AI helped was the early refactor of the inherited Python/Flask app into Go (PR #15). None of us knew Go, and Claude helped us scaffold the package structure and understand compiler errors while we learned the type system. Later, the same kind of help was useful for Docker Swarm, Traefik, the PostgreSQL migration, CI/CD setup, and security tooling.
 
