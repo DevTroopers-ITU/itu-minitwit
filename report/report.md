@@ -23,9 +23,13 @@ Documentation.md). One UML deployment diagram + C&C is sufficient, maybe or mayb
 good minimum.
 -->
 
-  - Deployment (allocation) diagram. Docker swarm overview / serverside understanding 
-  - C&C viewpoint explaining the runtime components and their communication
-  - Sequence diagram (maybe not so important - see Mirceas lecture slides)
+The system runs on a three-node Docker Swarm cluster hosted on DigitalOcean. The manager node handles orchestration and hosts the monitoring stack (Prometheus, Grafana, Loki) and Traefik, which terminates TLS and routes incoming traffic. The two worker nodes each run a Webserver replica and a Promtail instance for log collection. The PostgreSQL database runs as a DigitalOcean managed instance on a separate account, reachable from all nodes over a private VPC network on port 25060.
+
+![Deployment diagram showing the three-node Swarm cluster and external PostgreSQL database](images/deployment_allocation_diagram.png)
+
+At runtime, Traefik distributes HTTPS traffic from browsers and HTTP traffic from the simulator across the three Webserver replicas. Each replica connects to the shared PostgreSQL database over TCP/SSL. Prometheus scrapes metrics from all replicas via `/metrics`. Promtail runs as a global Swarm service (one per node), reads container logs from the Docker socket, and ships them to Loki. Grafana queries both Prometheus and Loki, and routes alerts to Discord via a webhook.
+
+![Component-and-connector diagram showing runtime components and their communication](images/component_connector_diagram.png)
 
 ## Dependencies
 **Author(s):** Peter K
@@ -99,6 +103,8 @@ The pipeline has two workflows: **CI** runs on every pull request to `master`; *
 **CD** builds and pushes three images to GHCR (`minitwit`, `minitwit-prometheus`, `minitwit-grafana`), then SSHes into the Swarm manager and runs `docker stack deploy --with-registry-auth`. The flag passes registry credentials from the manager to worker nodes so they can pull from the private registry. We use a long-lived PAT for this rather than the ephemeral `GITHUB_TOKEN` — workers schedule pulls asynchronously, and the short-lived token had expired by the time workers pulled, causing "No such image" failures (incident: 21 Apr 2026).
 
 Swarm then rolls out the update one replica at a time (`order: start-first`), so the new replica passes its health check before the old one is taken down.
+
+![CD pipeline activity diagram: from git push to running containers in the Swarm](images/ci_cd_pipeline_diagram.png)
 
 **Browser tests** are split out from API tests so failures became easier to diagnose, and the workflow was corrected when an invalid severity input caused the analysis step to misbehave. This keeps the quality gates useful instead of noisy.
 
