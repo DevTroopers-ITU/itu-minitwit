@@ -100,6 +100,10 @@ The pipeline has two workflows: **CI** runs on every pull request to `master`; *
 
 Swarm then rolls out the update one replica at a time (`order: start-first`), so the new replica passes its health check before the old one is taken down.
 
+**Browser tests** are split out from API tests so failures became easier to diagnose, and the workflow was corrected when an invalid severity input caused the analysis step to misbehave. This keeps the quality gates useful instead of noisy.
+
+`Codacy` was added late enough that some maintainability issues were only diagnosed after the fact, but it still provided a useful backstop during the final stages of the project. The pipeline was also exercised manually whenever the YAML changed, especially when `Playwright` was introduced, so the team could confirm the workflow still ran the expected jobs and that `Docker Scout` continued to gate only critical and high vulnerabilities.
+
 ## Monitoring
 **Author(s):** Peter J, Apoorva
 
