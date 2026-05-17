@@ -111,6 +111,8 @@ For monitoring we use Prometheus to scrape metrics from the app, and Grafana to 
 
 We set up three alert rules in Prometheus: one that fires if a webserver replica has been unreachable for over a minute, one for when more than 10% of responses are 5xx errors over a five-minute window, and one for when P95 latency goes above 1 second for five minutes. All alerts are routed to a Discord channel through a Grafana contact point, using a webhook URL stored as a Docker Swarm secret so it never ends up in the codebase.
 
+DigitalOcean alert policies were also applied directly to the managed PostgreSQL instance. The database monitors disk usage, CPU usage, and memory usage, and the CPU policy in particular uses a 90% threshold over five minutes. When that limit is reached, the database emits the familiar "CPU is running high" warning for `db-postgresql-fra1-53911`, which gives the project early notice that the managed database is under pressure.
+
 The Grafana setup is fully provisioned from code — datasources and dashboards are baked into a custom Docker image. The main dashboard covers uptime and availability across all replicas, total HTTP responses broken down by route, P95 response time, and a combined error rate panel. Over the week of 9–15 May we saw 100% uptime, and P95 response times stayed comfortably under 50 ms for the vast majority of the time.
 
 ![Availability dashboard showing 100% uptime and HTTP response breakdown](images/monitor-availability.png)
