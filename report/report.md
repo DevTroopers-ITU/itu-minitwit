@@ -23,7 +23,7 @@ Documentation.md). One UML deployment diagram + C&C is sufficient, maybe or mayb
 good minimum.
 -->
 
-The system runs on a three-node Docker Swarm cluster hosted on DigitalOcean. The manager node handles orchestration and hosts the monitoring stack (Prometheus, Grafana, Loki) and Traefik, which terminates TLS and routes incoming traffic. The two worker nodes each run a Webserver replica and a Promtail instance for log collection. The PostgreSQL database runs as a DigitalOcean managed instance on a separate account, reachable from all nodes over a private VPC network on port 25060.
+The system runs on a three-node Docker Swarm cluster hosted on DigitalOcean. The manager node handles orchestration and hosts the monitoring stack (Prometheus, Grafana, Loki) and Traefik, which terminates TLS and routes incoming traffic. All three nodes run a Webserver replica and a Promtail instance for log collection. PostgreSQL runs as a DigitalOcean managed instance, reachable from all swarm nodes over TCP on port 25060.
 
 ![Deployment diagram showing the three-node Swarm cluster and external PostgreSQL database](images/deployment_allocation_diagram.png)
 
