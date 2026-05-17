@@ -156,6 +156,11 @@ Each replica runs a health check every 30 seconds (`wget --spider` against local
 
 The monitoring services (Prometheus, Grafana, Loki) each run as a single replica pinned to the manager node. We could have run them in a more resilient configuration, but these services all hold persistent state that is genuinely tricky to replicate without extra tooling, and a brief monitoring outage is much less bad than a complex distributed setup breaking in production. The webserver replicas are stateless and are the only part of the system we actually scale horizontally. If we ever needed more capacity on the database or monitoring side, vertical scaling (resizing the droplet) is the more practical option.
 
+As mentioned above, the database tier follows a different scaling model from the web tier. The managed PostgreSQL instance on DigitalOcean serves as a vertically scalable service, so CPU, memory, or disk pressure is handled by upgrading the managed database rather than introducing our own multi-node database topology. That keeps the operational surface smaller while still matching simulator load.
+
+We follow the same split across the project. We scaled our webservers horizontally in Swarm, and kept persistence and alerts easy to control by keeping the database and monitoring services centralized on the manager node.
+
+
 # Reflection Perspective
 
 ## Evolution and Refactoring
