@@ -151,43 +151,56 @@ Each replica runs a health check every 30 seconds (`wget --spider` against local
 The monitoring services (Prometheus, Grafana, Loki) each run as a single replica pinned to the manager node. We could have run them in a more resilient configuration, but these services all hold persistent state that is genuinely tricky to replicate without extra tooling, and a brief monitoring outage is much less bad than a complex distributed setup breaking in production. The webserver replicas are stateless and are the only part of the system we actually scale horizontally. If we ever needed more capacity on the database or monitoring side, vertical scaling (resizing the droplet) is the more practical option.
 
 # Reflection Perspective
-<!-- Suggested word budget: ~500 -->
 
 ## Evolution and Refactoring
 **Author(s):** Håkon and Leo
-<!-- Biggest issues and how we solved them. Link commits/issues. -->
+
+The storyboard below puts the whole project on one page: course topics across the top, three lanes for what shipped on time vs >2 weeks late, and operational incidents underneath. We refer back to it from the later Reflection sections.
+
+![Project storyboard: thematic arcs, on-time vs delayed PRs, and operational incidents from Jan to May 2026](exam-storyboard.drawio.png)
+
+The project had two main architectural rewrites following the course outline: an early Python-to-Go port (PR #15, week 2) and the later move from a single Hetzner deployment to a three-node Docker Swarm cluster on DigitalOcean (PR #120 and follow-ups). The Swarm migration was the more consequential as it changed the system from one server running everything to replicated webservers, Traefik routing, managed PostgreSQL, and Swarm secrets. Running three webserver replicas also forced us to move shared state out of memory. One example was the `latest` simulator counter, which we moved into PostgreSQL (PR #138).
+
+The same pattern appeared elsewhere. The personal timeline query seemed fine in early testing, but later timed out for users with many follows. It took several rounds of diagnosis across the team before we landed on the query rewrite that fixed it (`a3dfc3d`).
+
+In hindsight, we mostly refactored when something forced us to. That kept the project moving, but it also meant that some weaknesses only became visible when the system was under pressure.
 
 ## Operation
 **Author(s):** Leo and Apoorva
 
-<!-- DRAFT — Apoorva: feel free to add a sentence about your fixes (firewall hardening / GHCR auth / Grafana persistence) within the word budget. -->
+As mentioned, we ran two production environments in parallel for most of April: a single-node Hetzner deployment and a Docker Swarm cluster on DigitalOcean, both connected to the same managed PostgreSQL instance. This let us migrate gradually without interrupting the simulator.
 
-We started on a single Hetzner droplet (EU-based, where Leo had prior experience): SQLite on a Docker volume, one VM running everything. When simulator load started hurting SQLite, we migrated the database to a DigitalOcean managed Postgres instance (PR #79). From session 9 we ran a 3-node Docker Swarm on DO in parallel with Hetzner for several weeks, both pointing at the same DO Postgres — so we could check Swarm health against real data without flipping DNS. That parallel-run is what let us catch the 17 April Swarm-networking outage before users saw it: a new DO cloud firewall silently blocked the Swarm control-plane ports between our own nodes. External uptime checks said green; the cluster was dead.
+One sharp operational lesson came from that parallel-run window. On 16 April, a new DigitalOcean firewall blocked Docker Swarm's internal overlay traffic between nodes. The manager kept serving traffic through its local replica, so external uptime checks stayed green while cluster redundancy had silently failed for nearly 18 hours. Later Swarm routing follow-ups on DigitalOcean (PR #129 / #131) addressed a separate set of overlay-routing bugs in the lead-up to the DNS migration.
 
-**Lesson: control plane and data plane fail independently. Running two stacks in parallel during the migration cost us almost nothing and bought us the ability to debug live without risk to users.**
+The incident showed that control-plane and data-plane failures are different things. Edge-level uptime checks were not enough. Three replicas behind Traefik gave us horizontal replication, but we never benchmarked whether it was better than the simpler single-node setup. The manager also remained a single point of failure for several critical services.
 
 ## Maintenance
 **Author(s):** Leo
-<!-- What's hard to maintain, what we improved, what's still ugly. -->
+
+Our maintenance work was mostly reactive. Tooling improved during the project, with linting, security scanning, and image hardening added over time rather than from the start. A concrete example was Codacy, which identified a `/health` route bug that had been live for weeks (fixed in commit `c8ff76c`, whose message reads *"caught by codacy"*).
+
+The storyboard above shows the same pattern in the DELAYED lane: maintenance tooling often arrived only after problems became visible. PR #146 updated the lint setup when it drifted out of sync with newer Go versions, and PR #168 added browser tests in the week before submission. More generally, bugs that affected visible behaviour were fixed, while quieter problems remained. For example, bcrypt errors are still swallowed in helper code, simulator authentication contains hardcoded values, test coverage is limited, and logs accumulated recurring warnings that nobody investigated.
+
+The lesson is that maintenance needs an owner. Improvements happened when a problem became painful enough to fix, not because we had a regular practice for improving maintainability.
 
 ## DevOps Style
 **Author(s):** Leo
-<!--
-What was different from previous projects and how it worked out.
-Be honest about trade-offs.
--->
+
+Using the DevOps Handbook's Three Ways as a lens, flow was actually our weakest area. We had CI/CD and PRs from early on (PR #65), but we never set up a project board, issue tracking, an estimation practice, or a Kanban view. Work was visible only through Discord pings and the PR queue. Batches were often too large — the 69% self-merge rate shown in the storyboard reflects PRs that grew too big and too sole-authored to be reviewed.
+
+Feedback was mixed. Prometheus and Loki were up by the end, but for most of the project we read server health by SSH-ing into the containers manually rather than through dashboards. When things broke we did swarm on Discord and people grabbed tasks fast — that informal feedback loop worked, even if the tooling-driven one didn't. The 16 April firewall outage is the clearest evidence the formal loop was incomplete: edge uptime stayed green for 18 hours.
+
+Continual learning was probably our strongest area, but informally so. We met collaboratively each week to understand work done over the weekends, drew architecture on the whiteboard together, and briefed each other on Discord. The larger incidents got written up (`docs/incidents/session11-ops-debug.md`, `docs/architecture/latest-counter-in-db.md`), and the `docs/` folder is structured into `incidents/`, `operations/`, `architecture/`, `security/`, and `monitoring/` — but we never established a regular post-mortem practice or allocated dedicated improvement time. In hindsight, two sessions a week instead of one would have helped.
+
+The main takeaway is that DevOps was not just about adding tools. It became real when we had to operate the system ourselves.
 
 # Use of Generative AI
 **Author(s):** Leo
 
-<!-- Suggested word budget: ~200. Required per ITU GAI policy. -->
+We used Anthropic Claude, mainly through the Code interface, throughout the project. AI-assisted commits carry `Co-Authored-By: Claude`, and `.mailmap` maps the tool to `LLM <none>` as required by the course. Across merged PRs, the trailer appears on 11 commits in 9 PRs (shown in the storyboard footer above). The real number is higher: squash-merging strips trailers (only 5 survive on master), and much of the AI help during debugging, exploration, and prose never made it into a tagged commit.
 
-<!-- DRAFT — to revisit after other sections are written. -->
+The clearest place AI helped was the early refactor of the inherited Python/Flask app into Go (PR #15). None of us knew Go, and Claude helped us scaffold the package structure and understand compiler errors while we learned the type system. Later, the same kind of help was useful for Docker Swarm, Traefik, the PostgreSQL migration, CI/CD setup, and security tooling.
 
-We used **Claude Code (Anthropic Opus 4.6, later 4.7)** all semester, in thinking mode mostly via the CLI; no other tools meaningfully. Claude commits carry `Co-Authored-By` trailers, and `.mailmap` maps the tool to `LLM <none>` as required.
+It only helped when we could evaluate the suggestions. Plausible but wrong answers sometimes slowed debugging down, so we learned to treat AI as a fast helper for exploration, not as an authority.
 
-Our group is five people, four without a CS bachelor. The DevOps stack — Go, Docker Swarm, Prometheus, Grafana, Postgres, Traefik, Terraform — was new to all of us, and we leaned on Claude to explain concepts we didn't yet have a feel for and as a scribe for running notes and incident write-ups. Looking back, two things we'd carry into a next project: declaring AI use more specifically (model, mode, context), and writing our own PRs and comments even when Claude had helped — both ways of showing we'd actually understood the work, not just shipped it.
-
-It didn't help us when we wanted it to deliver answers in territory we couldn't read — debugging then turned into pasting things back and forth instead of thinking. Under time pressure it was tempting to take output we hadn't really understood.
-
-**AI worked best at explaining and at checking work we already understood — worst when we wanted it to deliver answers we couldn't yet evaluate.**
+AI use was also uneven across the team. It increased individual productivity, but it also meant that some contributors could move faster through unfamiliar technical areas than others. Overall, generative AI helped us move faster, but only when paired with our own understanding.
