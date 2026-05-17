@@ -120,7 +120,7 @@ The storyboard below puts the whole project on one page: course topics across th
 
 ![Project storyboard: thematic arcs, on-time vs delayed PRs, and operational incidents from Jan to May 2026](exam-storyboard.drawio.png)
 
-The project had two main architectural rewrites: an early Python-to-Go port (PR #15, week 2) and the later move from a single Hetzner deployment to a three-node Docker Swarm cluster on DigitalOcean (PR #120 and follow-ups). The Swarm migration was the more consequential — it changed the system from one server running everything to replicated webservers, Traefik routing, managed PostgreSQL, and Swarm secrets. Running three webserver replicas also forced us to move shared state out of memory. One example was the `latest` simulator counter, which we moved into PostgreSQL (PR #138).
+The project had two main architectural rewrites: an early Python-to-Go port (PR #15, week 2) and the later move from a single Hetzner deployment to a three-node Docker Swarm cluster on DigitalOcean (PR #120 and follow-ups). The Swarm migration was the more consequential as it changed the system from one server running everything to replicated webservers, Traefik routing, managed PostgreSQL, and Swarm secrets. Running three webserver replicas also forced us to move shared state out of memory. One example was the `latest` simulator counter, which we moved into PostgreSQL (PR #138).
 
 The same pattern appeared elsewhere. The personal timeline query seemed fine in early testing, but later timed out for users with many follows. It took several rounds of diagnosis across the team before we landed on the query rewrite that fixed it (`a3dfc3d`).
 
@@ -129,7 +129,7 @@ In hindsight, we mostly refactored when something forced us to. That kept the pr
 ## Operation
 **Author(s):** Leo and Apoorva
 
-We ran two production environments in parallel for most of April: a single-node Hetzner deployment and a Docker Swarm cluster on DigitalOcean, both connected to the same managed PostgreSQL instance. This let us migrate gradually without interrupting the simulator.
+As mentioned, we ran two production environments in parallel for most of April: a single-node Hetzner deployment and a Docker Swarm cluster on DigitalOcean, both connected to the same managed PostgreSQL instance. This let us migrate gradually without interrupting the simulator.
 
 One sharp operational lesson came from that parallel-run window. On 16 April, a new DigitalOcean firewall blocked Docker Swarm's internal overlay traffic between nodes. The manager kept serving traffic through its local replica, so external uptime checks stayed green while cluster redundancy had silently failed for nearly 18 hours. Later Swarm routing follow-ups on DigitalOcean (PR #129 / #131) addressed a separate set of overlay-routing bugs in the lead-up to the DNS migration.
 

@@ -244,90 +244,90 @@
         </mxCell>
 
         <mxCell id="p_goport" value="PR #15&#10;Python → Go&#10;Feb 10" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#E5E2DA;strokeWidth=1;fontSize=8;align=center;verticalAlign=middle;spacingLeft=6;" vertex="1" parent="1">
-          <mxGeometry x="160" y="210" width="85" height="55" as="geometry"/>
+          <mxGeometry x="160" y="205" width="85" height="55" as="geometry"/>
         </mxCell>
         <mxCell id="p_goport_stripe" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#B0573B;strokeColor=none;" vertex="1" parent="1">
-          <mxGeometry x="160" y="210" width="5" height="55" as="geometry"/>
+          <mxGeometry x="160" y="205" width="5" height="55" as="geometry"/>
         </mxCell>
 
         <mxCell id="p_simapi" value="PR #36&#10;Sim API+Swagger&#10;Feb 16" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#E5E2DA;strokeWidth=1;fontSize=8;align=center;verticalAlign=middle;spacingLeft=6;" vertex="1" parent="1">
-          <mxGeometry x="260" y="210" width="85" height="55" as="geometry"/>
+          <mxGeometry x="260" y="205" width="85" height="55" as="geometry"/>
         </mxCell>
         <mxCell id="p_simapi_stripe" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#B85C7A;strokeColor=none;" vertex="1" parent="1">
-          <mxGeometry x="260" y="210" width="5" height="55" as="geometry"/>
+          <mxGeometry x="260" y="205" width="5" height="55" as="geometry"/>
         </mxCell>
-        <mxCell id="p_hetzner" value="PR #41&#10;Hetzner VM&#10;+ Vagrant, Feb 18" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#E5E2DA;strokeWidth=1;fontSize=8;align=center;verticalAlign=middle;spacingLeft=6;" vertex="1" parent="1">
-          <mxGeometry x="260" y="272" width="85" height="55" as="geometry"/>
+        <mxCell id="p_hetzner" value="PR #41&#10;Hetzner VM&#10;+ Vagrant&#10;Feb 18" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#E5E2DA;strokeWidth=1;fontSize=8;align=center;verticalAlign=middle;spacingLeft=6;" vertex="1" parent="1">
+          <mxGeometry x="260" y="280" width="85" height="60" as="geometry"/>
         </mxCell>
         <mxCell id="p_hetzner_stripe" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#B85C7A;strokeColor=none;" vertex="1" parent="1">
-          <mxGeometry x="260" y="272" width="5" height="55" as="geometry"/>
+          <mxGeometry x="260" y="280" width="5" height="60" as="geometry"/>
         </mxCell>
 
         <mxCell id="p_ci" value="d1594ba&#10;CI workflow&#10;Feb 24" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#E5E2DA;strokeWidth=1;fontSize=8;align=center;verticalAlign=middle;spacingLeft=6;" vertex="1" parent="1">
-          <mxGeometry x="360" y="210" width="85" height="55" as="geometry"/>
+          <mxGeometry x="360" y="205" width="85" height="55" as="geometry"/>
         </mxCell>
         <mxCell id="p_ci_stripe" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#B85C7A;strokeColor=none;" vertex="1" parent="1">
-          <mxGeometry x="360" y="210" width="5" height="55" as="geometry"/>
+          <mxGeometry x="360" y="205" width="5" height="55" as="geometry"/>
         </mxCell>
 
         <mxCell id="p_gorm" value="PR #70&#10;GORM ORM&#10;Mar 6 → Mar 9" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#E5E2DA;strokeWidth=1;fontSize=8;align=center;verticalAlign=middle;spacingLeft=6;" vertex="1" parent="1">
-          <mxGeometry x="560" y="210" width="85" height="55" as="geometry"/>
+          <mxGeometry x="560" y="205" width="85" height="55" as="geometry"/>
         </mxCell>
         <mxCell id="p_gorm_stripe" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#6B5B95;strokeColor=none;" vertex="1" parent="1">
-          <mxGeometry x="560" y="210" width="5" height="55" as="geometry"/>
+          <mxGeometry x="560" y="205" width="5" height="55" as="geometry"/>
         </mxCell>
 
         <mxCell id="p_pg" value="PR #79&#10;SQLite → DO PG&#10;Mar 18  +1w" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#E5E2DA;strokeWidth=1;fontSize=8;align=center;verticalAlign=middle;spacingLeft=6;" vertex="1" parent="1">
-          <mxGeometry x="660" y="210" width="85" height="55" as="geometry"/>
+          <mxGeometry x="660" y="205" width="85" height="55" as="geometry"/>
         </mxCell>
         <mxCell id="p_pg_stripe" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#6B5B95;strokeColor=none;" vertex="1" parent="1">
-          <mxGeometry x="660" y="210" width="5" height="55" as="geometry"/>
+          <mxGeometry x="660" y="205" width="5" height="55" as="geometry"/>
         </mxCell>
         <mxCell id="p_prom" value="PR #84&#10;Prom + Grafana&#10;Mar 18  +1w" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#E5E2DA;strokeWidth=1;fontSize=8;align=center;verticalAlign=middle;spacingLeft=6;" vertex="1" parent="1">
-          <mxGeometry x="660" y="272" width="85" height="55" as="geometry"/>
+          <mxGeometry x="660" y="280" width="85" height="55" as="geometry"/>
         </mxCell>
         <mxCell id="p_prom_stripe" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#6B5B95;strokeColor=none;" vertex="1" parent="1">
-          <mxGeometry x="660" y="272" width="5" height="55" as="geometry"/>
+          <mxGeometry x="660" y="280" width="5" height="55" as="geometry"/>
         </mxCell>
 
         <mxCell id="p_lint" value="PR #77&#10;Static analysis&#10;Mar 13" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#E5E2DA;strokeWidth=1;fontSize=8;align=center;verticalAlign=middle;spacingLeft=6;" vertex="1" parent="1">
-          <mxGeometry x="760" y="210" width="85" height="55" as="geometry"/>
+          <mxGeometry x="760" y="205" width="85" height="55" as="geometry"/>
         </mxCell>
         <mxCell id="p_lint_stripe" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#3F5F8C;strokeColor=none;" vertex="1" parent="1">
-          <mxGeometry x="760" y="210" width="5" height="55" as="geometry"/>
+          <mxGeometry x="760" y="205" width="5" height="55" as="geometry"/>
         </mxCell>
 
         <mxCell id="p_loki" value="PR #112&#10;Loki+Promtail&#10;Mar 30  +1w" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#E5E2DA;strokeWidth=1;fontSize=8;align=center;verticalAlign=middle;spacingLeft=6;" vertex="1" parent="1">
-          <mxGeometry x="860" y="210" width="85" height="55" as="geometry"/>
+          <mxGeometry x="860" y="205" width="85" height="55" as="geometry"/>
         </mxCell>
         <mxCell id="p_loki_stripe" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#3F5F8C;strokeColor=none;" vertex="1" parent="1">
-          <mxGeometry x="860" y="210" width="5" height="55" as="geometry"/>
+          <mxGeometry x="860" y="205" width="5" height="55" as="geometry"/>
         </mxCell>
-        <mxCell id="p_tls" value="PR #118&#10;Traefik + Let's&#10;Encrypt, Apr 10" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#E5E2DA;strokeWidth=1;fontSize=8;align=center;verticalAlign=middle;spacingLeft=6;" vertex="1" parent="1">
-          <mxGeometry x="960" y="210" width="85" height="55" as="geometry"/>
+        <mxCell id="p_tls" value="PR #118&#10;Traefik +&#10;Let's Encrypt&#10;Apr 10" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#E5E2DA;strokeWidth=1;fontSize=8;align=center;verticalAlign=middle;spacingLeft=6;" vertex="1" parent="1">
+          <mxGeometry x="960" y="205" width="85" height="60" as="geometry"/>
         </mxCell>
         <mxCell id="p_tls_stripe" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#5A8A8E;strokeColor=none;" vertex="1" parent="1">
-          <mxGeometry x="960" y="210" width="5" height="55" as="geometry"/>
+          <mxGeometry x="960" y="205" width="5" height="60" as="geometry"/>
         </mxCell>
 
         <mxCell id="p_swarmfix" value="PR #129 / #131&#10;Traefik routing fixes&#10;before the DNS flip&#10;Apr 17–20" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#E5E2DA;strokeWidth=1;fontSize=8;align=center;verticalAlign=middle;spacingLeft=6;" vertex="1" parent="1">
-          <mxGeometry x="1060" y="210" width="85" height="72" as="geometry"/>
+          <mxGeometry x="1060" y="205" width="85" height="72" as="geometry"/>
         </mxCell>
         <mxCell id="p_swarmfix_stripe" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#A04040;strokeColor=none;" vertex="1" parent="1">
-          <mxGeometry x="1060" y="210" width="5" height="72" as="geometry"/>
+          <mxGeometry x="1060" y="205" width="5" height="72" as="geometry"/>
         </mxCell>
         <mxCell id="p_latest" value="PR #138&#10;the counter we&#10;forgot to put in&#10;the database&#10;Apr 21" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#E5E2DA;strokeWidth=1;fontSize=8;align=center;verticalAlign=middle;spacingLeft=6;" vertex="1" parent="1">
-          <mxGeometry x="1160" y="210" width="85" height="72" as="geometry"/>
+          <mxGeometry x="1160" y="205" width="85" height="72" as="geometry"/>
         </mxCell>
         <mxCell id="p_latest_stripe" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#A04040;strokeColor=none;" vertex="1" parent="1">
-          <mxGeometry x="1160" y="210" width="5" height="72" as="geometry"/>
+          <mxGeometry x="1160" y="205" width="5" height="72" as="geometry"/>
         </mxCell>
 
-        <mxCell id="p_hardening" value="PR #143&#10;Semgrep, Docker&#10;Scout, non-root&#10;container, Apr 23" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#E5E2DA;strokeWidth=1;fontSize=8;align=center;verticalAlign=middle;spacingLeft=6;" vertex="1" parent="1">
-          <mxGeometry x="1060" y="285" width="85" height="60" as="geometry"/>
+        <mxCell id="p_hardening" value="PR #143&#10;Semgrep, Docker&#10;Scout, non-root&#10;container&#10;Apr 23" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#E5E2DA;strokeWidth=1;fontSize=8;align=center;verticalAlign=middle;spacingLeft=6;" vertex="1" parent="1">
+          <mxGeometry x="1060" y="280" width="85" height="65" as="geometry"/>
         </mxCell>
         <mxCell id="p_hardening_stripe" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#A04040;strokeColor=none;" vertex="1" parent="1">
-          <mxGeometry x="1060" y="285" width="5" height="60" as="geometry"/>
+          <mxGeometry x="1060" y="280" width="5" height="65" as="geometry"/>
         </mxCell>
 
         <mxCell id="lane_sep_1" style="endArrow=none;html=1;rounded=0;strokeColor=#D4D0C4;strokeWidth=0.5;dashed=1;" edge="1" parent="1">
@@ -402,11 +402,11 @@
           <mxGeometry x="55" y="545" width="250" height="15" as="geometry"/>
         </mxCell>
 
-        <mxCell id="inc_storage" value="Storage debate&#10;(SQLite volume vs&#10;external DB)&#10;Mar 2–8 — Discord" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#E5E2DA;strokeWidth=1;fontSize=8;align=center;verticalAlign=middle;spacingLeft=6;" vertex="1" parent="1">
-          <mxGeometry x="460" y="565" width="180" height="50" as="geometry"/>
+        <mxCell id="inc_storage" value="Storage debate&#10;SQLite volume vs&#10;external DB&#10;on Discord&#10;Mar 2–8" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#E5E2DA;strokeWidth=1;fontSize=8;align=center;verticalAlign=middle;spacingLeft=6;" vertex="1" parent="1">
+          <mxGeometry x="460" y="565" width="180" height="62" as="geometry"/>
         </mxCell>
         <mxCell id="inc_storage_stripe" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#6B5B95;strokeColor=none;" vertex="1" parent="1">
-          <mxGeometry x="460" y="565" width="5" height="50" as="geometry"/>
+          <mxGeometry x="460" y="565" width="5" height="62" as="geometry"/>
         </mxCell>
 
         <mxCell id="inc_parallel" value="Hetzner + DO Swarm running in parallel — Apr 10 → May 4" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#7A7268;strokeWidth=1;fontSize=9;fontStyle=1;align=center;verticalAlign=middle;spacingLeft=6;" vertex="1" parent="1">
@@ -416,14 +416,35 @@
           <mxGeometry x="960" y="565" width="5" height="32" as="geometry"/>
         </mxCell>
 
-        <mxCell id="inc_outage" value="OUTAGE&#10;DO firewall ate&#10;Swarm gossip&#10;ports — Apr 16–17&#10;no PR" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#A04040;strokeWidth=1.5;fontSize=8;fontStyle=1;align=center;verticalAlign=middle;spacingLeft=6;" vertex="1" parent="1">
+        <mxCell id="inc_promoom" value="Prometheus OOM&#10;container exited 137,&#10;caught manually&#10;Mar 25–26  PR #96" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#A04040;strokeWidth=1;fontSize=8;align=center;verticalAlign=middle;spacingLeft=6;" vertex="1" parent="1">
+          <mxGeometry x="760" y="610" width="85" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="inc_promoom_stripe" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#A04040;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry x="760" y="610" width="5" height="50" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="inc_cdenv" value="SILENT CD FAIL&#10;.env wiped DATABASE_URL,&#10;CD said OK while&#10;prod crashed&#10;Mar 27–30  PR #110" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#A04040;strokeWidth=1.5;fontSize=8;fontStyle=1;align=center;verticalAlign=middle;spacingLeft=6;" vertex="1" parent="1">
+          <mxGeometry x="860" y="610" width="85" height="68" as="geometry"/>
+        </mxCell>
+        <mxCell id="inc_cdenv_stripe" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#A04040;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry x="860" y="610" width="5" height="68" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="inc_dbfirewall" value="DB firewall miss&#10;DO managed-DB blocked&#10;Swarm node IPs&#10;Apr 16 — no PR" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#A04040;strokeWidth=1;fontSize=8;align=center;verticalAlign=middle;spacingLeft=6;" vertex="1" parent="1">
+          <mxGeometry x="960" y="610" width="85" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="inc_dbfirewall_stripe" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#A04040;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry x="960" y="610" width="5" height="55" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="inc_outage" value="OUTAGE (no PR)&#10;DO firewall ate&#10;Swarm gossip&#10;ports&#10;Apr 16–17" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#A04040;strokeWidth=1.5;fontSize=8;fontStyle=1;align=center;verticalAlign=middle;spacingLeft=6;" vertex="1" parent="1">
           <mxGeometry x="1060" y="610" width="85" height="65" as="geometry"/>
         </mxCell>
         <mxCell id="inc_outage_stripe" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#A04040;strokeColor=none;" vertex="1" parent="1">
           <mxGeometry x="1060" y="610" width="5" height="65" as="geometry"/>
         </mxCell>
 
-        <mxCell id="inc_ghcr" value="PR #141&#10;GHCR PAT fix&#10;Apr 21 — silent&#10;CD failure" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#A04040;strokeWidth=1;fontSize=8;align=center;verticalAlign=middle;spacingLeft=6;" vertex="1" parent="1">
+        <mxCell id="inc_ghcr" value="PR #141&#10;GHCR PAT fix&#10;silent CD failure&#10;Apr 21" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#A04040;strokeWidth=1;fontSize=8;align=center;verticalAlign=middle;spacingLeft=6;" vertex="1" parent="1">
           <mxGeometry x="1060" y="678" width="85" height="44" as="geometry"/>
         </mxCell>
         <mxCell id="inc_ghcr_stripe" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#A04040;strokeColor=none;" vertex="1" parent="1">
@@ -437,11 +458,11 @@
           <mxGeometry x="1160" y="610" width="5" height="85" as="geometry"/>
         </mxCell>
 
-        <mxCell id="inc_decomm" value="PR #162&#10;Hetzner removed&#10;from CD, May 4&#10;VM deleted May 15" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#E5E2DA;strokeWidth=1.5;fontSize=8;fontStyle=1;align=center;verticalAlign=middle;spacingLeft=6;" vertex="1" parent="1">
-          <mxGeometry x="1260" y="610" width="85" height="65" as="geometry"/>
+        <mxCell id="inc_decomm" value="PR #162&#10;Hetzner removed&#10;from CD May 4&#10;VM deleted&#10;May 15" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#E5E2DA;strokeWidth=1.5;fontSize=8;fontStyle=1;align=center;verticalAlign=middle;spacingLeft=6;" vertex="1" parent="1">
+          <mxGeometry x="1260" y="610" width="85" height="72" as="geometry"/>
         </mxCell>
         <mxCell id="inc_decomm_stripe" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#7A7268;strokeColor=none;" vertex="1" parent="1">
-          <mxGeometry x="1260" y="610" width="5" height="65" as="geometry"/>
+          <mxGeometry x="1260" y="610" width="5" height="72" as="geometry"/>
         </mxCell>
 
         <mxCell id="rail_line" style="endArrow=none;html=1;rounded=0;strokeColor=#888888;strokeWidth=1;" edge="1" parent="1">
