@@ -402,6 +402,36 @@
           <mxGeometry x="55" y="545" width="250" height="15" as="geometry"/>
         </mxCell>
 
+        <mxCell id="leg_inc_body" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#A04040;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="60" y="575" width="14" height="14" as="geometry"/>
+        </mxCell>
+        <mxCell id="leg_inc_stripe" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#A04040;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry x="60" y="575" width="4" height="14" as="geometry"/>
+        </mxCell>
+        <mxCell id="leg_inc_text" value="incident / failure" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=9;fontColor=#555555;" vertex="1" parent="1">
+          <mxGeometry x="80" y="575" width="200" height="14" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="leg_lc_body" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#7A7268;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="60" y="600" width="14" height="14" as="geometry"/>
+        </mxCell>
+        <mxCell id="leg_lc_stripe" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#7A7268;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry x="60" y="600" width="4" height="14" as="geometry"/>
+        </mxCell>
+        <mxCell id="leg_lc_text" value="infra lifecycle" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=9;fontColor=#555555;" vertex="1" parent="1">
+          <mxGeometry x="80" y="600" width="200" height="14" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="leg_pr_body" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#E5E2DA;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="60" y="625" width="14" height="14" as="geometry"/>
+        </mxCell>
+        <mxCell id="leg_pr_stripe" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#6B5B95;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry x="60" y="625" width="4" height="14" as="geometry"/>
+        </mxCell>
+        <mxCell id="leg_pr_text" value="process / decision" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=9;fontColor=#555555;" vertex="1" parent="1">
+          <mxGeometry x="80" y="625" width="200" height="14" as="geometry"/>
+        </mxCell>
+
         <mxCell id="inc_storage" value="Storage debate&#10;SQLite volume vs&#10;external DB&#10;on Discord&#10;Mar 2–8" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#E5E2DA;strokeWidth=1;fontSize=8;align=center;verticalAlign=middle;spacingLeft=6;" vertex="1" parent="1">
           <mxGeometry x="460" y="565" width="180" height="62" as="geometry"/>
         </mxCell>
@@ -467,33 +497,33 @@
 
         <mxCell id="rail_line" style="endArrow=none;html=1;rounded=0;strokeColor=#888888;strokeWidth=1;" edge="1" parent="1">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="60" y="722" as="sourcePoint"/>
-            <mxPoint x="1440" y="722" as="targetPoint"/>
+            <mxPoint x="60" y="745" as="sourcePoint"/>
+            <mxPoint x="1440" y="745" as="targetPoint"/>
           </mxGeometry>
         </mxCell>
         <mxCell id="rail_label" value="RELEASE TAGS" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;fontSize=10;fontStyle=1;fontColor=#444444;" vertex="1" parent="1">
-          <mxGeometry x="55" y="702" width="150" height="15" as="geometry"/>
+          <mxGeometry x="55" y="725" width="150" height="15" as="geometry"/>
         </mxCell>
 
         <mxCell id="tag_v10" value="v1.0.0&#10;Feb 12" style="ellipse;whiteSpace=wrap;html=1;fillColor=#B0573B;strokeColor=none;fontSize=8;fontStyle=1;fontColor=#FFFFFF;align=center;verticalAlign=middle;" vertex="1" parent="1">
-          <mxGeometry x="195" y="707" width="55" height="30" as="geometry"/>
+          <mxGeometry x="195" y="730" width="55" height="30" as="geometry"/>
         </mxCell>
         <mxCell id="tag_v11" value="v1.1.0&#10;Mar 6" style="ellipse;whiteSpace=wrap;html=1;fillColor=#6B5B95;strokeColor=none;fontSize=8;fontStyle=1;fontColor=#FFFFFF;align=center;verticalAlign=middle;" vertex="1" parent="1">
-          <mxGeometry x="588" y="707" width="55" height="30" as="geometry"/>
+          <mxGeometry x="588" y="730" width="55" height="30" as="geometry"/>
         </mxCell>
         <mxCell id="tag_v12" value="v1.2.0&#10;Mar 10" style="ellipse;whiteSpace=wrap;html=1;fillColor=#6B5B95;strokeColor=none;fontSize=8;fontStyle=1;fontColor=#FFFFFF;align=center;verticalAlign=middle;" vertex="1" parent="1">
-          <mxGeometry x="655" y="707" width="55" height="30" as="geometry"/>
+          <mxGeometry x="655" y="730" width="55" height="30" as="geometry"/>
         </mxCell>
         <mxCell id="tag_v13" value="v1.3.0&#10;Mar 20" style="ellipse;whiteSpace=wrap;html=1;fillColor=#3F5F8C;strokeColor=none;fontSize=8;fontStyle=1;fontColor=#FFFFFF;align=center;verticalAlign=middle;" vertex="1" parent="1">
-          <mxGeometry x="790" y="707" width="55" height="30" as="geometry"/>
+          <mxGeometry x="790" y="730" width="55" height="30" as="geometry"/>
         </mxCell>
         <mxCell id="tag_v14" value="v1.4.0&#10;Mar 27" style="ellipse;whiteSpace=wrap;html=1;fillColor=#5A8A8E;strokeColor=none;fontSize=8;fontStyle=1;fontColor=#FFFFFF;align=center;verticalAlign=middle;" vertex="1" parent="1">
-          <mxGeometry x="890" y="707" width="55" height="30" as="geometry"/>
+          <mxGeometry x="890" y="730" width="55" height="30" as="geometry"/>
         </mxCell>
 
 
         <mxCell id="legend_body" value="88 merged PRs · 69% self-merged · 11 commits across 9 PRs carry a Co-Authored-By: Claude trailer · 5 release tags, all before Mar 27." style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;fontSize=9;fontStyle=2;fontFamily=Georgia;whiteSpace=wrap;fontColor=#777777;" vertex="1" parent="1">
-          <mxGeometry x="55" y="770" width="1395" height="20" as="geometry"/>
+          <mxGeometry x="55" y="793" width="1395" height="20" as="geometry"/>
         </mxCell>
 
       </root>
