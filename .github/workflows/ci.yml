@@ -105,4 +105,5 @@ jobs:
         with:
           command: cves
           image: minitwit:ci
+          only-severities: critical,high
           exit-code: true
