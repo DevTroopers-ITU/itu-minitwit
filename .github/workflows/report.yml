@@ -26,7 +26,8 @@ jobs:
           pandoc report.md \
             -o build/MSc_group_q.pdf \
             --pdf-engine=xelatex \
-            --resource-path=.
+            --resource-path=. \
+            --extract-media=./build
 
       - name: Commit PDF
         run: |
