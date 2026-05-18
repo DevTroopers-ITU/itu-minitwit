@@ -17,7 +17,7 @@ header-includes:
         \vspace*{4cm}
         {\Huge\bfseries \@title\par}
         \vspace{1cm}
-        {\large BSDSESM1KU --- DevOps, Software Evolution and Software Maintenance\par}
+        {\large KSDSESM1KU --- DevOps, Software Evolution and Software Maintenance\par}
         \vspace{2.5cm}
         {\large
           Leo Sakharoff --- leos@itu.dk\\[0.4em]
@@ -30,20 +30,11 @@ header-includes:
       \end{titlepage}%
     }
     \makeatother
+  - |
+    \usepackage{float}
+    \floatplacement{figure}{H}
 ---
 
-<!-- Preview-only title block; PDF uses the LaTeX \maketitle above -->
-# ITU-MiniTwit {.unnumbered}
-
-**BSDSESM1KU — DevOps, Software Evolution and Software Maintenance**
-
-Leo Sakharoff — leos@itu.dk  
-Peter Juul Møller — pemoe@itu.dk  
-Peter Kvist — peht@itu.dk  
-Apoorva Sood — apso@itu.dk  
-Håkon Refsvik — s25129@itu.dk
-
----
 
 # System's Perspective
 
@@ -71,26 +62,26 @@ At runtime, Traefik distributes HTTPS traffic from browsers and HTTP traffic fro
   - **GORM** — ORM for database access 
   - **Gorilla Sessions** — session management
 
-  ### Database
+### Database
   - **PostgreSQL** — primary database (accessed via GORM)
 
-  ### Infrastructure
+### Infrastructure
   - **Docker & Docker Swarm** — containerisation and
   orchestration
   - **DigitalOcean** — cloud hosting
   - **Terraform** — infrastructure as code
   - **Traefik v3.6** — reverse proxy and automatic TLS
 
-  ### CI/CD
+### CI/CD
   - **GitHub Actions** — automated build, test, and deploy
   pipeline
 
-  ### Observability
+### Observability
   - **Prometheus** — metrics collection
   - **Grafana** — dashboards and visualisation
   - **Loki + Promtail** — log aggregation
 
-  ### Code Quality & Security
+### Code Quality & Security
   - **golangci-lint** — static analysis for Go
   - **Hadolint** — Dockerfile linting
   - **Semgrep** — static security analysis

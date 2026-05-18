@@ -17,7 +17,10 @@ jobs:
       - name: Install Pandoc and XeLaTeX
         run: |
           sudo apt-get update -qq
-          sudo apt-get install -y pandoc texlive-xetex texlive-fonts-recommended texlive-latex-extra texlive-lang-european
+          sudo apt-get install -y texlive-luatex texlive-fonts-recommended texlive-latex-extra texlive-lang-european
+          PANDOC_VERSION=$(curl -s https://api.github.com/repos/jgm/pandoc/releases/latest | grep '"tag_name"' | cut -d'"' -f4)
+          curl -sLo pandoc.deb "https://github.com/jgm/pandoc/releases/download/${PANDOC_VERSION}/pandoc-${PANDOC_VERSION}-1-amd64.deb"
+          sudo dpkg -i pandoc.deb
 
       - name: Build PDF
         run: |
@@ -25,7 +28,7 @@ jobs:
           cd report
           pandoc report.md \
             -o build/MSc_group_q.pdf \
-            --pdf-engine=xelatex \
+            --pdf-engine=lualatex \
             --resource-path=.
 
       - name: Commit PDF
