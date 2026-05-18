@@ -4,66 +4,60 @@
 
 Production runs on a 3-node Docker Swarm cluster on DigitalOcean fronted by Traefik with Let's Encrypt TLS. Pushes to `master` trigger GitHub Actions, which builds the images, pushes them to GHCR, and runs `docker stack deploy` on the manager. See [docs/operations/docker-swarm.md](docs/operations/docker-swarm.md) for the full setup and [docs/architecture/architecture.md](docs/architecture/architecture.md) for the topology.
 
-## Spinning up a dev VM (optional)
+## Spinning up the infrastructure (optional)
 
-Vagrant + Hetzner Cloud. (can be changed at any point — Terraform replacement planned.)
+Terraform + DigitalOcean. All config lives in [terraform/](terraform/).
 
 ### You need
 
-- Vagrant ([download](https://www.vagrantup.com/downloads))
-- `vagrant plugin install vagrant-hetznercloud`
-- One-liner to create and add a hetznercloud dummy box
-  `mkdir /tmp/hetzner-dummy && cd /tmp/hetzner-dummy && echo '{"provider":"hetznercloud"}' > metadata.json && tar czf hetzner-dummy.box metadata.json && vagrant box add hetzner-dummy.box --name dummy --provider hetznercloud && cd ~`
+- [Terraform CLI](https://learn.hashicorp.com/tutorials/terraform/install-cli)
+- A DigitalOcean account with a Full Access API token
+- A DigitalOcean Spaces bucket named `devtroopers-minitwit-terraform` in `fra1` with a Spaces access key pair (for remote Terraform state)
 
-- Your SSH key on Hetzner Console (ask Leo if unsure)`
-
-### Environment variables
-
-Get the token from Leo. SSH key name is one of these Peter is missing (`peter-juul`, `haakon`, `apoorva`, `leo`).
-
-Create a `.env` file (same folder as this README):
+Generate a dedicated SSH key pair from the `terraform/` folder (do this once per machine):
 
 ```bash
-nano .env
+mkdir ssh_key && ssh-keygen -t rsa -b 4096 -q -N '' -f ./ssh_key/terraform
 ```
 
-Paste the following and save (`Ctrl+O`, `Ctrl+X`):
+`ssh_key/` is gitignored and must be regenerated each time you provision from scratch.
+
+### Secrets file
+
+Copy the template and fill in the blanks:
 
 ```bash
-export HCLOUD_TOKEN="your-token-here"
-export HCLOUD_SSH_KEY_NAME="your-name-here"
-export SSH_KEY_PATH="~/.ssh/id_ed25519"   # or ~/.ssh/id_rsa
-export SECRET_KEY=""                      # insert random string (longer the better)
-export DATABASE_URL=""                    # insert the Postgres URL (ask for it in Discord)
-export POSTGRES_PASSWORD=""               # insert the Postgres password (ask for it in Discord)
+cp terraform/secrets_template terraform/secrets
+nano terraform/secrets
 ```
-
-This file is in `.gitignore` so it won't be committed. You only create it once, but you need to load it every time you open a new terminal:
 
 ```bash
-source .env
-ssh-add ~/.ssh/id_ed25519                  # same key as SSH_KEY_PATH
+export TF_VAR_do_token=          # DigitalOcean API token
+export SPACE_NAME=devtroopers-minitwit-terraform
+export STATE_FILE=minitwit/terraform.tfstate
+export AWS_ACCESS_KEY_ID=        # DO Spaces access key
+export AWS_SECRET_ACCESS_KEY=    # DO Spaces secret key
+export TF_VAR_db_password=       # choose a database password
+export TF_VAR_secret_key=        # random string for session signing
+export TF_VAR_discord_webhook_url=  # Discord webhook for Grafana alerts
 ```
 
-### Plugin bugfix (required)
-
-The vagrant-hetznercloud plugin has a typo bug. Run this once after installing the plugin:
-
-```bash
-sed -i '' 's/option\[:location\]/options[:location]/;s/option\[:datacenter\]/options[:datacenter]/;s/option\[:user_data\]/options[:user_data]/' \
-  ~/.vagrant.d/gems/3.3.8/gems/vagrant-hetznercloud-0.0.1/lib/vagrant-hetznercloud/action/create_server.rb
-```
+This file is in `.gitignore` so it won't be committed.
 
 ### Run
 
 ```bash
-source .env                          # load environment variables first
-vagrant up --provider=hetznercloud
+cd terraform
+bash bootstrap.sh
 ```
 
-App will be at `http://<server-ip>:8080`. Takes a few minutes to build.
+This provisions all Droplets, sets up PostgreSQL, creates Docker secrets, and deploys the stack. When done the public IP is printed — site will be at `https://<ip>`.
 
-`vagrant ssh` to get into the server, `vagrant destroy` to tear it down.
+SSH to the swarm leader with `ssh root@<leader-ip> -i ssh_key/terraform`. Tear everything down with:
+
+```bash
+source secrets && terraform destroy -auto-approve
+```
 
 ## Testing
 
@@ -111,9 +105,4 @@ Note: On macOS, port 5000 is taken by AirPlay Receiver — that's why we use por
 
 ### Test development
 
-If you just want to make virtual machines on hetzner with the development branch, you can run:
-
-```bash
-source .env                          # load environment variables first
-DEPLOY_BRANCH=dev vagrant up --provider=hetznercloud
-```
+To provision a throw-away cluster from the `dev` branch, point `docker-stack.yml` at the dev image tags before running `bootstrap.sh`, or push dev images to GHCR and redeploy manually from the leader.

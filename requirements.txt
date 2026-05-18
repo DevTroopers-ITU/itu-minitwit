@@ -1,2 +1,3 @@
 pytest
 requests
+playwright==1.52.0

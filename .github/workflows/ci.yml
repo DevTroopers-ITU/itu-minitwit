@@ -63,12 +63,21 @@ jobs:
       - name: Build final image
         run: docker build -t minitwit:ci .
 
-      - name: Run E2E tests with docker compose
+      - name: Run API tests with docker compose
         run: |
-          docker compose -f docker-compose.yml -f docker-compose.test.yml up \
-            --build \
-            --abort-on-container-exit \
-            --exit-code-from tests
+          docker compose -f docker-compose.yml -f docker-compose.test.yml run --rm tests sh -c "
+            pip install --upgrade pip &&
+            pip install -r requirements.txt &&
+            pytest python-references/minitwit_sim_api_test.py -v
+          "
+
+      - name: Run Playwright browser tests with docker compose
+        run: |
+          docker compose -f docker-compose.yml -f docker-compose.test.yml run --rm tests sh -c "
+            pip install --upgrade pip &&
+            pip install -r requirements.txt &&
+            pytest python-references/minitwit_ui_browser_test.py -v
+          "
 
       - name: Compose down
         if: always()
