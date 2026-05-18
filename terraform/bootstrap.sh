@@ -3,6 +3,7 @@ set -e
 echo -e "\n--> Bootstrapping Minitwit\n"
 
 echo -e "\n--> Loading environment variables from secrets file\n"
+# shellcheck source=/dev/null
 source secrets
 
 echo -e "\n--> Checking that environment variables are set\n"
@@ -41,11 +42,11 @@ PUBLIC_IP=$(terraform output -raw public_ip)
 # build database connection string and create docker secrets on the swarm
 echo -e "\n--> Creating Docker secrets on swarm\n"
 DB_URL="postgresql://minitwit:${TF_VAR_db_password}@${DB_IP}:5432/minitwit"
-ssh -o 'StrictHostKeyChecking no' root@$LEADER_IP -i ssh_key/terraform \
+ssh -o 'StrictHostKeyChecking no' "root@${LEADER_IP}" -i ssh_key/terraform \
     "echo '$DB_URL' | docker secret create database_url -"
-ssh -o 'StrictHostKeyChecking no' root@$LEADER_IP -i ssh_key/terraform \
+ssh -o 'StrictHostKeyChecking no' "root@${LEADER_IP}" -i ssh_key/terraform \
     "echo '$TF_VAR_secret_key' | docker secret create secret_key -"
-ssh -o 'StrictHostKeyChecking no' root@$LEADER_IP -i ssh_key/terraform \
+ssh -o 'StrictHostKeyChecking no' "root@${LEADER_IP}" -i ssh_key/terraform \
     "echo '$TF_VAR_discord_webhook_url' | docker secret create discord_webhook_url -"
 
 # copy stack file to leader and deploy
@@ -54,13 +55,13 @@ echo -e "\n--> Copying stack file to leader\n"
 scp -o 'StrictHostKeyChecking no' \
     -i ssh_key/terraform \
     ../docker-stack.yml \
-    root@$LEADER_IP:~/docker-stack.yml
+    "root@${LEADER_IP}:~/docker-stack.yml"
 
 # deploy the stack to the cluster
 echo -e "\n--> Deploying the Minitwit stack to the cluster\n"
 ssh \
     -o 'StrictHostKeyChecking no' \
-    root@$LEADER_IP \
+    "root@${LEADER_IP}" \
     -i ssh_key/terraform \
     'docker stack deploy minitwit -c docker-stack.yml'
 
