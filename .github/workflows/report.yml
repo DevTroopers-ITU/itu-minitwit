@@ -2,7 +2,7 @@ name: Report
 
 on:
   push:
-    branches: [master]
+    branches: [master, dev]
     paths: [report/**]
   workflow_dispatch:
 
@@ -17,7 +17,7 @@ jobs:
       - name: Install Pandoc and XeLaTeX
         run: |
           sudo apt-get update -qq
-          sudo apt-get install -y pandoc texlive-xetex texlive-fonts-recommended
+          sudo apt-get install -y pandoc texlive-xetex texlive-fonts-recommended texlive-latex-extra texlive-lang-european
 
       - name: Build PDF
         run: |
