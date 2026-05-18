@@ -1,6 +1,5 @@
 ---
 title: ITU-MiniTwit
-subtitle: Group Q — DevTroopers
 author:
   - Leo Sakharoff
   - Peter Juul Møller
@@ -8,20 +7,49 @@ author:
   - Apoorva Sood
   - Håkon Refsvik
 date: \today
+numbersections: true
+header-includes:
+  - |
+    \makeatletter
+    \renewcommand{\maketitle}{%
+      \begin{titlepage}
+        \centering
+        \vspace*{4cm}
+        {\Huge\bfseries \@title\par}
+        \vspace{1cm}
+        {\large BSDSESM1KU --- DevOps, Software Evolution and Software Maintenance\par}
+        \vspace{2.5cm}
+        {\large
+          Leo Sakharoff --- leos@itu.dk\\[0.4em]
+          Peter Juul Møller --- pemoe@itu.dk\\[0.4em]
+          Peter Kvist --- peht@itu.dk\\[0.4em]
+          Apoorva Sood --- apso@itu.dk\\[0.4em]
+          Håkon Refsvik --- s25129@itu.dk\par}
+        \vfill
+        {\large \@date\par}
+      \end{titlepage}%
+    }
+    \makeatother
+---
+
+<!-- Preview-only title block; PDF uses the LaTeX \maketitle above -->
+# ITU-MiniTwit {.unnumbered}
+
+**BSDSESM1KU — DevOps, Software Evolution and Software Maintenance**
+
+Leo Sakharoff — leos@itu.dk  
+Peter Juul Møller — pemoe@itu.dk  
+Peter Kvist — peht@itu.dk  
+Apoorva Sood — apso@itu.dk  
+Håkon Refsvik — s25129@itu.dk
+
 ---
 
 # System's Perspective
 
-<!-- Suggested word budget: ~700 -->
-
 ## Design and Architecture 
 **Author(s):** Peter K, Håkon
-<!--
-Describe and illustrate the system. Include diagrams from at least the
-allocation and component-and-connector viewpoints (see session_12
-Documentation.md). One UML deployment diagram + C&C is sufficient, maybe or maybe not one sequence diagram is a
-good minimum.
--->
+
 
 The system runs on a three-node Docker Swarm cluster hosted on DigitalOcean. The manager node handles orchestration and hosts the monitoring stack (Prometheus, Grafana, Loki) and Traefik, which terminates TLS and routes incoming traffic. All three nodes run a Webserver replica and a Promtail instance for log collection. PostgreSQL runs as a DigitalOcean managed instance, reachable from all swarm nodes over TCP on port 25060.
 
@@ -33,11 +61,7 @@ At runtime, Traefik distributes HTTPS traffic from browsers and HTTP traffic fro
 
 ## Dependencies
 **Author(s):** Peter K
-<!--
-List and briefly describe all technologies and tools we depend on across
-all stages: language/framework, infra, CI/CD, observability, third-party
-services. Group by layer.
--->
+
 
 ### Language & Framework
   - **Go 1.25** — backend language
@@ -86,15 +110,10 @@ We run four static analysis tools in CI on every pull request, all blocking merg
 **Docker Scout** scans the final built Docker image for known CVEs in the OS packages and dependencies. It's configured to fail the build if any critical or high severity vulnerability is found, so we catch issues in base image dependencies before they reach production.
 
 # Process Perspective
-<!-- Suggested word budget: ~1100 -->
 
 ## CI/CD Pipeline
 **Author(s):** Peter K, Håkon & Apoorva
 
-<!--
-Stages and tools, from push to deployed replica. Cover deploy and release.
-Activity diagram fits well here.
--->
 
 The pipeline has two workflows: **CI** runs on every pull request to `master`; **CD** runs on every merge into `master`.
 
