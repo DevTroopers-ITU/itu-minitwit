@@ -1,6 +1,6 @@
 import os
 
-from playwright.sync_api import sync_playwright, expect
+from playwright.sync_api import sync_playwright, expect  # type: ignore[import]
 
 
 BASE_URL = os.getenv("BASE_URL", "http://webserver:8080")
