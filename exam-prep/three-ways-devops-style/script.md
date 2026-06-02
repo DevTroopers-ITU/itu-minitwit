@@ -1,98 +1,106 @@
 # Oral Exam — DevOps Style (The Three Ways)
 
-**Speaker:** Leo · **Time budget:** ~3 minutes · **Slides:** 1
+**Speaker:** Leo · **Time budget:** ~3 minutes · **Slide:** 1 (the three-ways
+value-stream diagram — Flow / Feedback / Continual Learning & Experimentation)
 
-Course anchor: *The DevOps Handbook*, Part 1 — the **Three Ways** (Session 05,
-"What is DevOps and configuration management"). DevOps is framed as bridging Dev
-and Ops through communication, CI/CD, quality assurance and automated deployment.
-
----
-
-## Slide (use ONE)
-
-Reuse `report/exam-storyboard.drawio.png` and overlay three labels with a
-one-word verdict each:
-
-| Way | Label | Verdict |
-|-----|-------|---------|
-| First Way  | **Flow**     | Weak (improved over time) |
-| Second Way | **Feedback** | Mixed |
-| Third Way  | **Continual Learning** | Strong, but informal |
-
-The storyboard already shows the on-time vs >2-weeks-late lanes and the
-operational incidents, so the batch-size arc and the 16 Apr outage are visible
-while you talk.
+> Built from the exam-prep conversation — these are *my* words, grounded in the
+> course's exact terms. Course-term backup: `course-terminology.md` (same folder).
+> Through-line: **reactive → proactive**. Thesis: **the tools aren't enough; DevOps
+> got real when we had to operate it.**
 
 ---
 
-## Full script (~400 words, ~3 min at a calm pace)
+## Speaker notes (paste into the slide's notes box)
 
-> Our reflection uses the **DevOps Handbook's Three Ways** as a lens. The
-> headline: for us, DevOps wasn't about adding tools — it became real once we
-> had to *operate* the system ourselves.
->
-> **First Way — Flow.** This was our weakest, but it's also our clearest
-> evolution story. Early on, work piled up on a long-lived `dev` branch — the
-> Python-to-Go refactor accumulated for *two weeks* before reaching production.
-> Big batches, long lead times, no WIP limit. By the end, we'd flipped: security
-> hardening shipped as **thirteen small PRs**, and bug fixes were one-to-three-line
-> changes straight to prod. So we drifted toward the First Way — but by instinct,
-> not by adopting a board or WIP limits.
->
-> **Second Way — Feedback.** Three levels. Our *human* loop was strong — we'd
-> spot something, drop it in Discord, and the team swarmed. But it was intuitive,
-> not structured. Our *CI* gates caught real errors before prod — but we stopped
-> at defending quality, never iterating on the tests to *improve* it. And our
-> *monitoring* — Prometheus, Loki, Grafana — was installed but not wired into how
-> we worked. The proof: on April 16th our Swarm overlay silently failed, and edge
-> uptime stayed green for **eighteen hours**. The honest lesson: we scaled *tools*
-> faster than the *practices* around them.
->
-> **Third Way — Continual learning.** Our strongest, but informal. We kept a
-> `docs/` folder and wrote up incidents — but it grew *reactively*, out of a
-> single weekly meeting that couldn't spread one person's deep-dive to the team.
-> Our best experiment was the migration: we ran the new Swarm cluster in parallel
-> and tested it with the simulator before cutover — blue-green in spirit. But we
-> de-risked the migration without ever *measuring* whether Swarm beat the single
-> server. Experimentation without a hypothesis.
->
-> If I tie it together: the thread under all three is **dev/prod parity**. When
-> we moved to Swarm, local stayed on Compose while prod moved to a Swarm stack —
-> so flow slowed, feedback moved downstream, and experimentation got harder. One
-> missing capability quietly weakened all three Ways.
->
-> So the real takeaway: the Three Ways aren't a checklist of tools. They're
-> connected, and they only came alive when we owned operations.
+```
+FRAME (~20s): Tools aren't enough — DevOps got real when we had to OPERATE it.
+"Value occurs when services are running in production."
+Pattern across all 3 Ways = REACTIVE; we'd have gained from being PROACTIVE.
+
+FLOW (~45s): the Way that changed most.
+- Early: big batches piled on dev → long lead time. Refactor = rebuilt in Go, then ONE big merge.
+- End: git history shows much smaller merges.
+- KEY INSIGHT: small batches felt natural in the REPAIR phase (prod running, not afraid to merge),
+  but hard in the BUILD phase (features, monitoring, logging).
+- Only learned it 2nd half of course. Forward: apply to both.  [term: Reduce Batch Sizes]
+
+FEEDBACK (~45s): three levels.
+- Human loop = our STRENGTH: catch error → Discord → group swarms to fix together. Intuitive, not structured.
+  [term: Swarm and Solve Problems to Build New Knowledge]
+- Tooling loop = GAP: under-used monitoring/logging, didn't "see problems as they occur."
+- LINK: weak feedback → batches stayed big (no signal pulling us smaller).
+
+LEARNING (~45s): Continual Learning AND Experimentation — real but informal.
+- WIN: the real learning was in CONVERSATIONS — honest, open environment, shared what we figured out.
+- HONEST: docs were largely AI-generated; a document ≠ learning. Value was in the talk, not the write-ups.
+  "We captured knowledge more than we circulated it."
+- EXPERIMENTATION: Hetzner → DO Swarm migration = where our dev env broke; never ran Swarm locally.
+  Blue-green test on DigitalOcean before cutover = good; but no local parity, not everyone on board.
+
+CLOSE (~15s): Through-line = REACTIVE → PROACTIVE.
+It only clicked once WE were operating the system. That, to me, is what DevOps actually is.
+```
+
+Optional on-slide labels (one per diagram row):
+- *First Way:* batches — big → small (repair vs build)
+- *Second Way:* human swarm strong · tooling under-used
+- *Third Way:* real in talk, not AI docs · no local Swarm
 
 ---
 
-## Cue-card version (glance, don't read)
+## Full script (spoken, ~3 min)
 
-- **Frame:** Three Ways as lens. *"DevOps became real when we operated it."*
-- **Flow (weak → better):** 2-week refactor batch on `dev` → ended with **13 small
-  hardening PRs** + 1–3 line fixes. Improved by instinct, no WIP limits.
-- **Feedback (mixed):** human swarm = strong (Discord); CI = caught errors but only
-  *defended* quality; monitoring = installed, not used. **16 Apr = 18h blind.**
-  *"Scaled tools faster than practices."*
-- **Learning (strong, informal):** `docs/` was reactive; one meeting/week =
-  bottleneck. Migration = blue-green-ish experiment, but **never measured** Swarm vs
-  single server.
-- **Connective insight:** **dev/prod parity** broke at Swarm migration → weakened all
-  three Ways at once. (Also a *12-Factor App* concept.)
-- **Close:** Three Ways are connected, not a checklist; came alive with ownership.
+> **Opener.** "My main takeaway is that we learned, by ourselves, that **the tools
+> aren't enough** — it was when we had to *operate* them that DevOps became real. That
+> fits the course's point that **value only happens when the service is running in
+> production.** And the honest pattern across all three Ways is that our practices came
+> **reactively** — we'd have gained from being more **proactive**, putting structure in
+> earlier instead of reaching for it once something hurt. So — Flow, Feedback, and
+> Continual Learning."
+>
+> **Flow.** "Flow changed the most for us. Early on we piled work onto our `dev` branch
+> in big batches before merging — long lead times, and we were bad at **reducing batch
+> sizes.** The refactor is the clearest example: we rebuilt everything in Go until it
+> worked, then made *one big merge.* But by the end you can see in our history we were
+> merging in much smaller sizes. The honest pattern is that small batches came naturally
+> in the **repair** phase — once production was running and we were debugging, we
+> weren't afraid to merge — but in the **build** phase, new features, monitoring,
+> logging, breaking things small was hard. We only learned this in the second half of
+> the course. Going forward I'd apply it to *both* building and repairing."
+>
+> **Feedback.** "Feedback splits into three levels for us. The **human loop** was our
+> strength — catching errors, posting in Discord, and the group **swarming to solve
+> them together to build new knowledge.** But it was intuitive, never structured. Where
+> we fell short was the **tooling loop** — we could've used monitoring and logging far
+> more to **see problems as they occur** and push quality back to the source. And I
+> think that's *connected to why our batches stayed big*: without that fast signal,
+> nothing pulled us toward smaller, safer changes."
+>
+> **Learning.** "**Continual Learning and Experimentation** was real for us, but
+> informal. The genuine learning happened when we sat down and talked things through —
+> we built an honest, open environment where people shared what they'd figured out, and
+> that was real. Where I'm more critical is the documentation: we wrote incident logs
+> and a docs folder, but a lot of it was **AI-generated**, and a document isn't the same
+> as learning. My own takeaway is that AI over-produces — so the real value was in the
+> **conversations, not the write-ups** — and we did that reactively, rather than making
+> it a habit. On the **experimentation** side, the Hetzner-to-Swarm migration is the
+> telling story: it's where our development environment broke down — we never got the
+> Swarm running locally to experiment with properly. The blue-green test on DigitalOcean
+> before cutover was good, but with real local parity and everyone on board, we could've
+> done it more sophisticatedly."
+>
+> **Close.** "So the through-line is **reactive versus proactive** — and that shift only
+> really clicked once we were the ones *operating* the system. That, for me, is what
+> DevOps actually is."
 
 ---
 
-## Likely follow-up questions (prep)
+## Course terms each beat lands on (quick ref)
 
-- *"How would you improve Flow?"* → WIP limits + a board; smaller batches by default;
-  a `make run` one-liner and maintained dev/prod parity so shipping is cheap.
-- *"What's a blameless post-mortem?"* → Third Way: write up incidents focusing on
-  systemic causes, not blame, and turn local fixes into global improvements. We wrote
-  incidents but never made it a *scheduled* practice.
-- *"Where do DORA metrics fit?"* → They measure the Ways: deployment frequency + lead
-  time (Flow), MTTR + change-failure rate (Feedback). We never tracked them.
-- *"Best evidence the feedback loop was incomplete?"* → 16 Apr overlay outage: edge
-  uptime green 18h while cluster redundancy was gone — control-plane vs data-plane.
-- *"Idempotent provisioning?"* → Session 05 config-management point; our Terraform +
-  UFW rules provisioned nodes reproducibly.
+- **Frame:** *"value occurs when services are running in production"*
+- **Flow:** Reduce Batch Sizes · Limit WIP / Make Work Visible · shorten lead time
+- **Feedback:** Swarm and Solve Problems to Build New Knowledge · See Problems as They
+  Occur · Keep Pushing Quality Closer to the Source
+- **Learning:** Continual Learning *and* Experimentation · Institutionalize the
+  Improvement of Daily Work · Transform Local Discoveries into Global Improvements
+- ⚠️ Don't attribute CALMS / DORA / Westrum to the course (not taught).
