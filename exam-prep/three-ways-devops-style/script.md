@@ -30,7 +30,7 @@ FEEDBACK (~50s): three levels.
 - 2) CI gates: caught errors before prod, but only CAUGHT — never improved the tests.
   [term: Keep Pushing Quality Closer to the Source]
 - 3) Monitoring/logging: had it, barely used it to "see problems as they occur."
-- LINK: under-used tooling → batches stayed big (no fast signal).
+- END: feedback worked when a PERSON noticed, not yet through the tools.
 
 LEARNING (~45s): Continual Learning AND Experimentation — real but informal.
 - WIN: the real learning was in CONVERSATIONS — honest, open environment, shared what we figured out.
@@ -71,8 +71,8 @@ Optional on-slide labels (one per diagram row):
 > together. Intuitive, but it worked. Second, our **CI gates** — they caught real errors
 > before production, but we stopped at *catching* them; we never improved the tests. And
 > third, **monitoring and logging** — we had them, but barely used them to actually **see
-> problems as they occur.** That under-used tooling is, I think, why our batches stayed
-> big — without a fast signal, nothing pulled us toward smaller changes."
+> problems as they occur.** So in practice, our feedback worked when a *person* noticed
+> something, not yet through the tools."
 >
 > **Learning.** "**Continual Learning and Experimentation** was real but informal. The
 > genuine learning happened when we sat down and **talked things through** — an honest,
