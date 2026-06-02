@@ -41,7 +41,9 @@ One slide, one path, ~3 min. Don't add a second slide.
 > CD does build, push, deploy. So we drifted toward the First Way, but by instinct,
 > not by adopting a board or WIP limits.
 >
-> **Second Way — Feedback.** Our best story here is a *silent* bug. Our `latest`
+> **Second Way — Feedback.** Our *human* loop was genuinely strong — we'd spot
+> something, drop it in Discord, and the team swarmed on it. Our *tooling* loop is
+> where we fell short, and our clearest example is a *silent* bug. Our `latest`
 > counter was an in-memory variable; with three replicas, each had its own copy, so
 > the simulator read a stale value about two-thirds of the time. It returned HTTP 200
 > with wrong data — so *none* of our alerts fired; up/down, error-rate and latency all
@@ -57,13 +59,16 @@ One slide, one path, ~3 min. Don't add a second slide.
 > **seven-hundred-line incident log** with a timestamped play-by-play, a "lessons
 > recorded" list, and a pre-flight checklist for the cutover. That's institutionalising
 > improvement. The honest gap: it grew *reactively*, out of one meeting a week, and
-> some of our docs drifted out of date.
+> some of our docs drifted out of date. And our one real *experiment* — running the
+> new Swarm in parallel before cutover — we treated as a safe migration, but we never
+> framed a hypothesis or measured whether Swarm actually beat the single server.
+> Experimentation without a hypothesis.
 >
-> If I tie it together: the thread under all three is **dev/prod parity**. We ran the
-> old server and the new Swarm in parallel — and notice the silent bug was *invisible*
-> on the single-server setup and only appeared with replicas. Parity is what made the
-> feedback possible. So the Three Ways aren't a checklist of tools — they're connected,
-> and they came alive when we owned operations.
+> If I tie it together: the thread under all three is **dev/prod parity**. That silent
+> bug was *invisible* on the single-server setup and only showed up with replicas — so
+> it was the prod-like environment, not our dashboards, that surfaced it. Parity is what
+> made the feedback possible. So the Three Ways aren't a checklist of tools — they're
+> connected, and they came alive when we owned operations.
 
 ---
 
@@ -82,6 +87,18 @@ One slide, one path, ~3 min. Don't add a second slide.
 - **Connective insight:** **dev/prod parity** sits under all three — the silent bug was
   invisible on single-server, only showed with replicas; parity is what *enabled* feedback.
 - **Close:** Three Ways are connected, not a checklist; came alive with ownership.
+
+**Held in reserve (drop into Q&A, not the 3-min talk):**
+- *Three levels of feedback:* human/Discord swarm (strong) · CI gates (defended quality but
+  never *iterated* the tests to improve it) · monitoring (installed, not wired into how we worked).
+- *Why batches were big early:* we couldn't slice the Python→Go refactor small because there
+  was **no production yet** — nothing to ship incrementally toward.
+- *Learning is handover, not writing:* the `docs/` existed, but the real step is *handing
+  knowledge over* — and AI-written docs over-produced, so the work was distilling them.
+- *Other parity angle:* tests ran on SQLite, prod on Postgres — a green test didn't fully
+  prove prod behaviour either.
+- *Another feedback-gap example:* the 16 Apr overlay outage — edge uptime green ~18h while
+  cluster redundancy had silently failed (control-plane vs data-plane).
 
 ---
 
