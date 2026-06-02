@@ -24,11 +24,13 @@ FLOW (~45s): the Way that changed most.
   but hard in the BUILD phase (features, monitoring, logging).
 - Only learned it 2nd half of course. Forward: apply to both.  [term: Reduce Batch Sizes]
 
-FEEDBACK (~45s): three levels.
-- Human loop = our STRENGTH: catch error → Discord → group swarms to fix together. Intuitive, not structured.
+FEEDBACK (~50s): three levels.
+- 1) Human loop = STRENGTH: catch → Discord → swarm together. Intuitive but worked.
   [term: Swarm and Solve Problems to Build New Knowledge]
-- Tooling loop = GAP: under-used monitoring/logging, didn't "see problems as they occur."
-- LINK: weak feedback → batches stayed big (no signal pulling us smaller).
+- 2) CI gates: caught errors before prod, but only CAUGHT — never improved the tests.
+  [term: Keep Pushing Quality Closer to the Source]
+- 3) Monitoring/logging: had it, barely used it to "see problems as they occur."
+- LINK: under-used tooling → batches stayed big (no fast signal).
 
 LEARNING (~45s): Continual Learning AND Experimentation — real but informal.
 - WIN: the real learning was in CONVERSATIONS — honest, open environment, shared what we figured out.
@@ -64,12 +66,13 @@ Optional on-slide labels (one per diagram row):
 > the **build** phase, features, monitoring, logging, breaking things small was hard.
 > Going forward I'd apply it to both."
 >
-> **Feedback.** "Feedback has three levels for us. The **human loop** was our strength —
-> catch something, post it in Discord, and the group **swarmed to solve it together.**
-> But it was intuitive, not structured. The **tooling loop** was our gap — we could've
-> used monitoring and logging far more to **see problems as they occur.** And I think
-> that's *why our batches stayed big*: without that fast signal, nothing pulled us toward
-> smaller changes."
+> **Feedback.** "Feedback has three levels for us. First, the **human loop** — our
+> strength: we'd catch something, post it in Discord, and the group swarmed to solve it
+> together. Intuitive, but it worked. Second, our **CI gates** — they caught real errors
+> before production, but we stopped at *catching* them; we never improved the tests. And
+> third, **monitoring and logging** — we had them, but barely used them to actually **see
+> problems as they occur.** That under-used tooling is, I think, why our batches stayed
+> big — without a fast signal, nothing pulled us toward smaller changes."
 >
 > **Learning.** "**Continual Learning and Experimentation** was real but informal. The
 > genuine learning happened when we sat down and **talked things through** — an honest,
