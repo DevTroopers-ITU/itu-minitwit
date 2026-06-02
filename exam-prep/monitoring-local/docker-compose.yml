@@ -1,0 +1,60 @@
+# Scratch monitoring stack for local learning. NOT the real deployment.
+# Points at the minitwit app already running on your host at :8080.
+#
+#   docker compose -f exam-prep/monitoring-local/docker-compose.yml up -d
+#   open http://localhost:3000   (Grafana, no login)
+#   open http://localhost:9090   (Prometheus, raw queries)
+#   open http://localhost:3100   (Loki API, for curling)
+#   docker compose -f exam-prep/monitoring-local/docker-compose.yml down
+#
+# Reuses the REAL Grafana dashboards/datasources, Loki config, and Promtail
+# config (mounted from ../../monitoring), so what you see here matches prod.
+services:
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - "9090:9090"
+    extra_hosts:
+      # lets the container reach the app running on your laptop
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+
+  grafana:
+    image: grafana/grafana:12.1
+    ports:
+      - "3000:3000"
+    environment:
+      # skip the login screen for local play
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+    volumes:
+      - ../../monitoring/grafana/dashboards:/etc/grafana/provisioning/dashboards:ro
+      - ../../monitoring/grafana/datasources:/etc/grafana/provisioning/datasources:ro
+    depends_on:
+      - prometheus
+      - loki
+
+  # STORE box: same image + same config file as production.
+  loki:
+    image: grafana/loki:3.6.7
+    ports:
+      - "3100:3100"
+    volumes:
+      - ../../monitoring/loki/loki-config.yml:/etc/loki/local-config.yaml:ro
+
+  # COLLECT box: your real promtail-config.yml. It tails every container on
+  # this machine via the Docker socket and pushes to loki:3100.
+  # NOTE: locally there is no Swarm, so the swarm_service / swarm_task labels
+  # come out empty (no swarm metadata to relabel). The `container` label works
+  # fine. That's the parity lesson: prod is all containers; your host `go run`
+  # app is NOT a container, so its logs don't show here.
+  promtail:
+    image: grafana/promtail:3.6.0
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - ../../monitoring/promtail/promtail-config.yml:/etc/promtail/config.yml:ro
+    command: -config.file=/etc/promtail/config.yml
+    depends_on:
+      - loki

@@ -1,0 +1,13 @@
+# Local play version. Difference from the real monitoring/prometheus/prometheus.yml:
+#  - the app runs on your laptop (host), not in Swarm, so we use a plain static
+#    target via host.docker.internal instead of Swarm DNS (tasks.webserver).
+#  - NO metric_relabel filter, so you can SEE every metric the app exports
+#    (including the Go runtime ones that prod throws away).
+# Job name is kept as 'itu-minitwit-app' so the real dashboard's queries match.
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: 'itu-minitwit-app'
+    static_configs:
+      - targets: ['host.docker.internal:8080']

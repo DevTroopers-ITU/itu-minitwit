@@ -1,4 +1,5 @@
 services:
+
   traefik:
     # Pinned to the exact patch release rather than floating v3.6. A floating
     # tag bit us once already (see docs/incidents/session11-ops-debug.md, bug 1) when

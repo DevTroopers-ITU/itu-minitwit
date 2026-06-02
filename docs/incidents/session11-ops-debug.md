@@ -7,12 +7,12 @@ member can read this after the fact and understand both what happened and why.
 
 SSH works from Leo's laptop to all four servers using `~/.ssh/id_ed25519`:
 
-| Host            | IP              | Hostname on box | Role in stack                                    |
-|-----------------|-----------------|-----------------|--------------------------------------------------|
-| DO manager      | 64.226.116.162  | `Manager`       | Swarm leader, Traefik, Prometheus, Grafana, Loki |
-| DO worker (A)   | 134.122.90.176  | `Worker-1`      | App replicas, Promtail                            |
-| DO worker (B)   | 206.189.59.60   | `Worker-2`      | App replicas, Promtail                            |
-| Hetzner legacy  | 46.224.144.214  | `h-6d6ea5`      | Old single-box compose deployment (still live)   |
+| Host           | IP             | Hostname on box | Role in stack                                    |
+| -------------- | -------------- | --------------- | ------------------------------------------------ |
+| DO manager     | 64.226.116.162 | `Manager`     | Swarm leader, Traefik, Prometheus, Grafana, Loki |
+| DO worker (A)  | 134.122.90.176 | `Worker-1`    | App replicas, Promtail                           |
+| DO worker (B)  | 206.189.59.60  | `Worker-2`    | App replicas, Promtail                           |
+| Hetzner legacy | 46.224.144.214 | `h-6d6ea5`    | Old single-box compose deployment (still live)   |
 
 `CLAUDE.md` had the Worker-1 / Worker-2 IPs swapped vs. the actual hostnames on the
 boxes — noted, fix queued.
@@ -123,6 +123,7 @@ So the block is entirely at DO's cloud firewall layer, not on the hosts.
 ### Let's Encrypt is fine right now
 
 Cert on `devtroopersminitwit.codes`:
+
 - Issuer: Let's Encrypt R13
 - Not Before: Apr 10 2026
 - Not After:  Jul  9 2026
@@ -145,13 +146,13 @@ avoid exposing the Swarm control plane to the world.
 Assuming we tag all three droplets with e.g. `minitwit-swarm`, add these
 **inbound** rules on the firewall:
 
-| Protocol | Port(s)  | Source                        | Purpose                               |
-|----------|----------|-------------------------------|---------------------------------------|
-| TCP      | 2377     | Tag: `minitwit-swarm`         | Cluster management (manager API)      |
-| TCP      | 7946     | Tag: `minitwit-swarm`         | Node gossip (discovery)               |
-| UDP      | 7946     | Tag: `minitwit-swarm`         | Node gossip (discovery)               |
-| UDP      | 4789     | Tag: `minitwit-swarm`         | Overlay network (VXLAN data plane)    |
-| ICMP     | —        | Tag: `minitwit-swarm`         | Ping between nodes (nice to have)     |
+| Protocol | Port(s) | Source                 | Purpose                            |
+| -------- | ------- | ---------------------- | ---------------------------------- |
+| TCP      | 2377    | Tag:`minitwit-swarm` | Cluster management (manager API)   |
+| TCP      | 7946    | Tag:`minitwit-swarm` | Node gossip (discovery)            |
+| UDP      | 7946    | Tag:`minitwit-swarm` | Node gossip (discovery)            |
+| UDP      | 4789    | Tag:`minitwit-swarm` | Overlay network (VXLAN data plane) |
+| ICMP     | —      | Tag:`minitwit-swarm` | Ping between nodes (nice to have)  |
 
 Important: the source **must be the tag, not "All IPv4"**. Exposing Swarm's
 management port 2377 to the public internet is a serious security hole — it
@@ -382,23 +383,19 @@ Track these here so they don't get lost once the firewall incident is done.
    be enough. Verify on both stacks before merging.
    Process: `fix/grafana-loki-label-portability` → PR into `dev` → PR
    `dev` → `master`.
-
 2. **Rotate the plaintext ghcr.io PAT** stored in
    `/root/.docker/config.json` on all three DO droplets (owner:
    `DenSygeMike` / Apoorva). Replace with the short-lived `GITHUB_TOKEN`
    flow the CD workflow already uses. Don't persist to disk.
-
 3. **`http: superfluous response.WriteHeader call` warning** fills the
    webserver logs. Harmless to clients, but a real middleware bug around
    `main.go:50`. Probably the Prometheus metrics middleware writes the
    status header after the handler already did. Worth a small refactor
    when there's a quiet moment.
-
 4. **Traefik stopped logging to stdout around 15 Apr 20:00 UTC.** Either
    traffic has been quiet (unlikely) or access log isn't going to stdout.
    Worth checking `--accesslog.filepath` / `--accesslog=true` config so
    Loki actually captures Traefik requests.
-
 5. **Swarm-services that are over-replicated because of the firewall**
    (webserver 5/3, grafana 2/1, loki 2/1, promtail 3/1) will self-heal
    once workers rejoin; verify post-fix.
@@ -460,8 +457,7 @@ Ruled out, in order:
 3. **Traefik router/service binding:** from inside the Traefik container,
    `wget --header=Host:devtroopersminitwit.codes https://localhost/public`
    returned `HTTP 200 OK`. Router rules match, service is bound, backend
-   is reachable. The old `Router minitwit cannot be linked automatically
-   with multiple Services` errors from yesterday's log are stale and no
+   is reachable. The old `Router minitwit cannot be linked automatically with multiple Services` errors from yesterday's log are stale and no
    longer fire (separate fix tracked in branch
    `fix/swarm-traefik-and-db-indexes`).
 4. **TLS:** handshake completes, cert is valid for the domain, issued by
@@ -556,11 +552,9 @@ Tracked in branch `fix/traefik-ingress-host-mode`, PR into `dev` →
    ```
 
    Both must return 200 in under 1s. If HTTP/2 still 504s, DO NOT flip.
-
 5. Only after both succeed: change the A record at name.com from
    `46.224.144.214` (Hetzner) to `64.226.116.162` (DO manager). TTL is
    300s so rollback window is 5 minutes.
-
 6. Monitor from laptop with the non-resolve version (real DNS):
 
    ```bash
@@ -574,10 +568,8 @@ Tracked in branch `fix/traefik-ingress-host-mode`, PR into `dev` →
 
    Watch `%{remote_ip}` flip from `46.224.144.214` to `64.226.116.162`
    as DNS propagates. All responses should stay 200.
-
 7. If anything goes wrong, revert the A record to `46.224.144.214`.
    Within 5 min (the TTL) new resolvers will re-pick Hetzner.
-
 
 ## 17 Apr, afternoon — the follow-on bugs we hit when we actually tried
 
@@ -607,11 +599,11 @@ What we ruled out.
 
 What fixed it. Upgrade to **Traefik v3.6**. Empirically:
 
-| tag | v1.24 errors in 5 s |
-|-----|---------------------|
-| v3.4 | 10 |
-| v3.5 | 8 |
-| v3.6 | 0 |
+| tag  | v1.24 errors in 5 s |
+| ---- | ------------------- |
+| v3.4 | 10                  |
+| v3.5 | 8                   |
+| v3.6 | 0                   |
 
 Guess at the mechanism: the Docker SDK vendored into ≤ v3.5 of Traefik defaults
 to API v1.24 when it cannot negotiate, and something about
@@ -677,12 +669,10 @@ and forwards actually work.
    eye on Traefik's release notes when Docker engines upgrade. Alternative:
    add a socket proxy (`tecnativa/docker-socket-proxy`) that forces a
    specific API version so Traefik's SDK never has to negotiate.
-
 10. **Docker services on multiple overlays need `traefik.swarm.network`.**
     Without it, Traefik picks an arbitrary IP per task. It may work by luck
     if the chosen network happens to be the one Traefik is on. Ours didn't.
     Make this label non-optional anywhere routing crosses >1 overlay.
-
 11. **Turn on `--accesslog=true --log.level=DEBUG` *before* you think you
     need it.** Bug 3 would have been a 30 second debug with logs, and was
     a 45 minute one without. The access log line
