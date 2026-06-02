@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080" font-family="DejaVu Sans, sans-serif">
+<rect width="1920" height="1080" fill="#FFFFFF"/>
+<defs>
+<marker id="ar" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+<path d="M0,0 L8,3 L0,6 Z" fill="#12303D"/></marker>
+<marker id="big" markerWidth="9" markerHeight="9" refX="6" refY="3" orient="auto" markerUnits="strokeWidth">
+<path d="M0,0 L7,3 L0,6 Z" fill="#12303D"/></marker>
+</defs>
+<rect x="0" y="0" width="14" height="1080" fill="#1CA3A3"/>
+<text x="60" y="62" font-size="26" font-weight="700" fill="#1CA3A3">Leo</text>
+<text x="62" y="138" font-size="56" font-weight="700" fill="#12303D">Reflection: DevOps Style (Three Ways)</text>
+<text x="64" y="190" font-size="30" font-style="italic" fill="#6B8290">The tools aren’t enough — DevOps got real once we had to operate it.</text>
+<line x1="62" y1="222" x2="1858" y2="222" stroke="#DCE5EA" stroke-width="2"/>
+<text x="120" y="252" font-size="26" font-weight="700" fill="#12303D">The First Way</text>
+<text x="120" y="280" font-size="19" font-style="italic" fill="#6B8290">Flow · Systems Thinking</text>
+<text x="150" y="338" font-size="30" font-style="italic" fill="#12303D" text-anchor="middle">Dev</text>
+<text x="470" y="338" font-size="30" font-style="italic" fill="#12303D" text-anchor="middle">Ops</text>
+<line x1="250" y1="330" x2="430" y2="330" stroke="#12303D" stroke-width="3" marker-end="url(#ar)"/>
+<text x="120" y="467" font-size="26" font-weight="700" fill="#12303D">The Second Way</text>
+<text x="120" y="495" font-size="19" font-style="italic" fill="#6B8290">Amplify Feedback Loops</text>
+<text x="150" y="553" font-size="30" font-style="italic" fill="#12303D" text-anchor="middle">Dev</text>
+<text x="470" y="553" font-size="30" font-style="italic" fill="#12303D" text-anchor="middle">Ops</text>
+<line x1="250" y1="531" x2="430" y2="531" stroke="#12303D" stroke-width="3" marker-end="url(#ar)"/>
+<path d="M 430 559 Q 340 605 250 559" fill="none" stroke="#12303D" stroke-width="3" marker-end="url(#ar)"/>
+<text x="120" y="682" font-size="26" font-weight="700" fill="#12303D">The Third Way</text>
+<text x="120" y="710" font-size="19" font-style="italic" fill="#6B8290">Continual Learning &amp; Experimentation</text>
+<text x="150" y="768" font-size="30" font-style="italic" fill="#12303D" text-anchor="middle">Dev</text>
+<text x="470" y="768" font-size="30" font-style="italic" fill="#12303D" text-anchor="middle">Ops</text>
+<line x1="250" y1="778" x2="430" y2="778" stroke="#12303D" stroke-width="3" marker-end="url(#ar)"/>
+<circle cx="280" cy="752" r="16" fill="none" stroke="#12303D" stroke-width="3"/>
+<circle cx="320" cy="752" r="16" fill="none" stroke="#12303D" stroke-width="3"/>
+<circle cx="360" cy="752" r="16" fill="none" stroke="#12303D" stroke-width="3"/>
+<circle cx="400" cy="752" r="16" fill="none" stroke="#12303D" stroke-width="3"/>
+<rect x="660" y="255" width="1190" height="150" rx="16" fill="#F5F8FA" stroke="#DCE5EA" stroke-width="2"/>
+<rect x="660" y="255" width="10" height="150" rx="5" fill="#2E8B57"/>
+<text x="700" y="308" font-size="34" font-weight="700" fill="#12303D">FLOW</text>
+<rect x="1620" y="278" width="200" height="44" rx="22" fill="#2E8B57"/>
+<text x="1720" y="309" font-size="22" font-weight="700" fill="#FFFFFF" text-anchor="middle">IMPROVED</text>
+<text x="700" y="368" font-size="27" fill="#33505E">Big batches → smaller. Felt natural in repair, hard in build.</text>
+<rect x="660" y="470" width="1190" height="150" rx="16" fill="#F5F8FA" stroke="#DCE5EA" stroke-width="2"/>
+<rect x="660" y="470" width="10" height="150" rx="5" fill="#C9821B"/>
+<text x="700" y="523" font-size="34" font-weight="700" fill="#12303D">FEEDBACK</text>
+<rect x="1620" y="493" width="200" height="44" rx="22" fill="#C9821B"/>
+<text x="1720" y="524" font-size="22" font-weight="700" fill="#FFFFFF" text-anchor="middle">MIXED</text>
+<text x="700" y="583" font-size="27" fill="#33505E">Human swarm strong; tooling under-used — so batches stayed big.</text>
+<rect x="660" y="685" width="1190" height="150" rx="16" fill="#F5F8FA" stroke="#DCE5EA" stroke-width="2"/>
+<rect x="660" y="685" width="10" height="150" rx="5" fill="#2F6FB0"/>
+<text x="700" y="738" font-size="34" font-weight="700" fill="#12303D">LEARNING</text>
+<rect x="1460" y="708" width="360" height="44" rx="22" fill="#2F6FB0"/>
+<text x="1640" y="739" font-size="22" font-weight="700" fill="#FFFFFF" text-anchor="middle">REAL BUT INFORMAL</text>
+<text x="700" y="798" font-size="27" fill="#33505E">Learning lived in talk, not AI docs. No local Swarm to experiment on.</text>
+<text x="960" y="905" font-size="22" font-style="italic" fill="#6B8290" text-anchor="middle">The thread across all three Ways — and what we’d do differently</text>
+<text x="150" y="977" font-size="40" font-weight="700" fill="#B23A3A">REACTIVE</text>
+<line x1="430" y1="965" x2="1470" y2="965" stroke="#12303D" stroke-width="6" marker-end="url(#big)"/>
+<text x="1510" y="977" font-size="40" font-weight="700" fill="#2E8B57">PROACTIVE</text>
+</svg>
