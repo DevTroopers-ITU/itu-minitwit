@@ -48,50 +48,41 @@ Optional on-slide labels (one per diagram row):
 
 ---
 
-## Full script (spoken, ~3 min)
+## Full script (spoken, ~2:40 — trimmed to stay under 3 min)
 
 > **Opener.** "My main takeaway is that we learned, by ourselves, that **the tools
-> aren't enough** — it was when we had to *operate* them that DevOps became real. That
-> fits the course's point that **value only happens when the service is running in
-> production.** And the honest pattern across all three Ways is that our practices came
-> **reactively** — we'd have gained from being more **proactive**, putting structure in
-> earlier instead of reaching for it once something hurt. So — Flow, Feedback, and
-> Continual Learning."
+> aren't enough** — DevOps became real when we had to *operate* them. That fits the
+> course's idea that **value only happens when the service is running in production.**
+> And the honest pattern across all three Ways is that we were **reactive** — we'd have
+> gained a lot from being **proactive.** So — Flow, Feedback, Learning."
 >
 > **Flow.** "Flow changed the most for us. Early on we piled work onto our `dev` branch
-> in big batches before merging — long lead times, and we were bad at **reducing batch
-> sizes.** The refactor is the clearest example: we rebuilt everything in Go until it
-> worked, then made *one big merge.* But by the end you can see in our history we were
-> merging in much smaller sizes. The honest pattern is that small batches came naturally
-> in the **repair** phase — once production was running and we were debugging, we
-> weren't afraid to merge — but in the **build** phase, new features, monitoring,
-> logging, breaking things small was hard. We only learned this in the second half of
-> the course. Going forward I'd apply it to *both* building and repairing."
+> in big batches — long lead times, bad at **reducing batch sizes.** The refactor is the
+> clearest example: we rebuilt everything in Go, then made *one big merge.* By the end,
+> our history shows much smaller merges. The honest pattern: small batches came naturally
+> in the **repair** phase — production was running, we weren't afraid to merge — but in
+> the **build** phase, features, monitoring, logging, breaking things small was hard.
+> Going forward I'd apply it to both."
 >
-> **Feedback.** "Feedback splits into three levels for us. The **human loop** was our
-> strength — catching errors, posting in Discord, and the group **swarming to solve
-> them together to build new knowledge.** But it was intuitive, never structured. Where
-> we fell short was the **tooling loop** — we could've used monitoring and logging far
-> more to **see problems as they occur** and push quality back to the source. And I
-> think that's *connected to why our batches stayed big*: without that fast signal,
-> nothing pulled us toward smaller, safer changes."
+> **Feedback.** "Feedback has three levels for us. The **human loop** was our strength —
+> catch something, post it in Discord, and the group **swarmed to solve it together.**
+> But it was intuitive, not structured. The **tooling loop** was our gap — we could've
+> used monitoring and logging far more to **see problems as they occur.** And I think
+> that's *why our batches stayed big*: without that fast signal, nothing pulled us toward
+> smaller changes."
 >
-> **Learning.** "**Continual Learning and Experimentation** was real for us, but
-> informal. The genuine learning happened when we sat down and talked things through —
-> we built an honest, open environment where people shared what they'd figured out, and
-> that was real. Where I'm more critical is the documentation: we wrote incident logs
-> and a docs folder, but a lot of it was **AI-generated**, and a document isn't the same
-> as learning. My own takeaway is that AI over-produces — so the real value was in the
-> **conversations, not the write-ups** — and we did that reactively, rather than making
-> it a habit. On the **experimentation** side, the Hetzner-to-Swarm migration is the
-> telling story: it's where our development environment broke down — we never got the
-> Swarm running locally to experiment with properly. The blue-green test on DigitalOcean
-> before cutover was good, but with real local parity and everyone on board, we could've
-> done it more sophisticatedly."
+> **Learning.** "**Continual Learning and Experimentation** was real but informal. The
+> genuine learning happened when we sat down and **talked things through** — an honest,
+> open environment where people shared what they'd figured out. But the documentation was
+> largely **AI-generated**, and a document isn't learning — so we **captured knowledge
+> more than we circulated it.** On experimentation, the move from Hetzner to the
+> DigitalOcean Swarm is telling — it's where our dev environment broke down: we never ran
+> the Swarm locally to experiment with. The blue-green test before cutover was good, but
+> without local parity we couldn't do it properly."
 >
-> **Close.** "So the through-line is **reactive versus proactive** — and that shift only
-> really clicked once we were the ones *operating* the system. That, for me, is what
-> DevOps actually is."
+> **Close.** "So the through-line is **reactive versus proactive** — and that only
+> clicked once we were the ones *operating* the system. That, for me, is what DevOps
+> actually is."
 
 ---
 
