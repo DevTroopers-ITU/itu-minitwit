@@ -10,6 +10,31 @@ value-stream diagram — Flow / Feedback / Continual Learning & Experimentation)
 
 ---
 
+## Keynotes (memorise this — the skeleton)
+
+```
+OPEN ▸ "Tools aren't enough — DevOps got real when we had to OPERATE it."
+        (+ we were reactive; should've been proactive)
+
+1) FLOW ▸ batches: BIG → small
+   focus: natural in REPAIR, hard in BUILD
+
+2) FEEDBACK ▸ 3 loops:
+   • CI ........... caught bugs, but never improved the tests
+   • Monitoring ... had it, but we SSH'd in instead
+   • Human/Discord  our STRENGTH — but intuitive, not structured
+
+3) LEARNING ▸ talk, not AI docs
+   focus: "captured knowledge, didn't circulate it"
+
+4) EXPERIMENT ▸ no local Swarm
+   focus: the migration broke our dev environment
+
+CLOSE ▸ "Tools aren't enough — it's operating them."  reactive → proactive
+```
+
+---
+
 ## Speaker notes (paste into the slide's notes box)
 
 ```
